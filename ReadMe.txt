@@ -1,2 +1,1 @@
-GameWorld项目转移至github
-https://github.com/coderguang/csglib
+a simple game engine,can esay to make a mini game
