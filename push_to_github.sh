@@ -24,7 +24,7 @@ rsync -avz --delete --exclude='.svn/' --exclude='.git' --exclude='*.log' --exclu
 cd $dst_dir
 
 git add *
-git commit -m "rsync my code to github"
+git commit -a -m "rsync my code to github"
 git push
 
 cd $cur_dir
