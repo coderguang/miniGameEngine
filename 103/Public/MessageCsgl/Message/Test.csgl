@@ -1,0 +1,28 @@
+#ifndef _MESSAGE_TEST_H_
+#define _MESSAGE_TEST_H_
+
+// for test
+enum ETest{
+	ETestOne=1,
+	ETestTwo,
+	ETestThree=5,
+};
+
+["id":1] struct STest{
+	int a;
+	bool b;
+	string str;
+	vector<int> ib;
+};
+
+interface ITest{
+
+	["rpcid":11] void t1();
+	
+	["rpcid":12] void t2(int a,string s);
+
+	["rpcid":13] void t3(int a,string s,out bool b,out string os);
+};
+
+
+#endif
