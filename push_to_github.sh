@@ -17,6 +17,10 @@
 dst_dir=/home/guang/github/GameWorld/
 cur_dir=`pwd`
 
+#first update code
+
+svn update .
+
 cd ../
 
 rsync -avz --delete --exclude='.svn/' --exclude='.git' --exclude='*.log' --exclude='*.o' --exclude='*.a' --exclude='*.lib' --exclude='*.dll' --exclude='libboost_*' --exclude='Task.txt' --exclude='*.exe' --exclude='dbdata' GameWorld/ $dst_dir

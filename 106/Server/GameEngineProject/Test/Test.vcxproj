@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\GameEngine\Test\TestBoost.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestChat.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h" />
+    <ClInclude Include="..\..\GameEngine\Test\TestDef.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestLog.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestMongo.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestRpc.h" />
