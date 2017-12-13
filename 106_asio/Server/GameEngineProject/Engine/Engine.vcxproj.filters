@@ -79,6 +79,9 @@
     <Filter Include="Src\framework\timer">
       <UniqueIdentifier>{c2d11af0-a8b2-43b1-b77f-591fe0cbc4e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\engine\core">
+      <UniqueIdentifier>{1836f78e-6e47-422c-b1ad-26cd49cc81ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp">
@@ -212,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Engine\framework\util\CCmdManager.cpp">
       <Filter>Src\framework\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\core\csgServer.cpp">
+      <Filter>Src\engine\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +409,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Engine\framework\util\CCmdManager.h">
       <Filter>Src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\core\csgServer.h">
+      <Filter>Src\engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\def\boost_def.h">
+      <Filter>Src\engine\def</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

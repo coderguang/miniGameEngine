@@ -72,6 +72,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\..\lib\</OutDir>
+    <LibraryPath>..\..\..\..\lib\winlib\boost_1_65_140;..\..\..\..\lib\winlib\mongodb-c++-driver;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\lib\</OutDir>
@@ -102,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\lib\include;..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SDLCheck>false</SDLCheck>
     </ClCompile>
@@ -158,6 +159,7 @@
     <ClCompile Include="..\..\Engine\engine\baseServer\SocketRecvTask.cpp" />
     <ClCompile Include="..\..\Engine\engine\baseServer\SocketSendTask.cpp" />
     <ClCompile Include="..\..\Engine\engine\baseServer\updateDtTask.cpp" />
+    <ClCompile Include="..\..\Engine\engine\core\csgServer.cpp" />
     <ClCompile Include="..\..\Engine\engine\lock\lock.cpp" />
     <ClCompile Include="..\..\Engine\engine\lock\lockObjectManager.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgBlock.cpp" />
@@ -205,6 +207,8 @@
     <ClInclude Include="..\..\Engine\engine\baseServer\SocketRecvTask.h" />
     <ClInclude Include="..\..\Engine\engine\baseServer\SocketSendTask.h" />
     <ClInclude Include="..\..\Engine\engine\baseServer\updateDtTask.h" />
+    <ClInclude Include="..\..\Engine\engine\core\csgServer.h" />
+    <ClInclude Include="..\..\Engine\engine\def\boost_def.h" />
     <ClInclude Include="..\..\Engine\engine\def\color_def.h" />
     <ClInclude Include="..\..\Engine\engine\def\csg_def.h" />
     <ClInclude Include="..\..\Engine\engine\def\environment_def.h" />
