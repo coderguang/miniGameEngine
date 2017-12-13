@@ -45,9 +45,9 @@ void registCmd()
 	CCmdManager::instance()->registCmd("t_s_md" ,"test static desconstructor by static member" ,testStaticDesconstructorWithStatic);
 	CCmdManager::instance()->registCmd("t_s_mdn" ,"test static desconstructor by not static member" ,testStaticDesconstructorNotStatic);
 
-	CCmdManager::instance()->registCmd("t_asio" ,"test asio£¬0 for srv,1 for cli" ,testAsio);
+	CCmdManager::instance()->registCmd("t_asio" ,"test 0 for server,1 for client" ,testAsio);
 
-	CCmdManager::instance()->registCmd("a" ,"test asioex£¬0 for srv,1 for cli" ,testAsioEx);
+	CCmdManager::instance()->registCmd("a" ,"test asio ,0 for server,2 for client" ,testAsioEx);
 }
 
 

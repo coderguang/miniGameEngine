@@ -17,12 +17,13 @@ WHITE = "\e[37;1m"
 #set project dir
 PROJECT_DIR		:=$(shell pwd)
 APP_NAME		:= Test_Server
+APP_DIR			:= ../../runnable
 
 #set build param
 CC	:= clang++
 CFLAG	:= -I$(PROJECT_DIR) -std=c++11 -lstdc++ -g -D _DEBUG -L../../lib -L../../../../lib/linuxlib/mongodb-c++-driver -L../../../../lib/linuxlib/boost -I../../Engine/ -I../../../../lib/include
 #LIBS := -lpthread -lMessage -lEngine -lmongoclient -lboost_thread -lboost_system -lboost_regex
-LIBS :=  -lMessage -lEngine -lmongoclient -lboost_system -lboost_thread -lboost_filesystem -lboost_date_time -lboost_regex -lboost_program_options
+LIBS :=  -lMessage -lEngine -lmongoclient -lboost_system -lboost_thread -lboost_filesystem -lboost_date_time -lboost_regex -lboost_program_options -lboost_serialization
 
 RM :=rm
 
@@ -63,9 +64,9 @@ all:$(APP_NAME)
 
 $(APP_NAME):$(CUR_OBJ)
 	@echo "start build $(APP_NAME).."
-	$(CC) $(CFLAG) -o $(PROJECT_DIR)/$@ $^ $(LIBS)
+	$(CC) $(CFLAG) -o $(APP_DIR)/$@ $^ $(LIBS)
 	@echo -e $(GREEN) "build $(APP_NAME) success!" $(BLACK)
 .PHONY:clean
 clean :
-	@$(RM) -rf $(APP_NAME) $(CUR_OBJ) $(PROJECT_LIB_DIR)$(LIB_NAME) $(CUR_DEP) core.* TestApp
+	@$(RM) -rf $(APP_DIR)/$(APP_NAME) $(CUR_OBJ) $(PROJECT_LIB_DIR)$(LIB_NAME) $(CUR_DEP) core.* TestApp
 

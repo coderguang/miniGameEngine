@@ -23,17 +23,14 @@ typedef boost::shared_ptr<boost::thread> thread_ptr;
 class myAsioTest
 {
 public:
-	myAsioTest() :w(io_service) ,socket(new boost::asio::ip::tcp::socket(io_service)),acceptor(get_io_service() ,boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4() ,8989))
+	myAsioTest() :w(io_service),acceptor(get_io_service() ,boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4() ,8989))
 	{
+
 	};
 
 	boost::asio::io_service& get_io_service()
 	{
 		return io_service;
-	}
-	socket_ptr& get_socket()
-	{
-		return socket;
 	}
 
 	void start_connect()
@@ -42,11 +39,23 @@ public:
 
 		ip::tcp::resolver resolver(get_io_service());
 		ip::tcp::resolver::query query(localhostip ,localhostport);
-		
 		ip::tcp::resolver::iterator iter = resolver.resolve(query);
 
 		socket_ptr socketEx(new boost::asio::ip::tcp::socket(io_service));
 		boost::asio::async_connect(*socketEx ,iter ,boost::bind(&myAsioTest::handleConnect ,this,socketEx,boost::asio::placeholders::error));
+
+	}
+
+
+	void start_connect_remote()
+	{
+		using namespace boost::asio;
+
+		ip::tcp::resolver resolver(get_io_service());
+		ip::tcp::resolver::query query("119.29.137.106" ,localhostport);
+		ip::tcp::resolver::iterator iter = resolver.resolve(query);
+		socket_ptr socketEx(new boost::asio::ip::tcp::socket(io_service));
+		boost::asio::async_connect(*socketEx ,iter ,boost::bind(&myAsioTest::handleConnect ,this ,socketEx ,boost::asio::placeholders::error));
 
 	}
 
@@ -63,6 +72,7 @@ public:
 
 	void start_read(socket_ptr socket)
 	{
+		socket->non_blocking(true);
 		socket->async_read_some(boost::asio::null_buffers() ,boost::bind(
 			&myAsioTest::handle_read ,this,socket ,boost::asio::placeholders::error ,boost::asio::placeholders::bytes_transferred));
 	}
@@ -74,16 +84,22 @@ private:
 		if ( error )
 		{
 			LogErr("handle_read error,msg=" << error.message());
+			return;
 		}
 		boost::system::error_code read_err;
 
-		std::vector<char>* buf = new std::vector<char>(1000, 0);
-
-		//socket->async_read_some(boost::asio::buffer(*buf));
+		const int read_len = 100;
+		char buf[read_len];
+		int len = socket->read_some(boost::asio::buffer(buf,28) ,read_err);
+		buf[len - 1]= '\0';
 		if (read_err) {
 			LogErr("handle_read error read error,msg=" << read_err.message());
+		} else
+		{
+			std::string bufstr(buf);
+			LogDebug("handle_read,msg=" << bufstr);
 		}
-		
+		start_read(socket);
 	}
 
 	void handle_accept(socket_ptr socket ,const boost::system::error_code& error)
@@ -100,6 +116,7 @@ private:
 			{
 				LogDebug("myAsioTest accept...,ex=" << ex.what());
 			}
+			start_read(socket);
 			start_accept();
 		} else
 		{
@@ -116,12 +133,37 @@ private:
 		} else
 		{
 			LogDebug("myAsioTest connect...");
+			socketEx->async_write_some(boost::asio::null_buffers() ,boost::bind(&myAsioTest::handleWrite ,this ,socketEx ,boost::asio::placeholders::error));
 		}
+	}
+	void handleWrite(socket_ptr socketEx ,boost::system::error_code err)
+	{
+		if ( err )
+		{
+			LogErr("handleWritet,ex=" << err.message());
+			return;
+		} else
+		{
+			LogDebug("handleWritet.....");
+			boost::system::error_code write_err;
+			std::string str = "hello,boost asio!are you ok?";
+			int wlen=socketEx->write_some(boost::asio::buffer(str.c_str(),str.length()) ,write_err);
+			if ( write_err )
+			{
+				LogErr("handleWritet write some,ex=" << write_err.message());
+				return;
+			} else
+			{
+				LogDebug("handleWritet write some,complete size=" << wlen);
+			}
+			CThread::sleep_for(5000);
+			socketEx->async_write_some(boost::asio::null_buffers() ,boost::bind(&myAsioTest::handleWrite ,this ,socketEx ,boost::asio::placeholders::error));
+		}
+
 	}
 
 	boost::asio::io_service io_service;
 	boost::asio::io_service::work w;
-	socket_ptr socket;
 	std::vector<thread_ptr> threads;
 	boost::asio::ip::tcp::acceptor acceptor;
 };
@@ -144,6 +186,14 @@ void testAsioClientByResolver()
 
 	onlyQforExitFunc();
 }
+void testAsioClientByResolverRemote()
+{
+	boost::shared_ptr<myAsioTest> test(new myAsioTest());
+	test->start_connect_remote();
+	test->run();
+
+	onlyQforExitFunc();
+}
 
 void testAsioEx(Json::Value& js)
 {
@@ -157,6 +207,9 @@ void testAsioEx(Json::Value& js)
 		testAsioClient2(); // can work
 		case 2:
 		testAsioClientByResolver();
+		break;
+		case 3:
+		testAsioClientByResolverRemote();
 		break;
 	}
 	
