@@ -382,7 +382,7 @@ void testAsioClient2() {
 	using namespace boost::asio;
 	io_service iosev;
 	ip::tcp::socket socket(iosev);
-	ip::tcp::endpoint ep(ip::address_v4::from_string("127.0.0.1"), 8989);
+	ip::tcp::endpoint ep(ip::address_v4::from_string("123.207.87.135"), 8989);
 	boost::system::error_code err;
 	socket.connect(ep, err);
 	if (err) {

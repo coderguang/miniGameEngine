@@ -45,8 +45,16 @@ bool csg::CCmdManager::dealCmd(std::string& cmdStr)
 		LogErr("CCmdManager::dealCmd,cmdKey=" << cmdKey << " not regist");
 		return false;
 	}
-
-	it->second->func(params);
+	try
+	{
+		it->second->func(params);
+	} catch ( std::exception ex )
+	{
+		LogErr("deal cmd occure exception,key=" << cmdKey << ",ex=" << ex.what());
+	} catch ( ... )
+	{
+		LogErr("deal cmd occure exception,key=" << cmdKey << "unknow exception");
+	}
 	return true;
 }
 

@@ -145,9 +145,12 @@ void startMain()
 				LogErr(inputStr << " not a correct commands!");
 				CCmdManager::instance()->printCmd();
 			}
+		} catch ( std::exception ex )
+		{
+			LogErr("startMain deal cmd occure exception,ex = " << ex.what());
 		} catch ( ... )
 		{
-			LogErr(" input occur exceptions....");
+				LogErr("startMain deal cmd occure exception unknow exception");
 		}
 
 	} while ( true );
@@ -190,9 +193,12 @@ void startSimpleMain()
 				LogErr(inputStr << " not a correct commands!");
 				CCmdManager::instance()->printCmd();
 			}
+		} catch ( std::exception ex )
+		{
+			LogErr("startSimpleMain deal cmd occure exception,ex="<< ex.what());
 		} catch ( ... )
 		{
-			LogErr(" input occur exceptions....");
+			LogErr("startSimpleMain deal cmd occure exception unknow exception");
 		}
 
 	} while ( true );
