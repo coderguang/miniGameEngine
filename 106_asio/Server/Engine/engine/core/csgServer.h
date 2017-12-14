@@ -34,7 +34,7 @@ namespace csg
 		std::vector<boost_io_service_ptr> _io_pool;
 		//worker
 		std::vector<boost_work_ptr> _work_pool;
-		//std::vector<boost_thread_ptr> _thread_pool;
+		std::vector<boost_thread_ptr> _thread_pool;
 		int _next_io_service;
 	};
 }

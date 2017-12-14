@@ -91,8 +91,8 @@ protected:
 
 		const int read_len = 100;
 		char buf[read_len];
-		int len = socket->read_some(boost::asio::buffer(buf,28) ,read_err);
-		buf[len - 1]= '\0';
+		memset(buf ,'\0' ,read_len);
+		int len = socket->read_some(boost::asio::buffer(buf) ,read_err);
 		if (read_err) {
 			LogErr("handle_read error read error,msg=" << read_err.message());
 			socket->close();
@@ -100,7 +100,7 @@ protected:
 		} else
 		{
 			std::string bufstr(buf);
-			LogDebug("handle_read,msg=" << bufstr);
+			LogDebug("handle_read,msg=" << bufstr<<",read size="<<len);
 		}
 		start_read(socket);
 	}
@@ -119,6 +119,7 @@ protected:
 			{
 				LogDebug("myAsioTest accept...,ex=" << ex.what());
 			}
+			socket->non_blocking(true);
 			start_read(socket);
 			start_accept();
 		} else
@@ -235,8 +236,7 @@ protected:
 
 		const int read_len = 100;
 		char buf[read_len];
-		int len = socket->read_some(boost::asio::buffer(buf ,28) ,read_err);
-		buf[len - 1] = '\0';
+		int len = socket->read_some(boost::asio::buffer(buf) ,read_err);
 		if ( read_err )
 		{
 			LogErr("myAsioTestClient handle_read error read error,msg=" << read_err.message());
@@ -245,7 +245,7 @@ protected:
 		} else
 		{
 			std::string bufstr(buf);
-			LogDebug("myAsioTestClient handle_read,msg=" << bufstr);
+			LogDebug("myAsioTestClient handle_read,msg="<< bufstr<<",size="<<len);
 		}
 		start_read(socket);
 	}

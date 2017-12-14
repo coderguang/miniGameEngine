@@ -1,12 +1,10 @@
 #include "boost/asio.hpp"
 #include "engine/core/csgServer.h"
 #include "framework/util/sysUtil.h"
-//#include "boost/thread/detail/thread.hpp"
 
 
 csg::CCsgService::CCsgService()
 {
-	/*
 	_next_io_service = 0;
 	int sys_core_num = CSysUtil::getNumberOfProcessors();
 	sys_core_num = sys_core_num / 2;
@@ -37,7 +35,7 @@ csg::CCsgService::CCsgService()
 	_io_db = boost_io_service_ptr(new boost::asio::io_service);
 	boost_work_ptr wdb(new boost::asio::io_service::work(*_io_db));
 	_work_pool.push_back(wdb);
-	*/
+	
 }
 
 csg::CCsgService::~CCsgService()
@@ -69,7 +67,6 @@ boost_io_service_ptr csg::CCsgService::get_update_dt_service()
 
 void csg::CCsgService::run()
 {
-	/*
 	for ( int i = 0; i < _io_pool.size(); i++ )
 	{
 		boost_thread_ptr thread(new boost::thread(boost::bind(&boost::asio::io_service::run ,_io_pool[i])));
@@ -87,12 +84,10 @@ void csg::CCsgService::run()
 
 	boost_thread_ptr threadUpdateDt(new boost::thread(boost::bind(&boost::asio::io_service::run ,_io_update_dt)));
 	_thread_pool.push_back(threadUpdateDt);
-	*/
 }
 
 void csg::CCsgService::stop()
 {
-	/*
 	for ( int i = 0; i < _io_pool.size(); i++ )
 	{
 		_io_pool[i]->stop();
@@ -104,6 +99,5 @@ void csg::CCsgService::stop()
 
 	for ( int i = 0; i < _thread_pool.size(); i++ )
 		_thread_pool[i]->join();
-		*/
 }
 
