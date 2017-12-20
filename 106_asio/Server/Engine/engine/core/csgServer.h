@@ -4,14 +4,14 @@
 #include "boost/asio.hpp"
 #include "boost/core/noncopyable.hpp"
 #include "engine/def/boost_def.h"
+#include "framework/DesignPattern/Singleton.h"
 
 namespace csg
 {
-	class CCsgService:public boost::noncopyable
+	/*
+	class CCsgServiceMgr:public virtual Singleton<CCsgServiceMgr>
 	{
 	public:
-		CCsgService();
-		~CCsgService();
 
 		boost_io_service_ptr get_io_service();
 
@@ -24,6 +24,9 @@ namespace csg
 		void run();
 
 		void stop();
+	protected:
+		CCsgServiceMgr();
+		~CCsgServiceMgr();
 
 	private:
 		boost_io_service_ptr _io_logic; 
@@ -37,5 +40,6 @@ namespace csg
 		std::vector<boost_thread_ptr> _thread_pool;
 		int _next_io_service;
 	};
+	*/
 }
 #endif

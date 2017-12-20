@@ -2,8 +2,8 @@
 #include "engine/core/csgServer.h"
 #include "framework/util/sysUtil.h"
 
-
-csg::CCsgService::CCsgService()
+/*
+csg::CCsgServiceMgr::CCsgServiceMgr()
 {
 	_next_io_service = 0;
 	int sys_core_num = CSysUtil::getNumberOfProcessors();
@@ -38,34 +38,34 @@ csg::CCsgService::CCsgService()
 	
 }
 
-csg::CCsgService::~CCsgService()
+csg::CCsgServiceMgr::~CCsgServiceMgr()
 {
 
 }
 
-boost_io_service_ptr csg::CCsgService::get_io_service()
+boost_io_service_ptr csg::CCsgServiceMgr::get_io_service()
 {
 	if ( _next_io_service >= _io_pool.size() )
 		_next_io_service = 0;
 	return _io_pool[_next_io_service++];
 }
 
-boost_io_service_ptr csg::CCsgService::get_log_service()
+boost_io_service_ptr csg::CCsgServiceMgr::get_log_service()
 {
 	return _io_log;
 }
 
-boost_io_service_ptr csg::CCsgService::get_db_service()
+boost_io_service_ptr csg::CCsgServiceMgr::get_db_service()
 {
 	return _io_db;
 }
 
-boost_io_service_ptr csg::CCsgService::get_update_dt_service()
+boost_io_service_ptr csg::CCsgServiceMgr::get_update_dt_service()
 {
 	return _io_update_dt;
 }
 
-void csg::CCsgService::run()
+void csg::CCsgServiceMgr::run()
 {
 	for ( int i = 0; i < _io_pool.size(); i++ )
 	{
@@ -86,7 +86,7 @@ void csg::CCsgService::run()
 	_thread_pool.push_back(threadUpdateDt);
 }
 
-void csg::CCsgService::stop()
+void csg::CCsgServiceMgr::stop()
 {
 	for ( int i = 0; i < _io_pool.size(); i++ )
 	{
@@ -100,4 +100,4 @@ void csg::CCsgService::stop()
 	for ( int i = 0; i < _thread_pool.size(); i++ )
 		_thread_pool[i]->join();
 }
-
+*/

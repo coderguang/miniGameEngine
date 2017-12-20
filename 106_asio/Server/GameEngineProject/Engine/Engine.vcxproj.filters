@@ -82,6 +82,9 @@
     <Filter Include="Src\engine\core">
       <UniqueIdentifier>{1836f78e-6e47-422c-b1ad-26cd49cc81ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\engine\net\Asio">
+      <UniqueIdentifier>{68866043-e93c-4503-b34d-99fd0edb662a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Engine\engine\core\csgServer.cpp">
       <Filter>Src\engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\net\Asio\asioSocket.cpp">
+      <Filter>Src\engine\net\Asio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +421,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Engine\engine\def\boost_def.h">
       <Filter>Src\engine\def</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\Asio\asioSocket.h">
+      <Filter>Src\engine\net\Asio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -282,7 +282,7 @@ protected:
 			{
 				LogDebug("myAsioTestClient handleWritet write some,complete size=" << wlen);
 			}
-			CThread::sleep_for(5000);
+			CThread::sleep_for(500);
 			socketEx->async_write_some(boost::asio::null_buffers() ,boost::bind(&myAsioTestClient::handleWrite ,this ,socketEx ,boost::asio::placeholders::error));
 		}
 

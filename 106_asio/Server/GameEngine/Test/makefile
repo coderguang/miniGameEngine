@@ -17,6 +17,7 @@ WHITE = "\e[37;1m"
 #set project dir
 PROJECT_DIR		:=$(shell pwd)
 APP_NAME		:= Test_Server
+APP_DIR			:= ../../runnable
 
 #set build param
 CC	:= clang++
@@ -63,9 +64,9 @@ all:$(APP_NAME)
 
 $(APP_NAME):$(CUR_OBJ)
 	@echo "start build $(APP_NAME).."
-	$(CC) $(CFLAG) -o $(PROJECT_DIR)/$@ $^ $(LIBS)
+	$(CC) $(CFLAG) -o $(APP_DIR)/$@ $^ $(LIBS)
 	@echo -e $(GREEN) "build $(APP_NAME) success!" $(BLACK)
 .PHONY:clean
 clean :
-	@$(RM) -rf $(APP_NAME) $(CUR_OBJ) $(PROJECT_LIB_DIR)$(LIB_NAME) $(CUR_DEP) core.* TestApp
+	@$(RM) -rf $(APP_NAME) $(CUR_OBJ) $(APP_DIR)/$(APP_NAME) $(CUR_DEP) core.* TestApp
 

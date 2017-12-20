@@ -23,7 +23,7 @@ svn update .
 
 cd ../
 
-rsync -avz --delete --exclude='.svn/' --exclude='.git' --exclude='*.log' --exclude='*.o' --exclude='*.a' --exclude='*.lib' --exclude='*.dll' --exclude='libboost_*' --exclude='Task.txt' --exclude='*.exe' --exclude='dbdata' GameWorld/ $dst_dir
+rsync -avz --delete --exclude='runnable' --exclude='.svn/' --exclude='.git' --exclude='*.log' --exclude='*.o' --exclude='*.a' --exclude='*.lib' --exclude='*.dll' --exclude='libboost_*' --exclude='Task.txt' --exclude='*.exe' --exclude='dbdata' GameWorld/ $dst_dir
 
 cd $dst_dir
 
