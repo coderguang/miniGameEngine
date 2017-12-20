@@ -20,7 +20,7 @@
 #define _CSG_L_
 
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <vector>
 
 struct CSGEnum{

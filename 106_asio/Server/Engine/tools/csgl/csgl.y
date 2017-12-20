@@ -78,7 +78,7 @@ std::vector<std::string> structVec;
 
 //enum
 %token <t_string>TOKEN_ENUM_START 
-%token <te_list>TOKEN_ENUM_CONTENT;
+%token <te_list>TOKEN_ENUM_CONTENT
 
 //struct
 %token TOKEN_STRUCT_START TOKEN_STRUCT_END

@@ -14,6 +14,3 @@
 #***********************************************
 
 ./../tools/csgl Message/ ../../Server/GameEngine/Message/ Test
-
-
-
