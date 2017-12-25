@@ -139,8 +139,8 @@ function clean_all(){
 }
 
 
-#build_engine
-#build_libs
-#build_apps
+build_engine
+build_libs
+build_apps
 
 clean_all

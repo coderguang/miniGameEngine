@@ -1,6 +1,4 @@
 #include "engine/mq/msgQueue.h"
-#include "../net/session/session.h"
-#include "../net/session/sessionManager.h"
 
 
 using namespace csg;
@@ -31,11 +29,11 @@ bool csg::CMsgQueue::runLoop()
 	CAutoLock l(getReadLock());
 	for ( ListMsg::iterator it = _readList.begin(); it != _readList.end(); ++it )
 	{
-		CSessionPtr session = CSessionManager::instance()->getSession(( *it )->socketfd);
-		if ( session )
-		{
-			session->pushMessage((*it)->msgBlock);
-		}
+// 		CSessionPtr session = CSessionManager::instance()->getSession(( *it )->socketfd);
+// 		if ( session )
+// 		{
+// 			session->pushMessage((*it)->msgBlock);
+// 		}
 	}
 	_readList.clear();
 	return true;

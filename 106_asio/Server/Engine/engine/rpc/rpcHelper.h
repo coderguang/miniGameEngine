@@ -4,10 +4,9 @@
 #include "../serialize/serializestream.h"
 #include "rmidef.h"
 #include "rmiObject.h"
-#include "../net/session/session.h"
 #include "framework/DesignPattern/objectPool.h"
 
-
+/*
 namespace csg
 {
 	class CRpcHelper
@@ -23,4 +22,5 @@ namespace csg
 
 	};
 }
+*/
 #endif

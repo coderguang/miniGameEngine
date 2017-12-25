@@ -8,7 +8,7 @@
 
 namespace csg
 {
-	/*
+	
 	class CCsgServiceMgr:public virtual Singleton<CCsgServiceMgr>
 	{
 	public:
@@ -24,9 +24,10 @@ namespace csg
 		void run();
 
 		void stop();
+
+		void init();
 	protected:
-		CCsgServiceMgr();
-		~CCsgServiceMgr();
+
 
 	private:
 		boost_io_service_ptr _io_logic; 
@@ -40,6 +41,6 @@ namespace csg
 		std::vector<boost_thread_ptr> _thread_pool;
 		int _next_io_service;
 	};
-	*/
+	
 }
 #endif

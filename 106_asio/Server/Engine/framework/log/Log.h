@@ -6,7 +6,6 @@
 #include "../datetime/datetime.h"
 #include "../DesignPattern/Singleton.h"
 #include <vector>
-#include "engine/thread/thread.h"
 #include "../util/sysUtil.h"
 #include "../DesignPattern/objectPool.h"
 
@@ -31,8 +30,9 @@ namespace csg
 		{
 			logStr = msg;
 			logLv = lv;
-			pid = CThread::pid();
-			threadId = CThread::threadId();
+			//pid = CThread::pid();
+			pid = 0;
+			//threadId = CThread::threadId();
 			logDt = CDateTime();
 			fileName = fileN;
 			functionName = functionN;

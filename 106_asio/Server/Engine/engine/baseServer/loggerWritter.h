@@ -2,19 +2,17 @@
 #ifndef _ENGINE_BASE_SERVER_LOGGER_WRITTER_H_
 #define _ENGINE_BASE_SERVER_LOGGER_WRITTER_H_
 
-#include "../thread/task.h"
 #include "framework/log/Log.h"
 #include <map>
 #include <fstream>
 
 namespace csg
 {
-	class CLoggerWritterTask :public virtual CTask
+	class CLoggerWritterTask 
 	{
 	public:
-		CLoggerWritterTask() :CTask() ,_consoleShow(false) ,_lastWriteTotalDay(0),_dir("")
+		CLoggerWritterTask() :_consoleShow(false) ,_lastWriteTotalDay(0),_dir("")
 		{
-			setTaskType(EBaseServerLoggerWritter);
 			_logRecord.clear();
 			_logMsgMap.clear();
 		}

@@ -3,19 +3,4 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Src">
-      <UniqueIdentifier>{4b0e0515-a76d-4d06-8685-d82439c56ef0}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\GameEngine\Message\Test.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\GameEngine\Message\Test.h">
-      <Filter>Src</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+/*
 #include "Test.h"
 #include "engine/rpc/rpcHelper.h"
 using namespace csg;
@@ -347,5 +348,5 @@ void csg_proxy::ITest::t3_async(const CSessionPtr& session,const CCli_ITest_t3_P
 	CRpcHelper::toCall(session,__os,objectBind);
 
 }
-
+*/
 

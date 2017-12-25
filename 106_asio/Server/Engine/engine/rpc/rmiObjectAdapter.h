@@ -5,7 +5,7 @@
 #include "rmiObject.h"
 #include "framework/DesignPattern/Singleton.h"
 #include "../lock/lock.h"
-
+/*
 namespace csg
 {
 	class CRMIObject;
@@ -34,4 +34,7 @@ namespace csg
 	};
 
 }
+
+*/
+
 #endif

@@ -3,7 +3,7 @@
 
 
 using namespace csg;
-
+/*
 CCounterHandler CRMIObject::_count("CRMIObject");
 CCounterHandler CRMIProxyObject::_count("CRMIProxyObject");
 CCounterHandler CRMIProxyCallBackObject::_count("CRMIProxyCallBackObject");
@@ -157,3 +157,5 @@ void csg::CRMIObjectCallBackObject::setSession(const CSessionPtr& session ,const
 	_session = session;
 	_rmiCall = rmiCall;
 }
+
+*/

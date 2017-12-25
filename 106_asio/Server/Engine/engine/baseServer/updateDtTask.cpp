@@ -5,6 +5,7 @@
 
 int csg::CUpdateDtTask::run()
 {
+	/*
 	LogSys("CUpdateDtTask::run start");
 	std::unique_lock<CLock> lock(getLock());
 	while ( !isExit() )
@@ -18,6 +19,8 @@ int csg::CUpdateDtTask::run()
 		CDateTime::updateThreadDt();
 	}
 	LogSys("CUpdateDtTask::run exit");
+	*/
 	return CSG_RETURN_OK;
+	
 }
 

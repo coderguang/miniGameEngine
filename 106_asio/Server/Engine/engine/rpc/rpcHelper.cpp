@@ -1,6 +1,6 @@
 #include "engine/rpc/rpcHelper.h"
-#include "../net/socket/socket.h"
 
+/*
 using namespace csg;
 
 void csg::CRpcHelper::prepareToCall(const CSessionPtr& session ,CAutoSerializeStream& __os ,SRMICall& call ,const CRMIProxyCallBackObjectPtr& backObject ,CRMIObjectBindPtr& objectBind)
@@ -85,3 +85,4 @@ void csg::CRpcHelper::toReturn(const CSessionPtr& session ,CAutoSerializeStream&
 	//CSG_LOG_DEBUG("CRpcHelper::toReturn,sendSize=" <<sendSize);
 }
 
+*/

@@ -42,8 +42,8 @@ void csg::CLoggerWritterTask::setFileDir(const std::string& dir)
 
 int csg::CLoggerWritterTask::run()
 {
+	/*
 	LogSys("CLoggerWritterTask::run start");
-	std::unique_lock<CLock> lock(getLock());
 	initLogMsgMap();
 	while ( !isExit() )
 	{
@@ -57,7 +57,9 @@ int csg::CLoggerWritterTask::run()
 	}
 	LogSys("CLoggerWritterTask::run exit");
 	flush();//刷完最后的log
+	*/
 	return CSG_RETURN_OK;
+	
 }
 
 void csg::CLoggerWritterTask::flush()

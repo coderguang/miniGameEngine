@@ -2,17 +2,16 @@
 #ifndef _ENGINE_BASE_SERVER_UPDATE_DT_TASK_H_
 #define _ENGINE_BASE_SERVER_UPDATE_DT_TASK_H_
 
-#include "../thread/task.h"
 #include "baseServerDef.h"
 
 namespace csg
 {
-	class CUpdateDtTask :public virtual CTask
+	class CUpdateDtTask
 	{
 	public:
-		CUpdateDtTask() :CTask()
+		CUpdateDtTask()
 		{
-			setTaskType(EBaseServerUpdateDt);
+			
 		}
 		virtual ~CUpdateDtTask()
 		{

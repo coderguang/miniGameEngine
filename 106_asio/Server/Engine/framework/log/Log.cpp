@@ -1,5 +1,4 @@
 #include "framework/log/Log.h"
-#include "engine/thread/thread.h"
 #include <string>
 #include "../util/typetransform.h"
 

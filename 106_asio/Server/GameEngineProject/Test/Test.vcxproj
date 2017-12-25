@@ -18,37 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\GameEngine\Test\chat\client.cpp" />
-    <ClCompile Include="..\..\GameEngine\Test\chat\server.cpp" />
-    <ClCompile Include="..\..\GameEngine\Test\logic\ITestImpl.cpp" />
-    <ClCompile Include="..\..\GameEngine\Test\TestMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\GameEngine\Test\chat\client.h" />
-    <ClInclude Include="..\..\GameEngine\Test\chat\server.h" />
-    <ClInclude Include="..\..\GameEngine\Test\logic\ITestImpl.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestAsio.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestAsioEx.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestBoost.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestChat.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestDef.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestLog.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestMongo.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestRpc.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestSerialize.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestSerializeEx.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestSmartPtr.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestSocket.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestThread.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestTime.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestTimer.h" />
-    <ClInclude Include="..\..\GameEngine\Test\TestUtil.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\GameEngine\Test\TestBaseWinSocket.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ADE46A3B-2A11-499D-9B0E-9324143A987E}</ProjectGuid>
     <RootNamespace>Test</RootNamespace>
