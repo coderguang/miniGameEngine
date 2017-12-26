@@ -4,5 +4,24 @@
     <Filter Include="Src">
       <UniqueIdentifier>{30b94e92-cc04-45d4-b4e3-6118fa84e635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\log">
+      <UniqueIdentifier>{191b03e4-ee42-4efd-ba6f-7036b338199d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\GameEngine\Test\main.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\GameEngine\Test\log\TestLog.h">
+      <Filter>Src\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameEngine\Test\TestDef.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

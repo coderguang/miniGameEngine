@@ -16,8 +16,7 @@ namespace csg
 		virtual ~CUpdateDtTask()
 		{
 		};
-	protected:
-		virtual int run();
+		virtual void run();
 	};
 
 

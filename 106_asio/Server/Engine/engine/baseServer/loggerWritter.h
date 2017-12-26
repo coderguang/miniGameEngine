@@ -20,15 +20,14 @@ namespace csg
 
 		void setConsoleInfo(bool show);
 
-		virtual void setFileDir(const std::string& dir);
+		virtual void setFileDir(const std::string dir,const std::string fileName);
 
-	protected:
-		virtual int run();
+		virtual void run();
+
+		void initLogMsgMap();
 
 	private:
 		void flush();
-
-		void initLogMsgMap();
 
 		virtual void write();
 
@@ -41,6 +40,7 @@ namespace csg
 		std::map<int ,std::string> _logMsgMap;
 
 		std::string _dir;
+		std::string _fileName;
 		std::ofstream _ofs;
 		bool _consoleShow;
 		int _lastWriteTotalDay;

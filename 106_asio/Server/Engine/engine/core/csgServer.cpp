@@ -1,98 +1,34 @@
-#include "boost/asio.hpp"
 #include "engine/core/csgServer.h"
-#include "framework/util/sysUtil.h"
+#include "csgIoMgr.h"
+#include "../baseServer/loggerWritter.h"
+#include "boost/asio/io_service.hpp"
+#include "framework/datetime/datetime.h"
+#include "../baseServer/updateDtTask.h"
 
-
-void csg::CCsgServiceMgr::init()
+void csg::CCsgServer::init()
 {
-	_next_io_service = 0;
-	int sys_core_num = CSysUtil::getNumberOfProcessors();
-	sys_core_num = sys_core_num / 2;
+	CCsgIoMgr::instance()->init();
+	CCsgIoMgr::instance()->run();
+}
+
+void csg::CCsgServer::startUpdateDtServer()
+{
+	_dt= boost::shared_ptr<CUpdateDtTask>(new CUpdateDtTask());
+	CCsgIoMgr::instance()->getUpdateDtService()->post(boost::bind(&CUpdateDtTask::run,_dt));
+}
+
+void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
+{
+	_logger= boost::shared_ptr<CLoggerWritterTask>(new CLoggerWritterTask());
+	_logger->setFileDir(path ,logFileName);
 #ifdef _DEBUG
-	sys_core_num = 1;
+	_logger->setConsoleInfo(true);
 #endif
-	sys_core_num = sys_core_num > 0 ? sys_core_num : 1;
-	
-	for(int i=0;i<sys_core_num;i++ ){
-		boost_io_service_ptr io_service(new boost_io_service);
-		boost_work_ptr work(new boost_work(*io_service));
-		_io_pool.push_back(io_service);
-		_work_pool.push_back(work);
-	}
-
-	_io_log = boost_io_service_ptr(new boost_io_service);
-	boost_work_ptr wlog(new boost_work(*_io_log));
-	_work_pool.push_back(wlog);
-
-	_io_logic = boost_io_service_ptr(new boost_io_service);
-	boost_work_ptr wlogic(new boost_work(*_io_logic));
-	_work_pool.push_back(wlogic);
-
-	_io_update_dt = boost_io_service_ptr(new boost_io_service);
-	boost_work_ptr wupdateDt(new boost_work(*_io_update_dt));
-	_work_pool.push_back(wupdateDt);
-
-	_io_db = boost_io_service_ptr(new boost_io_service);
-	boost_work_ptr wdb(new boost_work(*_io_db));
-	_work_pool.push_back(wdb);
-	
+	_logger->initLogMsgMap();
+	CCsgIoMgr::instance()->getLogService()->post(boost::bind(&CLoggerWritterTask::run ,_logger));
 }
 
-boost_io_service_ptr csg::CCsgServiceMgr::get_io_service()
+void csg::CCsgServer::stop()
 {
-	if ( _next_io_service >= _io_pool.size() )
-		_next_io_service = 0;
-	return _io_pool[_next_io_service++];
+	CCsgIoMgr::instance()->stop();
 }
-
-boost_io_service_ptr csg::CCsgServiceMgr::get_log_service()
-{
-	return _io_log;
-}
-
-boost_io_service_ptr csg::CCsgServiceMgr::get_db_service()
-{
-	return _io_db;
-}
-
-boost_io_service_ptr csg::CCsgServiceMgr::get_update_dt_service()
-{
-	return _io_update_dt;
-}
-
-void csg::CCsgServiceMgr::run()
-{
-	for ( int i = 0; i < _io_pool.size(); i++ )
-	{
-		boost_thread_ptr thread(new boost::thread(boost::bind(&boost_io_service::run ,_io_pool[i])));
-		_thread_pool.push_back(thread);
-	}
-
-	boost_thread_ptr threadLog(new boost::thread(boost::bind(&boost_io_service::run ,_io_log)));
-	_thread_pool.push_back(threadLog);
-
-	boost_thread_ptr threadLogic(new boost::thread(boost::bind(&boost_io_service::run ,_io_logic)));
-	_thread_pool.push_back(threadLogic);
-
-	boost_thread_ptr threaddb(new boost::thread(boost::bind(&boost_io_service::run ,_io_db)));
-	_thread_pool.push_back(threaddb);
-
-	boost_thread_ptr threadUpdateDt(new boost::thread(boost::bind(&boost_io_service::run ,_io_update_dt)));
-	_thread_pool.push_back(threadUpdateDt);
-}
-
-void csg::CCsgServiceMgr::stop()
-{
-	for ( int i = 0; i < _io_pool.size(); i++ )
-	{
-		_io_pool[i]->stop();
-	}
-	_io_log->stop();
-	_io_logic->stop();
-	_io_update_dt->stop();
-	_io_db->stop();
-
-	for ( int i = 0; i < _thread_pool.size(); i++ )
-		_thread_pool[i]->join();
-}
-

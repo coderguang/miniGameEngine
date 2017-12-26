@@ -8,6 +8,7 @@
 #include <vector>
 #include "../util/sysUtil.h"
 #include "../DesignPattern/objectPool.h"
+#include "engine/thread/thread.h"
 
 namespace csg
 {
@@ -30,9 +31,8 @@ namespace csg
 		{
 			logStr = msg;
 			logLv = lv;
-			//pid = CThread::pid();
-			pid = 0;
-			//threadId = CThread::threadId();
+			pid = CThread::pid();
+			threadId = CThread::threadId();
 			logDt = CDateTime();
 			fileName = fileN;
 			functionName = functionN;

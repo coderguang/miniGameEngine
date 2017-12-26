@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\GameEngine\Test\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\GameEngine\Test\log\TestLog.h" />
+    <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h" />
+    <ClInclude Include="..\..\GameEngine\Test\TestDef.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ADE46A3B-2A11-499D-9B0E-9324143A987E}</ProjectGuid>
     <RootNamespace>Test</RootNamespace>
@@ -114,7 +122,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../lib/Engine.lib;../lib/Message.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../lib/Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

@@ -13,6 +13,8 @@
 #ifdef CSG_LINUX
 #include <sys/stat.h>
 #endif
+#include "../thread/thread.h"
+#include "../core/csgIoMgr.h"
 
 
 csg::CLoggerWritterTask::~CLoggerWritterTask()
@@ -26,9 +28,10 @@ void csg::CLoggerWritterTask::setConsoleInfo(bool show)
 	_consoleShow = show;
 }
 
-void csg::CLoggerWritterTask::setFileDir(const std::string& dir)
+void csg::CLoggerWritterTask::setFileDir(const std::string dir,const std::string fileName)
 {
 	_dir = dir;
+	_fileName = fileName;
 	if ( -1 == mkdir(_dir.c_str() ,0777) )
 	{
 		if ( EEXIST != errno )
@@ -40,26 +43,11 @@ void csg::CLoggerWritterTask::setFileDir(const std::string& dir)
 	LogSys("CLoggerWritterTask::setFileDir,mkdir " << _dir << " complete!");
 }
 
-int csg::CLoggerWritterTask::run()
+void csg::CLoggerWritterTask::run()
 {
-	/*
-	LogSys("CLoggerWritterTask::run start");
-	initLogMsgMap();
-	while ( !isExit() )
-	{
-		if ( isStop() )
-		{
-			LogSys("CLoggerWritterTask::run watting");
-			_cv.wait(lock);
-		}
-		flush();
-		CThread::sleep_for(500); //500ms 刷一次log
-	}
-	LogSys("CLoggerWritterTask::run exit");
-	flush();//刷完最后的log
-	*/
-	return CSG_RETURN_OK;
-	
+	flush();
+	CThread::sleep_for(500);
+	CCsgIoMgr::instance()->getLogService()->post(boost::bind(&CLoggerWritterTask::run ,this));
 }
 
 void csg::CLoggerWritterTask::flush()
@@ -140,7 +128,7 @@ void csg::CLoggerWritterTask::write(const CLogRecord& record)
 	{
 		if ( _ofs.is_open() )
 			_ofs.close();
-		_ofs.open(_dir + "/" + logFileName + ".log" ,std::ios::app);
+		_ofs.open(_dir + "/" +_fileName+"-"+logFileName + ".log" ,std::ios::app);
 		if ( !_ofs.is_open() )
 		{
 			LogErr("csg::CLoggerWritterTask::write,cant open " << logFileName);

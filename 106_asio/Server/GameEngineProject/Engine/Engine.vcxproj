@@ -102,7 +102,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;CSG_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\..\lib\include;..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SDLCheck>false</SDLCheck>
@@ -156,19 +156,25 @@
     <ClCompile Include="..\..\Engine\engine\allocator\allocator.cpp" />
     <ClCompile Include="..\..\Engine\engine\baseServer\loggerWritter.cpp" />
     <ClCompile Include="..\..\Engine\engine\baseServer\mainLogicTask.cpp" />
+    <ClCompile Include="..\..\Engine\engine\baseServer\SocketClient.cpp" />
+    <ClCompile Include="..\..\Engine\engine\baseServer\SocketServer.cpp" />
     <ClCompile Include="..\..\Engine\engine\baseServer\updateDtTask.cpp" />
+    <ClCompile Include="..\..\Engine\engine\core\csgIoMgr.cpp" />
     <ClCompile Include="..\..\Engine\engine\core\csgServer.cpp" />
     <ClCompile Include="..\..\Engine\engine\lock\lock.cpp" />
     <ClCompile Include="..\..\Engine\engine\lock\lockObjectManager.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgBlock.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgManager.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgQueue.cpp" />
+    <ClCompile Include="..\..\Engine\engine\net\session\session.cpp" />
+    <ClCompile Include="..\..\Engine\engine\net\session\sessionMgr.cpp" />
     <ClCompile Include="..\..\Engine\engine\rpc\rmidef.cpp" />
     <ClCompile Include="..\..\Engine\engine\rpc\rmiObject.cpp" />
     <ClCompile Include="..\..\Engine\engine\rpc\rmiObjectAdapter.cpp" />
     <ClCompile Include="..\..\Engine\engine\rpc\rpcHelper.cpp" />
     <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp" />
     <ClCompile Include="..\..\Engine\engine\serialize\serializestream.cpp" />
+    <ClCompile Include="..\..\Engine\engine\thread\thread.cpp" />
     <ClCompile Include="..\..\Engine\framework\counter\counterHandler.cpp" />
     <ClCompile Include="..\..\Engine\framework\counter\counterHandlerManager.cpp" />
     <ClCompile Include="..\..\Engine\framework\datetime\datetime.cpp" />
@@ -192,7 +198,10 @@
     <ClInclude Include="..\..\Engine\engine\baseServer\baseServerDef.h" />
     <ClInclude Include="..\..\Engine\engine\baseServer\loggerWritter.h" />
     <ClInclude Include="..\..\Engine\engine\baseServer\mainLogicTask.h" />
+    <ClInclude Include="..\..\Engine\engine\baseServer\SocketClient.h" />
+    <ClInclude Include="..\..\Engine\engine\baseServer\SocketServer.h" />
     <ClInclude Include="..\..\Engine\engine\baseServer\updateDtTask.h" />
+    <ClInclude Include="..\..\Engine\engine\core\csgIoMgr.h" />
     <ClInclude Include="..\..\Engine\engine\core\csgServer.h" />
     <ClInclude Include="..\..\Engine\engine\def\boost_def.h" />
     <ClInclude Include="..\..\Engine\engine\def\color_def.h" />
@@ -203,12 +212,16 @@
     <ClInclude Include="..\..\Engine\engine\mq\msgBlock.h" />
     <ClInclude Include="..\..\Engine\engine\mq\msgManager.h" />
     <ClInclude Include="..\..\Engine\engine\mq\msgQueue.h" />
+    <ClInclude Include="..\..\Engine\engine\net\protocol\protocol.h" />
+    <ClInclude Include="..\..\Engine\engine\net\session\session.h" />
+    <ClInclude Include="..\..\Engine\engine\net\session\sessionMgr.h" />
     <ClInclude Include="..\..\Engine\engine\rpc\rmidef.h" />
     <ClInclude Include="..\..\Engine\engine\rpc\rmiObject.h" />
     <ClInclude Include="..\..\Engine\engine\rpc\rmiObjectAdapter.h" />
     <ClInclude Include="..\..\Engine\engine\rpc\rpcHelper.h" />
     <ClInclude Include="..\..\Engine\engine\serialize\bytesbuffer.h" />
     <ClInclude Include="..\..\Engine\engine\serialize\serializestream.h" />
+    <ClInclude Include="..\..\Engine\engine\thread\thread.h" />
     <ClInclude Include="..\..\Engine\framework\counter\counterHandler.h" />
     <ClInclude Include="..\..\Engine\framework\counter\counterHandlerManager.h" />
     <ClInclude Include="..\..\Engine\framework\datetime\datetime.h" />
