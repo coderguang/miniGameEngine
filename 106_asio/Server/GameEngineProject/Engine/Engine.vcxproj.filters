@@ -198,6 +198,9 @@
     <ClCompile Include="..\..\Engine\engine\baseServer\SocketClient.cpp">
       <Filter>Src\engine\baseServer</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\net\protocol\csgProtocol.cpp">
+      <Filter>Src\engine\net\protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Engine\engine\serialize\bytesbuffer.h">
@@ -376,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Engine\engine\baseServer\SocketClient.h">
       <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\protocol\csgProtocol.h">
+      <Filter>Src\engine\net\protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

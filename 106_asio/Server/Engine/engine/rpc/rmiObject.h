@@ -7,8 +7,8 @@
 #include <set>
 #include "framework/exception/exception.h"
 #include "framework/SmartPoint/smartPoint.h"
+#include "engine/net/session/session.h"
 
-/*
 namespace csg
 {
 
@@ -133,6 +133,5 @@ namespace csg
 
 	typedef std::map<int ,CRMIObjectBindPtr> MapRMIObjectBind; 
 }
-*/
 
 #endif

@@ -1,6 +1,6 @@
 #include "engine/rpc/rpcHelper.h"
 
-/*
+
 using namespace csg;
 
 void csg::CRpcHelper::prepareToCall(const CSessionPtr& session ,CAutoSerializeStream& __os ,SRMICall& call ,const CRMIProxyCallBackObjectPtr& backObject ,CRMIObjectBindPtr& objectBind)
@@ -44,7 +44,7 @@ void csg::CRpcHelper::toCall(const CSessionPtr& session ,CAutoSerializeStream& _
 
 	//CSG_LOG_DEBUG("CRpcHelper::toCall,size=" << addHeadOs->getDataSize());
 
-	int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
+	//int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
 
 	//CSG_LOG_DEBUG("CRpcHelper::toCall,sendSize=" <<sendSize);
 
@@ -80,9 +80,7 @@ void csg::CRpcHelper::toReturn(const CSessionPtr& session ,CAutoSerializeStream&
 
 	//CSG_LOG_DEBUG("CRpcHelper::toReturn,size=" << addHeadOs->getDataSize());
 
-	int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
+	//int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
 
 	//CSG_LOG_DEBUG("CRpcHelper::toReturn,sendSize=" <<sendSize);
 }
-
-*/

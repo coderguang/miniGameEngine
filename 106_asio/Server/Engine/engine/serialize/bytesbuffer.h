@@ -38,6 +38,9 @@ namespace csg
 		void resize(size_t size);
 
 		void popData(int len);
+
+		void addDataSize(int addLen);
+
 	private:
 		
 		void checkOverflowAndRefresh(int addLength);
@@ -51,8 +54,6 @@ namespace csg
 		void reset();
 
 		void swap(csg::CBytesBuffer& buf);
-
-		void addDataSize(int addLen);
 
 	private:
 		bool _isRealOnly;

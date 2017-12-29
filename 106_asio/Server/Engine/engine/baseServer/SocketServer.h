@@ -29,6 +29,8 @@ namespace csg
 
 		void disconnect(CSessionPtr& session);
 
+		void handleWrite(CSessionPtr& session ,boost::system::error_code ex);
+
 	private:
 		int _port;
 		bool _isInner;

@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\Engine\engine\mq\msgBlock.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgManager.cpp" />
     <ClCompile Include="..\..\Engine\engine\mq\msgQueue.cpp" />
+    <ClCompile Include="..\..\Engine\engine\net\protocol\csgProtocol.cpp" />
     <ClCompile Include="..\..\Engine\engine\net\session\session.cpp" />
     <ClCompile Include="..\..\Engine\engine\net\session\sessionMgr.cpp" />
     <ClCompile Include="..\..\Engine\engine\rpc\rmidef.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="..\..\Engine\engine\mq\msgBlock.h" />
     <ClInclude Include="..\..\Engine\engine\mq\msgManager.h" />
     <ClInclude Include="..\..\Engine\engine\mq\msgQueue.h" />
+    <ClInclude Include="..\..\Engine\engine\net\protocol\csgProtocol.h" />
     <ClInclude Include="..\..\Engine\engine\net\protocol\protocol.h" />
     <ClInclude Include="..\..\Engine\engine\net\session\session.h" />
     <ClInclude Include="..\..\Engine\engine\net\session\sessionMgr.h" />

@@ -2,6 +2,7 @@
 #include "../core/csgIoMgr.h"
 #include "../net/session/session.h"
 #include "../net/session/sessionMgr.h"
+#include "../net/protocol/csgProtocol.h"
 
 void csg::CSocketServer::init(int port ,bool isInner ,int sessionType)
 {
@@ -51,6 +52,8 @@ void csg::CSocketServer::handleAccept(CSessionPtr session ,const boost::system::
 		{
 			LogDebug("CSocketServer::handleAccept accept... ,port = " << _port << " ,ex=" << ex.what());
 		}
+		CCsgProtocolPtr protocol = new CCsgProtocol();
+		session->setProtocol(protocol);
 		session->setStatus(ESessionStatusConnected);
 		CSessionMgr::instance()->addSession(session);
 		startRead(session);
@@ -77,12 +80,11 @@ void csg::CSocketServer::handleRead(CSessionPtr& session ,boost::system::error_c
 		disconnect(session);
 		return;
 	}
+	//暂时先不考虑效率
+	char tt[SERIALIZE_MAX_RESIZE];
+	memset(&tt ,'\0' ,SERIALIZE_MAX_RESIZE);
 	boost::system::error_code read_err;
-
-	const int read_len = 100;
-	char buf[read_len];
-	memset(buf ,'\0' ,read_len);
-	int len = session->getSocket()->read_some(boost::asio::buffer(buf) ,read_err);
+	int len = session->getSocket()->read_some(boost::asio::buffer(tt) ,read_err);
 	if ( read_err )
 	{
 		LogErr("CSocketServer::handleRead error read error,msg=" << read_err.message());
@@ -90,9 +92,12 @@ void csg::CSocketServer::handleRead(CSessionPtr& session ,boost::system::error_c
 		return;
 	} else
 	{
-		std::string bufstr(buf);
-		LogDebug("CSocketServer::handleRead,msg=" << bufstr << ",read size=" << len);
+		session->handleRecvData(tt ,len);
+		LogDebug("CSocketServer::handleRead,msg="<< ",read size=" << len);
 	}
+
+	//session->getSocket()->async_write_some(boost::asio::null_buffers() ,boost::bind(&CSocketServer::handleWrite ,this ,session ,boost::asio::placeholders::error));
+
 	startRead(session);
 }
 
@@ -101,5 +106,32 @@ void csg::CSocketServer::disconnect(CSessionPtr& session)
 	session->getSocket()->close();
 	session->setStatus(ESessionStatusDisConnected);
 	CSessionMgr::instance()->delSession(session);
+}
+
+void csg::CSocketServer::handleWrite(CSessionPtr& session ,boost::system::error_code err)
+{
+	if ( err )
+	{
+		LogErr("csg::CSocketServer,ex=" << err.message());
+		disconnect(session);
+		return;
+	} else
+	{
+		LogDebug("csg::CSocketServer::handleWrite.....");
+		boost::system::error_code write_err;
+		std::string str = "hello,boost asio!are you ok? I'm server";
+		int wlen = session->getSocket()->write_some(boost::asio::buffer(str.c_str() ,str.length()) ,write_err);
+		if ( write_err )
+		{
+			LogErr("csg::CSocketServer::handleWrite write some,ex=" << write_err.message());
+			disconnect(session);
+			return;
+		} else
+		{
+			LogDebug("csg::CSocketServer::handleWrite write some,complete size=" << wlen);
+		}
+		CThread::sleep_for(1000);
+		//session->getSocket()->async_write_some(boost::asio::null_buffers() ,boost::bind(&CSocketServer::handleWrite ,this ,session ,boost::asio::placeholders::error));
+	}
 }
 

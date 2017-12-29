@@ -1,7 +1,7 @@
 #include "engine/rpc/rmiObjectAdapter.h"
 
 using namespace csg;
-/*
+
 bool csg::CRMIObjectAdapter::addRmiObject(const std::string& endPoint,const CRMIObjectPtr& rmiObject)
 {
 	CAutoLock l(getLock());
@@ -50,4 +50,3 @@ CLock& csg::CRMIObjectAdapter::getLock()
 {
 	return _lock;
 }
-*/

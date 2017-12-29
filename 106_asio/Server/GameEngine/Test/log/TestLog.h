@@ -43,6 +43,21 @@ void startClient()
 	CSocketClient client;
 	client.init(localhost_url ,test_royalchen_port ,false);
 	client.startConnect();
+
+	LogDebug("only q will exit,watting.....");
+	do
+	{
+		std::string inputStr;
+		getline(std::cin ,inputStr);
+		if ( "b" == inputStr )
+		{
+			break;
+		} else if ( "c" == inputStr )
+		{
+			client.testWrite();
+		}
+	} while ( true );
+
 	onlyQForExit();
 }
 

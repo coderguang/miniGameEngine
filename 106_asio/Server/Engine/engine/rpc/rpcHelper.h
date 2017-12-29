@@ -6,7 +6,7 @@
 #include "rmiObject.h"
 #include "framework/DesignPattern/objectPool.h"
 
-/*
+
 namespace csg
 {
 	class CRpcHelper
@@ -22,5 +22,5 @@ namespace csg
 
 	};
 }
-*/
+
 #endif

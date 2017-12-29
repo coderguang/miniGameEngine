@@ -15,8 +15,22 @@ namespace csg
 
 		void startConnect();
 
+		void testWrite()
+		{
+			boost::system::error_code ex;
+			handleWrite(_session ,ex);
+		};
+
 	protected:
-		void handleConnect(CSessionPtr session ,boost::system::error_code ex);
+		void handleConnect(CSessionPtr& session ,boost::system::error_code ex);
+
+		void handleWrite(CSessionPtr& session ,boost::system::error_code ex);
+
+		void disconnect(CSessionPtr& session);
+
+		void startRead(CSessionPtr& session);
+
+		void handleRead(CSessionPtr& session ,boost::system::error_code error ,size_t bytes_transferred);
 
 	private:
 		std::string _ip;
