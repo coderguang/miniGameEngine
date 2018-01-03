@@ -2,7 +2,6 @@
 #include "engine/net/protocol/protocol.h"
 #include <limits.h>
 #include "../../rpc/rmiObject.h"
-#include "boost/smart_ptr/enable_shared_from_this.hpp"
 
 csg::CSession::CSession():_isInner(false),_status(ESessionStatusWaitConnecting),_sessionType(ESessionTypeClient)
 {
@@ -91,7 +90,7 @@ int csg::CSession::handleSendData(const CSessionPtr session ,const void* data ,c
 		return -1;
 	}
 	CAutoLock l(_writeLock);
-	return _protocol->handleSendData(shared_from_this(),data ,len);
+	return _protocol->handleSendData(this,data ,len);
 }
 
 int csg::CSession::handlePacketRecvData()
@@ -102,7 +101,7 @@ int csg::CSession::handlePacketRecvData()
 		return -1;
 	}
 	CAutoLock l(_readLock);
-	return _protocol->handleReadData(shared_from_this());
+	return _protocol->handleReadData(this);
 }
 
 int csg::CSession::getCallBackId()
@@ -135,33 +134,3 @@ bool csg::CSession::getCallBackObject(int callBackId ,CRMIObjectBindPtr& backObj
 	backObject = NULL;
 	return false;
 }
-
-// char* csg::CSession::getRecvDataPoint()
-// {
-// 	if ( NULL == _protocol )
-// 	{
-// 		assert(false);
-// 		return NULL;
-// 	}
-// 	CAutoLock l(_readLock);
-// 	return _protocol->getRecvDataPoint();
-// }
-// 
-// int csg::CSession::getRecvDataSize()
-// {
-// 	if ( NULL == _protocol )
-// 	{
-// 		assert(false);
-// 		return NULL;
-// 	}
-// 	return _protocol->getRecvDataSize();
-// }
-// void csg::CSession::addRecvDataSize(int len)
-// {
-// 	if ( NULL == _protocol )
-// 	{
-// 		assert(false);
-// 		return ;
-// 	}
-// 	_protocol->addRecvDataSize(len);
-// }

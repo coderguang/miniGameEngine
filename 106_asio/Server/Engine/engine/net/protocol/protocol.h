@@ -19,7 +19,7 @@ namespace csg
 
 	class CSession;
 
-	typedef boost::shared_ptr<CSession> CSessionPtr;
+	typedef CSmartPointShare<CSession> CSessionPtr;
 
 	class IProtocol :public virtual CRefObject
 	{

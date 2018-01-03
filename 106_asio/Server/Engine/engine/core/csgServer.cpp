@@ -5,6 +5,7 @@
 #include "framework/datetime/datetime.h"
 #include "../baseServer/updateDtTask.h"
 #include "../net/session/sessionMgr.h"
+#include "../baseServer/SocketServer.h"
 
 void csg::CCsgServer::init()
 {
@@ -32,6 +33,22 @@ void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
 void csg::CCsgServer::startMainLogicServer()
 {
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, CSessionMgr::instance()));
+}
+
+bool csg::CCsgServer::startListenServer(int port, bool isInner, int sessionType)
+{
+	std::map<int, boost_CSocketServer_ptr>::iterator it = _mapSocket.find(port);
+	if (it != _mapSocket.end()) {
+		LogErr("CCsgServer::startListenServer,duplicate port=" << port);
+		assert(false);
+		return false;
+	}
+
+	boost_CSocketServer_ptr srv(new CSocketServer());
+	srv->init(port, isInner, sessionType);
+	srv->startListen();
+	_mapSocket[port] = srv;
+	return true;
 }
 
 void csg::CCsgServer::stop()

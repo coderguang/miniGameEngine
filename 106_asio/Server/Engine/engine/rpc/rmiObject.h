@@ -14,7 +14,7 @@ namespace csg
 {
 
 	class CSession;
-	typedef boost::shared_ptr<CSession> CSessionPtr;
+	typedef CSmartPointShare<CSession> CSessionPtr;
 
 	typedef std::map<int ,SRMIInfo> MapRMIInfo;
 	typedef std::set<SRMIInfo> SetRMIInfo;

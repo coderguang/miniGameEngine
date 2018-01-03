@@ -38,8 +38,8 @@ void startSrv()
 	srv.init(test_royalchen_port ,false ,ESessionTypeClient);
 	srv.startListen();
 	onlyQForExit();
-	CSessionMgr::instance()->disconnectAll();
-	srv.stop();
+// 	CSessionMgr::instance()->disconnectAll();
+// 	srv.stop();
 }
 
 void startSrvEx() {
@@ -92,6 +92,11 @@ void testAsio(Json::Value& js)
 		case 3:
 		{
 			startSrvEx();
+		}
+		break;
+		case 4: 
+		{
+			CCsgServer::instance()->startListenServer(test_royalchen_port, false, ESessionTypeClient);
 		}
 		break;
 	}

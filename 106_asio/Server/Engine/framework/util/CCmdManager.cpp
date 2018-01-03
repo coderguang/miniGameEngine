@@ -53,7 +53,7 @@ bool csg::CCmdManager::dealCmd(std::string& cmdStr)
 		LogErr("deal cmd occure exception,key=" << cmdKey << ",ex=" << ex.what());
 	} catch ( ... )
 	{
-		LogErr("deal cmd occure exception,key=" << cmdKey << "unknow exception");
+		LogErr("deal cmd occure exception,key=" << cmdKey << "unknow exception,you should check your own function,not json error");
 	}
 	return true;
 }

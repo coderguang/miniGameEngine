@@ -5,6 +5,7 @@
 #include "../baseServer/updateDtTask.h"
 #include "../baseServer/loggerWritter.h"
 #include "boost/smart_ptr/shared_ptr.hpp"
+#include "../baseServer/SocketServer.h"
 
 
 namespace csg
@@ -21,6 +22,8 @@ namespace csg
 
 		void startMainLogicServer();
 
+		bool startListenServer(int port, bool isInner, int sessionType);
+
 		void stop();
 	public:
 
@@ -28,6 +31,7 @@ namespace csg
 	private:
 		boost::shared_ptr<CUpdateDtTask> _dt;
 		boost::shared_ptr<CLoggerWritterTask> _logger;
+		std::map<int, boost_CSocketServer_ptr> _mapSocket;
 	};
 }
 #endif

@@ -61,7 +61,7 @@ void csg::CSocketServer::handleAccept(CSessionPtr session ,const boost::system::
 		session->setProtocol(protocol);
 		session->setStatus(ESessionStatusConnected);
 		CSessionMgr::instance()->addSession(session);
-		//startRead(session);
+		startRead(session);
 		startAccept();
 	} else
 	{
@@ -101,7 +101,7 @@ void csg::CSocketServer::handleRead(CSessionPtr session ,boost::system::error_co
 	} else
 	{
 		session->handleRecvData(tt ,len);
-		LogDebug("CSocketServer::handleRead,msg="<< ",read size=" << len);
+		LogDebug("CSocketServer::handleRead"<< ",read size=" << len);
 	}
 
 	//session->getSocket()->async_write_some(boost::asio::null_buffers() ,boost::bind(&CSocketServer::handleWrite ,this ,session ,boost::asio::placeholders::error));

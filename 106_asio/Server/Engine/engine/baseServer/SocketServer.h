@@ -41,5 +41,8 @@ namespace csg
 		boost_acceptor_ptr acceptor;
 	};
 
+
+	typedef boost::shared_ptr<CSocketServer> boost_CSocketServer_ptr;
+
 }
 #endif
