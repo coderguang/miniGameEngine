@@ -10,6 +10,7 @@
 #include "engine/baseServer/SocketServer.h"
 #include "../TestDef.h"
 #include "engine/baseServer/SocketClient.h"
+#include "engine/net/session/sessionMgr.h"
 
 using namespace csg;
 
@@ -37,7 +38,19 @@ void startSrv()
 	srv.init(test_royalchen_port ,false ,ESessionTypeClient);
 	srv.startListen();
 	onlyQForExit();
+	CSessionMgr::instance()->disconnectAll();
+	srv.stop();
 }
+
+void startSrvEx() {
+	boost::shared_ptr<CSocketServer> srv(new CSocketServer());
+	srv->init(test_royalchen_port, false, ESessionTypeClient);
+	srv->startListen();
+	onlyQForExit();
+	//CSessionMgr::instance()->disconnectAll();
+	//srv->stop();
+}
+
 void startClient()
 {
 	CSocketClient client;
@@ -74,6 +87,11 @@ void testAsio(Json::Value& js)
 		case 2:
 		{
 			startClient();
+		}
+		break;
+		case 3:
+		{
+			startSrvEx();
 		}
 		break;
 	}

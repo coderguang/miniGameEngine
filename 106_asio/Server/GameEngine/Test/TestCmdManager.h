@@ -7,8 +7,14 @@
 
 using namespace csg;
 
+void quickTest() {
+	//startSrv();
+	//startSrvEx();
+}
+
 void startRegistCmd()
 {
+	quickTest();
 	LogDebug("start regist cmd........");
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
 

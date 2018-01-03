@@ -5,6 +5,7 @@
 #include "../../def/boost_def.h"
 #include "framework/SmartPoint/smartPoint.h"
 #include "../protocol/protocol.h"
+#include "boost/smart_ptr/enable_shared_from_this.hpp"
 
 namespace csg
 {
@@ -35,9 +36,9 @@ namespace csg
 	typedef std::map<std::string ,MapRMIObject> MapEndPointRMIObject; //区分哪些连接可以使用哪些接口
 
 	class CSession;
-	typedef CSmartPointShare<CSession> CSessionPtr;
+	typedef boost::shared_ptr<CSession> CSessionPtr;
 
-	class CSession:public virtual CRefObject
+	class CSession:public virtual boost::enable_shared_from_this<CSession>
 	{
 	public:
 		CSession();
@@ -69,7 +70,7 @@ namespace csg
 
 		int handleRecvData(const void* inData ,const int len);
 
-		int handleSendData(const CSessionPtr& session ,const void* data ,const int len);
+		int handleSendData(const CSessionPtr session ,const void* data ,const int len);
 
 		int handlePacketRecvData();
 

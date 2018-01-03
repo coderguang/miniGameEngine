@@ -54,3 +54,14 @@ void csg::CSessionMgr::runLoop()
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, this));
 }
 
+void csg::CSessionMgr::disconnectAll()
+{
+	CAutoLock l(_lock);
+	for (MapTypeSession::iterator it = _sessionMap.begin();it != _sessionMap.end();++it)
+		for (MapSession::iterator itEx = it->second.begin();itEx != it->second.end();++itEx) {
+			if (itEx->second)
+				itEx->second->getSocket()->close();
+		}
+
+}
+

@@ -19,7 +19,7 @@ namespace csg
 
 	class CSession;
 
-	typedef CSmartPointShare<CSession> CSessionPtr;
+	typedef boost::shared_ptr<CSession> CSessionPtr;
 
 	class IProtocol :public virtual CRefObject
 	{
@@ -33,11 +33,11 @@ namespace csg
 		// IO线程接收数据
 		virtual int handleRecvData(const void* inData ,const int len) = 0;
 		// 逻辑线程压包
-		virtual int handleSendData(const CSessionPtr& session ,const void* data ,const int len) = 0;
+		virtual int handleSendData(const CSessionPtr session ,const void* data ,const int len) = 0;
 		// 逻辑线程解包
-		virtual int handleReadData(const CSessionPtr& session) = 0;
+		virtual int handleReadData(const CSessionPtr session) = 0;
 		// IO线程发送数据
-		virtual int handleWriteData(const CSessionPtr& session) = 0;
+		virtual int handleWriteData(const CSessionPtr session) = 0;
 
 	protected:
 		CAutoSerializeStream _recvBuffer;

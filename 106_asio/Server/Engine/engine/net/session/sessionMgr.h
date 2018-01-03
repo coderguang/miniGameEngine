@@ -19,6 +19,7 @@ namespace csg
 
 		void runLoop();
 
+		void disconnectAll();
 	private:
 		static int socketId;
 		MapTypeSession _sessionMap;

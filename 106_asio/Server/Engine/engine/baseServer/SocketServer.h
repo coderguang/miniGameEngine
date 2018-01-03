@@ -4,10 +4,11 @@
 #include "framework/SmartPoint/refObject.h"
 #include "../def/boost_def.h"
 #include "../net/session/session.h"
+#include "boost/smart_ptr/enable_shared_from_this.hpp"
 
 namespace csg
 {
-	class CSocketServer:public virtual CRefObject
+	class CSocketServer:public virtual boost::enable_shared_from_this<CSocketServer>
 	{
 	public:
 		void init(int port ,bool isInner ,int sessionType);
@@ -18,18 +19,20 @@ namespace csg
 
 		void startListen();
 	
+		void stop();
+
 	protected:
 		void startAccept();
 
 		void handleAccept(CSessionPtr session ,const boost::system::error_code& err);
 
-		void startRead(CSessionPtr& session);
+		void startRead(CSessionPtr session);
 
-		void handleRead(CSessionPtr& session ,boost::system::error_code error ,size_t bytes_transferred);
+		void handleRead(CSessionPtr session ,boost::system::error_code error ,size_t bytes_transferred);
 
-		void disconnect(CSessionPtr& session);
+		void disconnect(CSessionPtr session);
 
-		void handleWrite(CSessionPtr& session ,boost::system::error_code ex);
+		void handleWrite(CSessionPtr session ,boost::system::error_code ex);
 
 	private:
 		int _port;

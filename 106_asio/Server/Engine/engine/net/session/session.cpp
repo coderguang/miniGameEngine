@@ -2,6 +2,7 @@
 #include "engine/net/protocol/protocol.h"
 #include <limits.h>
 #include "../../rpc/rmiObject.h"
+#include "boost/smart_ptr/enable_shared_from_this.hpp"
 
 csg::CSession::CSession():_isInner(false),_status(ESessionStatusWaitConnecting),_sessionType(ESessionTypeClient)
 {
@@ -82,7 +83,7 @@ int csg::CSession::handleRecvData(const void* inData ,const int len)
 	return _protocol->handleRecvData(inData ,len);
 }
 
-int csg::CSession::handleSendData(const CSessionPtr& session ,const void* data ,const int len)
+int csg::CSession::handleSendData(const CSessionPtr session ,const void* data ,const int len)
 {
 	if ( NULL == _protocol )
 	{
@@ -90,7 +91,7 @@ int csg::CSession::handleSendData(const CSessionPtr& session ,const void* data ,
 		return -1;
 	}
 	CAutoLock l(_writeLock);
-	return _protocol->handleSendData(this ,data ,len);
+	return _protocol->handleSendData(shared_from_this(),data ,len);
 }
 
 int csg::CSession::handlePacketRecvData()
@@ -101,7 +102,7 @@ int csg::CSession::handlePacketRecvData()
 		return -1;
 	}
 	CAutoLock l(_readLock);
-	return _protocol->handleReadData(this);
+	return _protocol->handleReadData(shared_from_this());
 }
 
 int csg::CSession::getCallBackId()

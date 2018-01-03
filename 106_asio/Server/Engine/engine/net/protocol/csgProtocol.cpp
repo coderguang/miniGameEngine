@@ -15,7 +15,7 @@ int csg::CCsgProtocol::handleRecvData(const void* inData, const int len)
 	return 0;
 }
 
-int csg::CCsgProtocol::handleSendData(const CSessionPtr& session, const void* data, const int len)
+int csg::CCsgProtocol::handleSendData(const CSessionPtr session, const void* data, const int len)
 {
 	CAutoLock l(_writeLock);
 	_sendBuffer->append(data, len);
@@ -23,7 +23,7 @@ int csg::CCsgProtocol::handleSendData(const CSessionPtr& session, const void* da
 	return 0;
 }
 
-int csg::CCsgProtocol::handleReadData(const CSessionPtr& session)
+int csg::CCsgProtocol::handleReadData(const CSessionPtr session)
 {
 	do
 	{
@@ -66,13 +66,13 @@ int csg::CCsgProtocol::handleReadData(const CSessionPtr& session)
 	return 0;
 }
 
-int csg::CCsgProtocol::handleWriteData(const CSessionPtr& session)
+int csg::CCsgProtocol::handleWriteData(const CSessionPtr session)
 {
 
 	return 0;
 }
 
-int csg::CCsgProtocol::handlePacket(const CSessionPtr& session, const void *packageData, const int len)
+int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packageData, const int len)
 {
 	CAutoSerializeStream is(CSerializeStreamPool::instance()->newObject());
 	is->append(packageData, len);
@@ -152,7 +152,7 @@ int csg::CCsgProtocol::handlePacket(const CSessionPtr& session, const void *pack
 	return true;
 }
 
-int csg::CCsgProtocol::handleWriteDataEx(const CSessionPtr& session, boost::system::error_code err)
+int csg::CCsgProtocol::handleWriteDataEx(const CSessionPtr session, boost::system::error_code err)
 {
 	if (err)
 	{

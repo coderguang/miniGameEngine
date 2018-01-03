@@ -27,15 +27,20 @@ void csg::CSocketServer::startListen()
 	startAccept();
 }
 
+void csg::CSocketServer::stop()
+{
+	acceptor->close();
+}
+
 void csg::CSocketServer::startAccept()
 {
 	boost_socket_ptr socket(new boost_socket(*CCsgIoMgr::instance()->getIoService()));
-	CSessionPtr session = new CSession();
+	CSessionPtr session(new CSession());
 	session->setSocket(socket);
 	session->setInner(_isInner);
 	session->setType(_sessionType);
 	session->setStatus(ESessionStatusWaitConnecting);
-	acceptor->async_accept(*session->getSocket() ,boost::bind(&CSocketServer::handleAccept ,this ,session,boost::asio::placeholders::error));
+	acceptor->async_accept(*session->getSocket() ,boost::bind(&CSocketServer::handleAccept ,shared_from_this() ,session,boost::asio::placeholders::error));
 }
 
 void csg::CSocketServer::handleAccept(CSessionPtr session ,const boost::system::error_code& error)
@@ -56,23 +61,26 @@ void csg::CSocketServer::handleAccept(CSessionPtr session ,const boost::system::
 		session->setProtocol(protocol);
 		session->setStatus(ESessionStatusConnected);
 		CSessionMgr::instance()->addSession(session);
-		startRead(session);
+		//startRead(session);
 		startAccept();
 	} else
 	{
 		LogDebug("myAsioTest accept...,err=" << error.message() << ",code=" << error.value());
-		startAccept();
+		if(error!= boost::asio::error::operation_aborted)
+			startAccept();
+		else
+			LogDebug("myAsioTest accept...other error,err=" << error.message() << ",code=" << error.value());
 	}
 }
 
-void csg::CSocketServer::startRead(CSessionPtr& session)
+void csg::CSocketServer::startRead(CSessionPtr session)
 {
 	session->getSocket()->non_blocking(true);
 	session->getSocket()->async_read_some(boost::asio::null_buffers() ,
-										  boost::bind(&CSocketServer::handleRead ,this ,session ,boost::asio::placeholders::error ,boost::asio::placeholders::bytes_transferred));
+										  boost::bind(&CSocketServer::handleRead , shared_from_this(),session ,boost::asio::placeholders::error ,boost::asio::placeholders::bytes_transferred));
 }
 
-void csg::CSocketServer::handleRead(CSessionPtr& session ,boost::system::error_code error ,size_t bytes_transferred)
+void csg::CSocketServer::handleRead(CSessionPtr session ,boost::system::error_code error ,size_t bytes_transferred)
 {
 	if ( error )
 	{
@@ -101,14 +109,14 @@ void csg::CSocketServer::handleRead(CSessionPtr& session ,boost::system::error_c
 	startRead(session);
 }
 
-void csg::CSocketServer::disconnect(CSessionPtr& session)
+void csg::CSocketServer::disconnect(CSessionPtr session)
 {
 	session->getSocket()->close();
 	session->setStatus(ESessionStatusDisConnected);
 	CSessionMgr::instance()->delSession(session);
 }
 
-void csg::CSocketServer::handleWrite(CSessionPtr& session ,boost::system::error_code err)
+void csg::CSocketServer::handleWrite(CSessionPtr session ,boost::system::error_code err)
 {
 	if ( err )
 	{

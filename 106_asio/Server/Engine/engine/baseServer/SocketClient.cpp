@@ -5,7 +5,7 @@
 
 csg::CSocketClient::CSocketClient()
 {
-	_session = new CSession();
+	_session = CSessionPtr(new CSession());
 }
 
 void csg::CSocketClient::init(std::string ip ,int port,bool isInner)
@@ -30,7 +30,7 @@ void csg::CSocketClient::startConnect()
 	boost::asio::async_connect(*_session->getSocket(),iter ,boost::bind(&CSocketClient::handleConnect ,this ,_session,boost::asio::placeholders::error));
 }
 
-void csg::CSocketClient::handleConnect(CSessionPtr& session ,boost::system::error_code ex)
+void csg::CSocketClient::handleConnect(CSessionPtr session ,boost::system::error_code ex)
 {
 	if ( ex )
 	{
@@ -43,7 +43,7 @@ void csg::CSocketClient::handleConnect(CSessionPtr& session ,boost::system::erro
 	}
 }
 
-void csg::CSocketClient::handleWrite(CSessionPtr& session ,boost::system::error_code err)
+void csg::CSocketClient::handleWrite(CSessionPtr session ,boost::system::error_code err)
 {
 	if ( err )
 	{
@@ -69,20 +69,20 @@ void csg::CSocketClient::handleWrite(CSessionPtr& session ,boost::system::error_
 	}
 }
 
-void csg::CSocketClient::disconnect(CSessionPtr& session)
+void csg::CSocketClient::disconnect(CSessionPtr session)
 {
 	session->getSocket()->close();
 	session->setStatus(ESessionStatusDisConnected);
 }
 
-void csg::CSocketClient::startRead(CSessionPtr& session)
+void csg::CSocketClient::startRead(CSessionPtr session)
 {
 	session->getSocket()->non_blocking(true);
 	session->getSocket()->async_read_some(boost::asio::null_buffers() ,
 										  boost::bind(&CSocketClient::handleRead ,this ,session ,boost::asio::placeholders::error ,boost::asio::placeholders::bytes_transferred));
 }
 
-void csg::CSocketClient::handleRead(CSessionPtr& session ,boost::system::error_code error ,size_t bytes_transferred)
+void csg::CSocketClient::handleRead(CSessionPtr session ,boost::system::error_code error ,size_t bytes_transferred)
 {
 	if ( error )
 	{

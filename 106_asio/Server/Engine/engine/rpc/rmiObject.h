@@ -8,12 +8,13 @@
 #include "framework/exception/exception.h"
 #include "framework/SmartPoint/smartPoint.h"
 #include "engine/net/session/session.h"
+#include "boost/smart_ptr/shared_ptr.hpp"
 
 namespace csg
 {
 
 	class CSession;
-	typedef CSmartPointShare<CSession> CSessionPtr;
+	typedef boost::shared_ptr<CSession> CSessionPtr;
 
 	typedef std::map<int ,SRMIInfo> MapRMIInfo;
 	typedef std::set<SRMIInfo> SetRMIInfo;
