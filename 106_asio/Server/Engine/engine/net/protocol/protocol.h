@@ -26,7 +26,7 @@ namespace csg
 	public:
 
 		IProtocol() :_recvBuffer(CSerializeStreamPool::instance()->newObject()) ,
-			_sendBuffer(CSerializeStreamPool::instance()->newObject())
+			_sendBuffer(CSerializeStreamPool::instance()->newObject()),_receiveHead(false)
 		{
 
 		}
@@ -35,35 +35,15 @@ namespace csg
 		// 逻辑线程压包
 		virtual int handleSendData(const CSessionPtr& session ,const void* data ,const int len) = 0;
 		// 逻辑线程解包
-		virtual int handleReadData()
-		{
-			return 0;
-		};
+		virtual int handleReadData(const CSessionPtr& session) = 0;
 		// IO线程发送数据
-		virtual int handleWriteData()
-		{
-			return 0;
-		};
-
-		char* getRecvDataPoint()
-		{
-			return const_cast<char*>(_recvBuffer->getData());
-		};
-
-		int getRecvDataSize()
-		{
-			return _recvBuffer->getDataSize();
-		};
-
-		void addRecvDataSize(int len)
-		{
-			_recvBuffer->addDataSize(len);
-		};
+		virtual int handleWriteData(const CSessionPtr& session) = 0;
 
 	protected:
 		CAutoSerializeStream _recvBuffer;
 		CAutoSerializeStream _sendBuffer;
 		SProtocolHead _protocolHead;
+		bool _receiveHead;
 	};
 
 	typedef CSmartPointShare<IProtocol> IProtocolPtr;

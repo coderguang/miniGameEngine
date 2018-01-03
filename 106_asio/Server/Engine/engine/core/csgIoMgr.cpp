@@ -59,6 +59,11 @@ boost_io_service_ptr csg::CCsgIoMgr::getUpdateDtService()
 	return _ioUpdateDt;
 }
 
+boost_io_service_ptr csg::CCsgIoMgr::getLogicServer()
+{
+	return _ioLogic;
+}
+
 void csg::CCsgIoMgr::run()
 {
 	for ( int i = 0; i < _ioPool.size(); i++ )

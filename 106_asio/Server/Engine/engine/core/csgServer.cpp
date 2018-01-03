@@ -4,6 +4,7 @@
 #include "boost/asio/io_service.hpp"
 #include "framework/datetime/datetime.h"
 #include "../baseServer/updateDtTask.h"
+#include "../net/session/sessionMgr.h"
 
 void csg::CCsgServer::init()
 {
@@ -26,6 +27,11 @@ void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
 #endif
 	_logger->initLogMsgMap();
 	CCsgIoMgr::instance()->getLogService()->post(boost::bind(&CLoggerWritterTask::run ,_logger));
+}
+
+void csg::CCsgServer::startMainLogicServer()
+{
+	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, CSessionMgr::instance()));
 }
 
 void csg::CCsgServer::stop()

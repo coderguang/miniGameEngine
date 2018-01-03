@@ -71,15 +71,7 @@ namespace csg
 
 		int handleSendData(const CSessionPtr& session ,const void* data ,const int len);
 
-		//int handleReadData();
-
-		//int handleWriteData();
-
-// 		char* getRecvDataPoint();
-// 
-// 		int getRecvDataSize();
-// 
-// 		void addRecvDataSize(int len);
+		int handlePacketRecvData();
 
 	public:
 		//rpc

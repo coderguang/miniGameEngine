@@ -79,7 +79,7 @@ int csg::CSession::handleRecvData(const void* inData ,const int len)
 		return -1;
 	}
 	CAutoLock l(_readLock);
-	_protocol->handleRecvData(inData ,len);
+	return _protocol->handleRecvData(inData ,len);
 }
 
 int csg::CSession::handleSendData(const CSessionPtr& session ,const void* data ,const int len)
@@ -90,7 +90,18 @@ int csg::CSession::handleSendData(const CSessionPtr& session ,const void* data ,
 		return -1;
 	}
 	CAutoLock l(_writeLock);
-	_protocol->handleSendData(this ,data ,len);
+	return _protocol->handleSendData(this ,data ,len);
+}
+
+int csg::CSession::handlePacketRecvData()
+{
+	if (NULL == _protocol)
+	{
+		assert(false);
+		return -1;
+	}
+	CAutoLock l(_readLock);
+	return _protocol->handleReadData(this);
 }
 
 int csg::CSession::getCallBackId()

@@ -49,6 +49,8 @@ int main(int argc ,char **argv)
 	CCsgServer::instance()->startUpdateDtServer();
 	CCsgServer::instance()->startLogServer("./log" ,"TestLog");
 
+	CCsgServer::instance()->startMainLogicServer();
+
 	start_main(argc ,argv);
 
 	CCsgServer::instance()->stop();

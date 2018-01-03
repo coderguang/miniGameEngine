@@ -16,6 +16,9 @@ namespace csg
 		bool addSession(CSessionPtr& session);
 
 		bool delSession(CSessionPtr& session);
+
+		void runLoop();
+
 	private:
 		static int socketId;
 		MapTypeSession _sessionMap;

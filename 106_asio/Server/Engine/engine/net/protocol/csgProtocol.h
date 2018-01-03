@@ -2,6 +2,7 @@
 #define _ENGINE_NET_PROTOCOL_CSG_PROTOCOL_H_
 
 #include "protocol.h"
+#include "..\..\lock\lock.h"
 
 namespace csg
 {
@@ -12,15 +13,18 @@ namespace csg
 
 		virtual int handleSendData(const CSessionPtr& session ,const void* data ,const int len)override;
 
-		virtual int handleReadData()
-		{
-			return 0;
-		};
+		virtual int handleReadData(const CSessionPtr& session)override;
 
-		virtual int handleWriteData()
-		{
-			return 0;
-		};
+		virtual int handleWriteData(const CSessionPtr& session)override;
+
+	protected:
+		virtual int handlePacket(const CSessionPtr& session, const void *packageData, const int len);
+
+		virtual int handleWriteDataEx(const CSessionPtr& session, boost::system::error_code err);
+
+	private:
+		CLock _writeLock;
+	
 	};
 
 	typedef CSmartPointShare<CCsgProtocol> CCsgProtocolPtr;

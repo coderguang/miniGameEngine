@@ -19,7 +19,11 @@ namespace csg
 
 		void startLogServer(std::string path,std::string logFileName);
 
+		void startMainLogicServer();
+
 		void stop();
+	public:
+
 
 	private:
 		boost::shared_ptr<CUpdateDtTask> _dt;

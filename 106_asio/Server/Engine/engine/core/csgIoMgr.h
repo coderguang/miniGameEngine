@@ -21,6 +21,8 @@ namespace csg
 
 		boost_io_service_ptr getUpdateDtService();
 
+		boost_io_service_ptr getLogicServer();
+
 		void run();
 
 		void stop();
