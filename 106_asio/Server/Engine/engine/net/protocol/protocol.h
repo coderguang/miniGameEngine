@@ -5,6 +5,7 @@
 #include "framework/SmartPoint/smartPoint.h"
 #include "../session/session.h"
 #include "framework/DesignPattern/objectPool.h"
+#include "../../mq/msgBlock.h"
 
 namespace csg
 {
@@ -38,6 +39,8 @@ namespace csg
 		virtual int handleReadData(const CSessionPtr session) = 0;
 		// IO线程发送数据
 		virtual int handleWriteData(const CSessionPtr session) = 0;
+
+		virtual int pushMessage(const CSessionPtr session,const CMsgBlockPtr& mb) = 0;
 
 	protected:
 		CAutoSerializeStream _recvBuffer;

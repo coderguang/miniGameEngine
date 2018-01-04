@@ -3,7 +3,7 @@
 #include <limits.h>
 #include "../../rpc/rmiObject.h"
 
-csg::CSession::CSession():_isInner(false),_status(ESessionStatusWaitConnecting),_sessionType(ESessionTypeClient)
+csg::CSession::CSession():_isInner(false),_status(ESessionStatusWaitConnecting),_sessionType(ESessionTypeClient),_callBackId(1)
 {
 
 }
@@ -133,4 +133,14 @@ bool csg::CSession::getCallBackObject(int callBackId ,CRMIObjectBindPtr& backObj
 	}
 	backObject = NULL;
 	return false;
+}
+
+int csg::CSession::pushMessage(const CMsgBlockPtr& mb)
+{
+	if (NULL == _protocol)
+	{
+		assert(false);
+		return -1;
+	}
+	return _protocol->pushMessage(this,mb);
 }

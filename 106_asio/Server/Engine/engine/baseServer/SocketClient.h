@@ -3,10 +3,12 @@
 
 #include "framework/SmartPoint/refObject.h"
 #include "../net/session/session.h"
+#include "boost/smart_ptr/enable_shared_from_this.hpp"
+#include "../mq/msgBlock.h"
 
 namespace csg
 {
-	class CSocketClient :public virtual CRefObject
+	class CSocketClient :public virtual boost::enable_shared_from_this<CSocketClient>
 	{
 	public:
 		CSocketClient();
@@ -15,16 +17,12 @@ namespace csg
 
 		void startConnect();
 
-		void testWrite()
-		{
-			boost::system::error_code ex;
-			handleWrite(_session ,ex);
-		};
+		void pushMessage(const CMsgBlockPtr& mb);
+
+		CSessionPtr getSession();
 
 	protected:
 		void handleConnect(CSessionPtr session ,boost::system::error_code ex);
-
-		void handleWrite(CSessionPtr session ,boost::system::error_code ex);
 
 		void disconnect(CSessionPtr session);
 
@@ -39,6 +37,7 @@ namespace csg
 		CSessionPtr _session;
 	};
 
+	typedef boost::shared_ptr<CSocketClient> boost_CSocketClient_ptr;
 
 }
 #endif

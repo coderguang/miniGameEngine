@@ -72,6 +72,31 @@ int csg::CCsgProtocol::handleWriteData(const CSessionPtr session)
 	return 0;
 }
 
+int csg::CCsgProtocol::pushMessage(const CSessionPtr session,const CMsgBlockPtr& mb)
+{
+	CAutoSerializeStream  tmpOS(CSerializeStreamPool::instance()->newObject());
+
+	_csg_write(*tmpOS, ERMIMessageTypeMQ);
+	mb->_csg_write(*tmpOS);// _writeBody的时候写structType
+
+	//整合发送前的flag数据
+	tmpOS->prepareToAppend();
+
+	CAutoSerializeStream  sendOs(CSerializeStreamPool::instance()->newObject());
+	sendOs->writeSize(tmpOS->getFlagDataSize());
+	sendOs->append(tmpOS->getFlagData(), tmpOS->getFlagDataSize());
+	sendOs->append(tmpOS->getData(), tmpOS->getDataSize());
+
+	//加协议头
+	SProtocolHead head;
+	head.msgSize = sendOs->getDataSize();
+	CAutoSerializeStream addHeadOs(CSerializeStreamPool::instance()->newObject());
+	addHeadOs->append(&head, SIZE_OF_PROTOCOL_HEAD);
+	addHeadOs->append(sendOs->getData(), sendOs->getDataSize());
+
+	return handleSendData(session, addHeadOs->getData(), addHeadOs->getDataSize());
+}
+
 int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packageData, const int len)
 {
 	CAutoSerializeStream is(CSerializeStreamPool::instance()->newObject());
@@ -163,7 +188,7 @@ int csg::CCsgProtocol::handleWriteDataEx(const CSessionPtr session, boost::syste
 	{
 		LogDebug("CCsgProtocol::handleWriteDataEx handleWritet.....");
 		boost::system::error_code write_err;
-		int wlen = session->getSocket()->write_some(boost::asio::buffer(_sendBuffer->getData(),0), write_err);
+		int wlen = session->getSocket()->write_some(boost::asio::buffer(_sendBuffer->getData(),_sendBuffer->getDataSize()), write_err);
 		if (write_err)
 		{
 			LogErr("CCsgProtocol::handleWriteDataEx write some2,ex=" << write_err.message());

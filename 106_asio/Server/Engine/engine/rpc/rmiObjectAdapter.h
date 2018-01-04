@@ -20,7 +20,7 @@ namespace csg
 	{
 	public:
 
-		bool addRmiObject(const std::string& endPoint ,const CRMIObjectPtr& rmiObject);
+		bool addRmiObject(const std::string& endPoint ,const CRMIObjectPtr rmiObject);
 
 		bool findRmiObject(const std::string& endPoint ,MapRMIObject& mapRmiObject);
 

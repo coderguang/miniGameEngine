@@ -7,10 +7,16 @@
     <Filter Include="Src\log">
       <UniqueIdentifier>{191b03e4-ee42-4efd-ba6f-7036b338199d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Logic">
+      <UniqueIdentifier>{08b8ee84-e387-4a58-ae9f-85d95388ee60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\GameEngine\Test\main.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameEngine\Test\Logic\ITestImpl.cpp">
+      <Filter>Src\Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +28,9 @@
     </ClInclude>
     <ClInclude Include="..\..\GameEngine\Test\TestDef.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameEngine\Test\Logic\ITestImpl.h">
+      <Filter>Src\Logic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

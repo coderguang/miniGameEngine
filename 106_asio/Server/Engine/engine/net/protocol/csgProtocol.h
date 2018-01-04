@@ -17,6 +17,7 @@ namespace csg
 
 		virtual int handleWriteData(const CSessionPtr session)override;
 
+		virtual int pushMessage(const CSessionPtr session,const CMsgBlockPtr& mb)override;
 	protected:
 		virtual int handlePacket(const CSessionPtr session, const void *packageData, const int len);
 

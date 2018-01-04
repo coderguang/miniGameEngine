@@ -1,14 +1,14 @@
-#ifndef _MESSAGE_TEST_H_
-#define _MESSAGE_TEST_H_
+#ifndef _MESSAGE_TEST_STRUCT_H_
+#define _MESSAGE_TEST_STRUCT_H_
 
 // for test
-enum ETest{
-	ETestOne=1,
-	ETestTwo,
-	ETestThree=5,
+enum ETestStruct{
+	ETestOneEx=1,
+	ETestTwoEx,
+	ETestThreeEx=5,
 };
 
-["id":5] struct STest{
+["id":5] struct STestStruct{
 	int a;
 	bool b;
 	string str;

@@ -11,8 +11,12 @@
 #include "../TestDef.h"
 #include "engine/baseServer/SocketClient.h"
 #include "engine/net/session/sessionMgr.h"
+#include "../../Message/TestStruct.h"
+#include "../../Message/Test.h"
+#include "../logic/ITestImpl.h"
 
 using namespace csg;
+using namespace Message;
 
 void testDateTime()
 {
@@ -47,17 +51,29 @@ void startSrvEx() {
 	srv->init(test_royalchen_port, false, ESessionTypeClient);
 	srv->startListen();
 	onlyQForExit();
-	//CSessionMgr::instance()->disconnectAll();
-	//srv->stop();
 }
 
 void startClient()
 {
-	CSocketClient client;
-	client.init(localhost_url ,test_royalchen_port ,false);
-	client.startConnect();
+	boost_CSocketClient_ptr client(new CSocketClient());
+	client->init(localhost_url ,test_royalchen_port ,false);
+	client->startConnect();
 
 	LogDebug("only q will exit,watting.....");
+	STestStruct_Ptr t=new STestStruct();
+	t->a = 35356;
+	t->b = 342423;
+	t->ib.push_back(3);
+	t->ib.push_back(5);
+	t->str = "good,nice";
+
+	CMsgBlockPtr mb = new CMsgBlock();
+	mb->_msgHead.command = 988;
+	mb->_msgHead.fromId.id = 1992;
+	mb->_msgBase = t;
+
+
+	csg_proxy::ITest trpc;
 	do
 	{
 		std::string inputStr;
@@ -67,11 +83,18 @@ void startClient()
 			break;
 		} else if ( "c" == inputStr )
 		{
-			client.testWrite();
+			client->pushMessage(mb);
+		}
+		else if ("r" == inputStr) {
+			LogDebug("start rpc test");			
+			CCli_ITest_t3_CallBackPtr cb = new CCli_ITest_t3_CallBack();
+			trpc.t3_async(client->getSession(), cb, 2523, "oojigwoeg");
 		}
 	} while ( true );
 
 	onlyQForExit();
+
+
 }
 
 void testAsio(Json::Value& js)

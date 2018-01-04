@@ -2,7 +2,7 @@
 
 using namespace csg;
 
-bool csg::CRMIObjectAdapter::addRmiObject(const std::string& endPoint,const CRMIObjectPtr& rmiObject)
+bool csg::CRMIObjectAdapter::addRmiObject(const std::string& endPoint,const CRMIObjectPtr rmiObject)
 {
 	CAutoLock l(getLock());
 	assert(rmiObject);

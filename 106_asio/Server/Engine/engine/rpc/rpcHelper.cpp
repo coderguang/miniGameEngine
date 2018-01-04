@@ -41,12 +41,8 @@ void csg::CRpcHelper::toCall(const CSessionPtr& session ,CAutoSerializeStream& _
 	CAutoSerializeStream addHeadOs(CSerializeStreamPool::instance()->newObject());
 	addHeadOs->append(&head ,SIZE_OF_PROTOCOL_HEAD);
 	addHeadOs->append(tmpOs->getData() ,tmpOs->getDataSize());
-
-	//CSG_LOG_DEBUG("CRpcHelper::toCall,size=" << addHeadOs->getDataSize());
-
-	//int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
-
-	//CSG_LOG_DEBUG("CRpcHelper::toCall,sendSize=" <<sendSize);
+	
+	session->handleSendData(session, addHeadOs->getData(), addHeadOs->getDataSize());
 
 }
 
@@ -78,9 +74,5 @@ void csg::CRpcHelper::toReturn(const CSessionPtr& session ,CAutoSerializeStream&
 	addHeadOs->append(&head ,SIZE_OF_PROTOCOL_HEAD);
 	addHeadOs->append(tmpOs->getData() ,tmpOs->getDataSize());
 
-	//CSG_LOG_DEBUG("CRpcHelper::toReturn,size=" << addHeadOs->getDataSize());
-
-	//int sendSize=CSocketHelper::sendMsg(session->getSocketfd() ,addHeadOs->getData() ,addHeadOs->getDataSize());
-
-	//CSG_LOG_DEBUG("CRpcHelper::toReturn,sendSize=" <<sendSize);
+	session->handleSendData(session, addHeadOs->getData(), addHeadOs->getDataSize());
 }

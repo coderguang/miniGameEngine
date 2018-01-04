@@ -44,6 +44,20 @@ void start_main(int argc ,char** argv)
 
 int main(int argc ,char **argv)
 {
+
+	LogDebug("Program run in below environment !!!");
+#ifdef _DEBUG
+	LogDebug("_DEBUG set");
+#endif
+
+#ifdef CSG_WIN
+	LogDebug("CSG_WIN set");
+#endif
+
+#ifdef CSG_LINUX
+	LogDebug("CSG_LINUX set");
+#endif
+
 	CCsgServer::instance()->init();
 
 	CCsgServer::instance()->startUpdateDtServer();

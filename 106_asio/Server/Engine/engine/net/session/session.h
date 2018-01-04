@@ -5,6 +5,7 @@
 #include "../../def/boost_def.h"
 #include "framework/SmartPoint/smartPoint.h"
 #include "../protocol/protocol.h"
+#include "../../mq/msgBlock.h"
 
 namespace csg
 {
@@ -80,6 +81,10 @@ namespace csg
 		void addCallBackObject(int callBackId ,CRMIObjectBindPtr& object);
 
 		bool getCallBackObject(int callBackId ,CRMIObjectBindPtr& backObject);
+
+	public:
+		//msg
+		int pushMessage(const CMsgBlockPtr& mb);
 
 	private:
 		boost_socket_ptr _socket;
