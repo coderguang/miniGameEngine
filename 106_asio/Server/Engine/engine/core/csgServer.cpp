@@ -17,6 +17,7 @@ void csg::CCsgServer::startUpdateDtServer()
 {
 	_dt= boost::shared_ptr<CUpdateDtTask>(new CUpdateDtTask());
 	CCsgIoMgr::instance()->getUpdateDtService()->post(boost::bind(&CUpdateDtTask::run,_dt));
+	LogInfo("start update dt server complete!");
 }
 
 void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
@@ -28,11 +29,14 @@ void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
 #endif
 	_logger->initLogMsgMap();
 	CCsgIoMgr::instance()->getLogService()->post(boost::bind(&CLoggerWritterTask::run ,_logger));
+
+	LogInfo("start log server complete!");
 }
 
 void csg::CCsgServer::startMainLogicServer()
 {
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, CSessionMgr::instance()));
+	LogInfo("start update main logic server complete!");
 }
 
 bool csg::CCsgServer::startListenServer(int port, bool isInner, int sessionType)
@@ -48,6 +52,7 @@ bool csg::CCsgServer::startListenServer(int port, bool isInner, int sessionType)
 	srv->init(port, isInner, sessionType);
 	srv->startListen();
 	_mapSocket[port] = srv;
+	LogInfo("start listen server complete!port="<<port);
 	return true;
 }
 

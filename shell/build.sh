@@ -138,7 +138,12 @@ function clean_all(){
 
 }
 
+function update_svn_code(){
+	svn update $BUILD_ROOT_DIR/$VERSION	
+}
 
+
+update_svn_code
 clean_all
 build_engine
 build_libs

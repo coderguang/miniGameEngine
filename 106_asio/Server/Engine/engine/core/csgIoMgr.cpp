@@ -1,6 +1,7 @@
 #include "boost/asio.hpp"
 #include "framework/util/sysUtil.h"
 #include "engine/core/csgIoMgr.h"
+#include "framework/log/Log.h"
 
 void csg::CCsgIoMgr::init()
 {
@@ -8,10 +9,10 @@ void csg::CCsgIoMgr::init()
 	int sys_core_num = CSysUtil::getNumberOfProcessors();
 	sys_core_num = sys_core_num / 2;
 #ifdef _DEBUG
-	sys_core_num = 1;
+	sys_core_num = 2;
 #endif
-	sys_core_num = sys_core_num > 0 ? sys_core_num : 1;
-	
+	sys_core_num = sys_core_num > 2 ? sys_core_num : 2;
+
 	for(int i=0;i<sys_core_num;i++ ){
 		boost_io_service_ptr io_service(new boost_io_service);
 		boost_work_ptr work(new boost_work(*io_service));
@@ -72,6 +73,8 @@ void csg::CCsgIoMgr::run()
 		_threadPool.push_back(thread);
 	}
 
+	LogInfo("CCsgIoMgr::run start io_server num is "<<(int)_ioPool.size());
+
 	boost_thread_ptr threadLog(new boost::thread(boost::bind(&boost_io_service::run ,_ioLog)));
 	_threadPool.push_back(threadLog);
 
@@ -83,6 +86,8 @@ void csg::CCsgIoMgr::run()
 
 	boost_thread_ptr threadUpdateDt(new boost::thread(boost::bind(&boost_io_service::run ,_ioUpdateDt)));
 	_threadPool.push_back(threadUpdateDt);
+
+	LogInfo("CCsgIoMgr::run start thread num is " << (int)_threadPool.size());
 }
 
 void csg::CCsgIoMgr::stop()
