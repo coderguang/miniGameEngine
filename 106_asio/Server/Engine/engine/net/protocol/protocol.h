@@ -22,7 +22,7 @@ namespace csg
 
 	typedef CSmartPointShare<CSession> CSessionPtr;
 
-	class IProtocol :public virtual CRefObject
+	class IProtocol:public virtual CRefObject
 	{
 	public:
 
@@ -32,7 +32,7 @@ namespace csg
 
 		}
 		// IO线程接收数据
-		virtual int handleRecvData(const void* inData ,const int len) = 0;
+		virtual int handleRecvData(const CSessionPtr session, const void* inData ,const int len) = 0;
 		// 逻辑线程压包
 		virtual int handleSendData(const CSessionPtr session ,const void* data ,const int len) = 0;
 		// 逻辑线程解包

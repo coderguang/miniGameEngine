@@ -5,15 +5,17 @@
 
 csg::CSession::CSession():_isInner(false),_status(ESessionStatusWaitConnecting),_sessionType(ESessionTypeClient),_callBackId(1)
 {
-
+	//LogDebug("session constructor!!!")
 }
 
 csg::CSession::~CSession()
 {
 	if ( _socket )
-	{
+	{		
+		//LogDebug("session deconstructor close")
 		_socket->close();
 	}
+	//LogDebug("session deconstructor end....")
 }
 
 void csg::CSession::setInner(bool isInner)
@@ -78,8 +80,7 @@ int csg::CSession::handleRecvData(const void* inData ,const int len)
 		assert(false);
 		return -1;
 	}
-	CAutoLock l(_readLock);
-	return _protocol->handleRecvData(inData ,len);
+	return _protocol->handleRecvData(this,inData ,len);
 }
 
 int csg::CSession::handleSendData(const CSessionPtr session ,const void* data ,const int len)
@@ -89,7 +90,6 @@ int csg::CSession::handleSendData(const CSessionPtr session ,const void* data ,c
 		assert(false);
 		return -1;
 	}
-	CAutoLock l(_writeLock);
 	return _protocol->handleSendData(this,data ,len);
 }
 
@@ -100,7 +100,6 @@ int csg::CSession::handlePacketRecvData()
 		assert(false);
 		return -1;
 	}
-	CAutoLock l(_readLock);
 	return _protocol->handleReadData(this);
 }
 

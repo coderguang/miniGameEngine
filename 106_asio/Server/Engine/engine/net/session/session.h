@@ -95,8 +95,6 @@ namespace csg
 		int _socketId;
 	private:
 		IProtocolPtr _protocol;
-		CLock _readLock;
-		CLock _writeLock;
 
 	private:
 		MapRMIObject _rmiObjectMap; //该session 可以调用的远程接口

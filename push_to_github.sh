@@ -21,6 +21,8 @@ cur_dir=`pwd`
 
 svn update .
 
+msg=$1
+
 cd ../
 
 rsync -avz --delete --exclude='runnable' --exclude='.svn/' --exclude='.git' --exclude='*.log' --exclude='*.o' --exclude='*.a' --exclude='*.lib' --exclude='*.dll' --exclude='libboost_*' --exclude='Task.txt' --exclude='*.exe' --exclude='dbdata' GameWorld/ $dst_dir
@@ -28,7 +30,7 @@ rsync -avz --delete --exclude='runnable' --exclude='.svn/' --exclude='.git' --ex
 cd $dst_dir
 
 git add *
-git commit -a -m "rsync my code to github"
+git commit -a -m "$1"
 git push
 
 cd $cur_dir

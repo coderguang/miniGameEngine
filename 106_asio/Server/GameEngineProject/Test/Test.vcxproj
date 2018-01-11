@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\GameEngine\Test\Logic\ITestImpl.h" />
     <ClInclude Include="..\..\GameEngine\Test\log\TestLog.h" />
+    <ClInclude Include="..\..\GameEngine\Test\net\TestAsio.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestDef.h" />
   </ItemGroup>

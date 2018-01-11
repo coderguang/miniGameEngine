@@ -13,11 +13,11 @@ namespace csg
 	class CSessionMgr :public virtual Singleton<CSessionMgr>
 	{
 	public:
-		bool addSession(CSessionPtr& session);
+		bool addSession(CSessionPtr session);
 
-		bool delSession(CSessionPtr& session);
+		bool delSession(CSessionPtr session);
 
-		void runLoop();
+		//void runLoop(); 不要在逻辑线程内遍历sessionMgr，会阻塞锁
 
 		void disconnectAll();
 	private:

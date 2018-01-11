@@ -4,10 +4,11 @@
 #include "boost/asio/connect.hpp"
 #include "../net/protocol/csgProtocol.h"
 #include "../net/session/sessionMgr.h"
+#include "../net/protocol/protocol.h"
 
 csg::CSocketClient::CSocketClient()
 {
-	_session = CSessionPtr(new CSession());
+	_session =new CSession();
 }
 
 void csg::CSocketClient::init(std::string ip ,int port,bool isInner)
@@ -24,12 +25,9 @@ void csg::CSocketClient::startConnect()
 	boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
 
 	boost_socket_ptr socket(new boost::asio::ip::tcp::socket(*CCsgIoMgr::instance()->getIoService()));
-	CCsgProtocolPtr protocol = new CCsgProtocol();
-	_session->setProtocol(protocol);
 	_session->setSocket(socket);
 	_session->setInner(_isInner);
 	_session->setStatus(ESessionStatusWaitConnecting);
-	
 	boost::asio::async_connect(*_session->getSocket(),iter ,boost::bind(&CSocketClient::handleConnect ,shared_from_this() ,_session,boost::asio::placeholders::error));
 }
 
@@ -52,7 +50,10 @@ void csg::CSocketClient::handleConnect(CSessionPtr session ,boost::system::error
 	} else
 	{
 		LogDebug("CSocketClient::handleConnect connect...");
-		CSessionMgr::instance()->addSession(session);
+		IProtocolPtr protocol = new CCsgProtocol();
+		session->setProtocol(protocol);
+		session->setStatus(ESessionStatusConnected);
+		CSessionMgr::instance()->addSession(_session);
 		startRead(session);
 	}
 }

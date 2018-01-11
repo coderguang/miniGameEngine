@@ -7,6 +7,7 @@
 #include "../Message/TestStruct.h"
 #include "engine/rpc/rmiObjectAdapter.h"
 #include "logic/ITestImpl.h"
+#include "net/TestAsio.h"
 
 using namespace csg;
 using namespace Message;
@@ -32,6 +33,7 @@ void startRegistCmd()
 	registStruct();
 	LogDebug("start regist cmd........");
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
+	CCmdManager::instance()->registCmd("b", "test asio net ex", testAsioEx);
 
 }
 

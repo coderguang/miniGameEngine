@@ -15,7 +15,7 @@ namespace csg
 		virtual ~CMainLogicTask()
 		{
 		}
-		virtual int run();
+		virtual void run();
 	};
 }
 #endif

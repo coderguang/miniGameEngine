@@ -35,7 +35,8 @@ void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
 
 void csg::CCsgServer::startMainLogicServer()
 {
-	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, CSessionMgr::instance()));
+	_logic = boost::shared_ptr<CMainLogicTask>(new CMainLogicTask());
+	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CMainLogicTask::run,_logic));
 	LogInfo("start update main logic server complete!");
 }
 
@@ -58,5 +59,6 @@ bool csg::CCsgServer::startListenServer(int port, bool isInner, int sessionType)
 
 void csg::CCsgServer::stop()
 {
+	CSessionMgr::instance()->disconnectAll();
 	CCsgIoMgr::instance()->stop();
 }

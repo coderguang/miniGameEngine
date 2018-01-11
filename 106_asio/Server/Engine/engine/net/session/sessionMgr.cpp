@@ -3,8 +3,9 @@
 
 int csg::CSessionMgr::socketId = 100000;
 
-bool csg::CSessionMgr::addSession(CSessionPtr& session)
+bool csg::CSessionMgr::addSession(CSessionPtr session)
 {
+	LogDebug("CSessionMgr::addSession start...")
 	CAutoLock l(_lock);
 	int tmpId = socketId++;
 	session->setSocketId(tmpId);
@@ -22,7 +23,7 @@ bool csg::CSessionMgr::addSession(CSessionPtr& session)
 	return true;
 }
 
-bool csg::CSessionMgr::delSession(CSessionPtr& session)
+bool csg::CSessionMgr::delSession(CSessionPtr session)
 {
 	CAutoLock l(_lock);
 	MapTypeSession::iterator it = _sessionMap.find(session->getType());
@@ -42,17 +43,17 @@ bool csg::CSessionMgr::delSession(CSessionPtr& session)
 	return true;
 }
 
-void csg::CSessionMgr::runLoop()
-{
-	CAutoLock l(_lock);
-	for (MapTypeSession::iterator it = _sessionMap.begin();it != _sessionMap.end();++it)
-		for (MapSession::iterator itEx = it->second.begin();itEx != it->second.end();++itEx) {
-			if (itEx->second)
-				itEx->second->handlePacketRecvData();
-		}
-	CThread::sleep_for(100);
-	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, this));
-}
+// void csg::CSessionMgr::runLoop()
+// {
+// 	CAutoLock l(_lock);
+// 	for (MapTypeSession::iterator it = _sessionMap.begin();it != _sessionMap.end();++it)
+// 		for (MapSession::iterator itEx = it->second.begin();itEx != it->second.end();++itEx) {
+// 			if (itEx->second)
+// 				itEx->second->handlePacketRecvData();
+// 		}
+// 	CThread::sleep_for(100);
+// 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CSessionMgr::runLoop, this));
+// }
 
 void csg::CSessionMgr::disconnectAll()
 {

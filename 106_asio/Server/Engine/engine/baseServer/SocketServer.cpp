@@ -35,7 +35,7 @@ void csg::CSocketServer::stop()
 void csg::CSocketServer::startAccept()
 {
 	boost_socket_ptr socket(new boost_socket(*CCsgIoMgr::instance()->getIoService()));
-	CSessionPtr session(new CSession());
+	CSessionPtr session=new CSession();
 	session->setSocket(socket);
 	session->setInner(_isInner);
 	session->setType(_sessionType);
