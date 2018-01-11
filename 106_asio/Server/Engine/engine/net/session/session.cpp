@@ -85,6 +85,12 @@ int csg::CSession::handleRecvData(const void* inData ,const int len)
 
 int csg::CSession::handleSendData(const CSessionPtr session ,const void* data ,const int len)
 {
+	if (ESessionStatusConnected != getStatus())
+	{
+		LogErr("session not connection");
+		return -1;
+	}
+
 	if ( NULL == _protocol )
 	{
 		assert(false);

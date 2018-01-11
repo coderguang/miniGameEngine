@@ -153,6 +153,8 @@ void startClientLocalLoop()
 	client->init(localhost_url, test_royalchen_port, false);
 	client->startConnect();
 
+	CThread::sleep_for(2000);
+
 	LogDebug("only q will exit,watting.....");
 	STestStruct_Ptr t = new STestStruct();
 	t->a = 35356;
