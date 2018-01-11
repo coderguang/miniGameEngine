@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <set>
+#include <cassert>
+#include <json/json.h>
 
 //the following are UBUNTU/LINUX ONLY terminal color codes.
 #define RESET   "\033[0m"
@@ -40,6 +43,9 @@ extern FILE *yyout;
 ofstream ofs;
 ofstream ofscpp;
 
+fstream  jsonfs;
+ofstream  jsonofs;
+
 // headfile content
 CSGStream headDefStream;
 CSGStream endDefStream;
@@ -57,11 +63,17 @@ CSGStream outputInfo;
 CSGStream headInterfaceStream;
 CSGStream cppInterfaceStream;
 
-
-
 bool globalError=false;
 
 std::vector<std::string> structVec;
+
+
+//唯一key,id等
+MapStructId mapStructId;
+MapStructName mapStructName;
+MapInterfaceId mapInterfaceId;
+MapInterfaceFileName mapInterfaceFileName;
+std::string nowInputFile;
 
 %}
 // ifndef token
@@ -126,9 +138,45 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 	callBackDef<<"namespace "<<mNamespace<<"\n"
 				<<"{\n";
 
+	std::set<std::string> interfaceNameSet;
+
 	for(int i=0;i<interfaceList.size();i++){
 		CSGInterface tmp=interfaceList[i];
 		std::string functionName=tmp.funcName;
+		//check
+		if(interfaceNameSet.count(functionName)>0){
+			std::cerr<<"error interface function,duplicate function file:"<<interfaceName<<",identify:"<<functionName<<std::endl;
+			globalError=true;
+			assert(false);
+		}
+		interfaceNameSet.insert(functionName);
+
+		MapInterfaceId::iterator rpcIdIter=mapInterfaceId.find(tmp.rpcId);
+		if(rpcIdIter!=mapInterfaceId.end()){
+			if(rpcIdIter->second.interfaceFile!=interfaceClassName||rpcIdIter->second.interface!=functionName){
+				std::cout<<"rpcid:"<<tmp.rpcId<<" had already be use!"<<std::endl;
+				globalError=true;
+				assert(false);
+			}
+		}
+		MapInterfaceFileName::iterator fileIter=mapInterfaceFileName.find(interfaceClassName);
+		if(fileIter!=mapInterfaceFileName.end()){
+			MapInterfaceName::iterator nameIt=fileIter->second.find(functionName);
+			if(nameIt!=fileIter->second.end()){
+				if(nameIt->second.rpcId!=tmp.rpcId){
+				std::cout<<"interface functionName:"<<functionName<<" had already be use!"<<std::endl;
+				globalError=true;
+				assert(false);
+				}
+			}
+		}
+
+
+		CSGInterfaceKey tmpIkey;
+		tmpIkey.rpcId=tmp.rpcId;
+		tmpIkey.interface=functionName;
+		tmpIkey.interfaceFile=interfaceClassName;
+		mapInterfaceId[tmp.rpcId]=tmpIkey;
 
 		//class def
 		std::string srvCB=srvCBprefix+functionName;
@@ -147,11 +195,19 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		isFirstOutParam=true;
 		isFirstParam=true;
 
+		std::set<std::string> paramNameSet;
 		for(int j=0;j<tmp.paramList.size();j++){
 			CSGInterfaceParam param=tmp.paramList[j];
 			bool isOut=param.isOut;
 			std::string type=param.type;
 			std::string identify=param.identify;
+
+			if(paramNameSet.count(identify)>0){
+				std::cerr<<"error interface function,duplicate param file:"<<interfaceName<<",identify:"<<functionName<<",param:"<<identify<<std::endl;
+				globalError=true;
+				assert(false);
+			}
+			paramNameSet.insert(identify);
 
 			if(isOut){
 				if(isFirstOutParam){
@@ -462,17 +518,26 @@ enum : TOKEN_ENUM_START TOKEN_ENUM_CONTENT {
 	int minEnumValue=999999;
 	int maxEnumValue=-99999;
 	int lastValue=-1;
+	std::set<std::string> enumNameSet;
 	//generated enum code
 	CSGStream enumHeadfileStream;
 	enumHeadfileStream<<"	enum "+enumName+" {\n";
 	for(int i=0;i<$2.size();i++){
 		CSGEnum tmp=$2[i];
+		if(enumNameSet.count(tmp.identify)>0){
+			std::cerr<<"error enum value,duplicate enum identify:"<<enumName<<",identify:"<<tmp.identify<<std::endl;
+			globalError=true;
+			assert(false);
+		}
+		enumNameSet.insert(tmp.identify);
+
 		enumHeadfileStream<<"		"<<tmp.identify;
 		if(0!=tmp.value){
 			enumHeadfileStream<<" = "<<toStr(tmp.value);
 			if(lastValue>=tmp.value){
 				std::cerr<<"error enum value,less than last one,enum name:"<<enumName<<",identify:"<<tmp.identify<<std::endl;
 				globalError=true;
+				assert(false);
 			}
 			lastValue=tmp.value;
 		}else{
@@ -515,6 +580,32 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	std::string structName=$5;
 	structVec.push_back(structName);
 	int idNum=$2;
+
+	//check
+	MapStructId::iterator idIter=mapStructId.find(idNum);
+	if(idIter!=mapStructId.end()){
+		if(idIter->second.name!=structName||idIter->second.fileName!=nowInputFile){
+			std::cout<<"struct id="<<idNum<<" had be used by "<<std::endl;
+			globalError=true;
+			assert(false);
+		}
+	}
+	MapStructName::iterator nameIter=mapStructName.find(structName);
+	if(nameIter!=mapStructName.end()){
+		if(nameIter->second.id!=idNum||nameIter->second.fileName!=nowInputFile){
+			std::cout<<"struct name="<<structName<<" had be used by "<<std::endl;
+			globalError=true;
+			assert(false);
+		}
+	}
+
+	CSGStructKey tmpStructKey;
+	tmpStructKey.id=idNum;
+	tmpStructKey.name=structName;
+	tmpStructKey.fileName=nowInputFile;
+	mapStructId[idNum]=tmpStructKey;
+	mapStructName[structName]=tmpStructKey;
+
 	CSGStream structHeadfileStream;
 	structHeadfileStream<<"	class "<<structName<<"\n"
 						<<"		:public virtual csg::IMsgBase {\n"
@@ -528,8 +619,17 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	std::string operatorEqEq;
 	std::string operatorless;
 	
+	std::set<std::string> structNameSet;
+
 	for(int i=0;i<$6.size();i++){
 		CSGStruct tmp=$6[i];
+		if(structNameSet.count(tmp.identify)>0){
+			std::cerr<<"error struct value,duplicate name:"<<structName<<",identify:"<<tmp.identify<<std::endl;
+			globalError=true;
+			assert(false);
+		}
+		structNameSet.insert(tmp.identify);
+
 		std::string valueType;
 		if("int"==tmp.type){
 			initDef+=tmp.identify+"=0;\n	";
@@ -754,6 +854,56 @@ void yyerror(const char* s){
 	std::cerr<<"\033[31m"<<"get error:["<<s<<"]\033[0m"<<std::endl;
 }
 
+void csgReadJson(Json::Value& jsonInfo){
+	
+	for(Json::Value::iterator it=jsonInfo["struct"].begin();it!=jsonInfo["struct"].end();++it){
+		CSGStructKey key;
+		key.id=(*it)["id"].asInt();
+		key.name=(*it)["name"].asString();
+		key.fileName=(*it)["file"].asString();
+		mapStructId[key.id]=key;
+		mapStructName[key.name]=key;
+	}
+	for(Json::Value::iterator it=jsonInfo["interface"].begin();it!=jsonInfo["interface"].end();++it){
+		CSGInterfaceKey key;
+		key.rpcId=(*it)["rpcId"].asInt();
+		key.interface=(*it)["name"].asString();
+		key.interfaceFile=(*it)["file"].asString();
+		mapInterfaceId[key.rpcId]=key;
+		mapInterfaceFileName[key.interfaceFile][key.interface]=key;
+	}
+}
+
+
+void rewriteJson(){
+	jsonofs.open(jsonfile);
+	if(!jsonofs.is_open()){
+		std::cerr<<RED<<"can't open json_file by writer"<<jsonfile<<RESET<<std::endl;
+		return ;
+	}
+	Json::Value rewriteJs;
+	for(MapStructId::iterator it=mapStructId.begin();it!=mapStructId.end();++it){
+		Json::Value tmpJs;
+		tmpJs["id"]=it->second.id;
+		tmpJs["name"]=it->second.name;
+		tmpJs["file"]=it->second.fileName;
+		rewriteJs["struct"].append(tmpJs);
+	}
+	for(MapInterfaceId::iterator it=mapInterfaceId.begin();it!=mapInterfaceId.end();++it){	
+		Json::Value tmpJs;
+		tmpJs["rpcId"]=it->second.rpcId;
+		tmpJs["name"]=it->second.interface;
+		tmpJs["file"]=it->second.interfaceFile;
+		rewriteJs["interface"].append(tmpJs);
+	}
+
+	std::string rewriteStr=rewriteJs.toStyledString();
+	jsonofs<<rewriteStr;
+	jsonofs.flush();
+	jsonofs.close();
+	std::cout<<"rewrite js="<<rewriteStr<<std::endl;
+};
+
 
 int main(int argc,char **argv){
 	
@@ -761,7 +911,28 @@ int main(int argc,char **argv){
 	if(argc<4){
 		std::cerr<<RED<<"no enough param,first is csgl file ,next is outfile dir"<<RESET<<std::endl;
 	}
+	jsonfs.open(jsonfile);
+	if(!jsonfs.is_open()){
+		std::cerr<<RED<<"can't open json_file "<<jsonfile<<RESET<<std::endl;
+		return 1;
+	}
+	std::string jsonStr,lineStr;
+	Json::Value jsonInfo;
+	while(getline(jsonfs,lineStr)){
+		jsonStr.append(lineStr);
+	}
+	jsonfs.close();
+	Json::Reader reader;
+	if ( false == reader.parse(jsonStr ,jsonInfo) )
+	{
+		std::cerr<<RED<<"can't parse json_file "<<jsonfile<<RESET<<std::endl;
+		return 1;
+	}
+	csgReadJson(jsonInfo);
+
 	std::string inputfile(*(argv+3));
+	nowInputFile=inputfile;
+	std::cout<<"now inputfile is "<<nowInputFile<<std::endl;
 	std::string inputfileName=inputfile+".csgl";
 	std::string inputDir(*(argv+1));
 	std::string outputDir(*(argv+2));
@@ -797,8 +968,10 @@ int main(int argc,char **argv){
 	fclose(fp);
 
 	if(globalError){
-		return 0;
+		return 1;
 	}
+	rewriteJson();
+
 	std::cout<<GREEN<<"start generated head file "<<inputfileName<<RESET<<std::endl;
 	//generated headfile
 	csgOutputHead();

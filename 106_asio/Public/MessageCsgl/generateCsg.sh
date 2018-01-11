@@ -21,5 +21,5 @@ fi
 
 outputfile=../../Server/GameEngine/Message
 
-svn add $outputfile/*.h $outputfile/*.cpp
-svn commit -m "update message file by csgl" $outputfile
+#svn add $outputfile/*.h $outputfile/*.cpp
+#svn commit -m "update message file by csgl" $outputfile

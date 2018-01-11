@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <map>
 
 struct CSGEnum{
 	std::string identify;
@@ -104,6 +105,30 @@ struct CSGType{
 	}
 };
 
+
+//用于区分唯一key
+class CSGStructKey{
+public:
+	int id;
+	std::string name;
+	std::string fileName;
+};
+
+class CSGInterfaceKey{
+public:
+	int rpcId;
+	std::string interfaceFile;
+	std::string interface;	
+};
+
+typedef std::map<int,CSGStructKey> MapStructId;
+typedef std::map<std::string,CSGStructKey> MapStructName;
+
+typedef std::map<int,CSGInterfaceKey> MapInterfaceId;
+typedef std::map<std::string,CSGInterfaceKey> MapInterfaceName;
+typedef std::map<std::string,MapInterfaceName> MapInterfaceFileName;
+
+
 static std::string includeCsgFile="\
 #include \"engine/serialize/serializestream\.h\"\n\
 #include \"engine/def/csg_def\.h\"\n\
@@ -117,6 +142,9 @@ static std::string csgDefStr="\
 // email:royalchen@royalchen.com \n\
 // FAQ:www.royalchen.com\n\
 // ******************************************";
+
+
+static std::string jsonfile="../MessageCsgl/csgl.json";
 
 class CSGStream{
 public:
