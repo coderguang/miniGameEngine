@@ -57,6 +57,53 @@ namespace Message {
 
 	typedef csg::CSmartPointShare<STest> STest_Ptr;
 
+	class STestMap
+		:public virtual csg::IMsgBase {
+	public:
+		int  a;
+		std::map<int,int>  ii;
+		std::map<int,double>  il;
+		std::map<string,string>  ss;
+		std::map<int,float>  iff;
+
+	public:
+		STestMap();
+		STestMap(const STestMap &);
+		STestMap& operator=(const STestMap &);
+
+	public:
+		bool operator==(const STestMap &)const;
+		bool operator!=(const STestMap &)const;
+		bool operator<(const STestMap &)const;
+
+		void _csg_init();
+		void _csg_read(CSerializeStream&);
+		void _csg_write(CSerializeStream&)const;
+
+		virtual IMsgBase* clone();
+		virtual int getType()const;
+	private:
+		static const int _msgType = 6;
+	};
+
+	typedef csg::CSmartPointShare<STestMap> STestMap_Ptr;
+
+	class __Map_STestMap_int_int_Serialize_ {};
+	void __read(csg::CSerializeStream& __is,std::map<int,int>&,__Map_STestMap_int_int_Serialize_);
+	void __write(csg::CSerializeStream& __os,const std::map<int,int>&,__Map_STestMap_int_int_Serialize_);
+
+	class __Map_STestMap_int_double_Serialize_ {};
+	void __read(csg::CSerializeStream& __is,std::map<int,double>&,__Map_STestMap_int_double_Serialize_);
+	void __write(csg::CSerializeStream& __os,const std::map<int,double>&,__Map_STestMap_int_double_Serialize_);
+
+	class __Map_STestMap_string_string_Serialize_ {};
+	void __read(csg::CSerializeStream& __is,std::map<string,string>&,__Map_STestMap_string_string_Serialize_);
+	void __write(csg::CSerializeStream& __os,const std::map<string,string>&,__Map_STestMap_string_string_Serialize_);
+
+	class __Map_STestMap_int_float_Serialize_ {};
+	void __read(csg::CSerializeStream& __is,std::map<int,float>&,__Map_STestMap_int_float_Serialize_);
+	void __write(csg::CSerializeStream& __os,const std::map<int,float>&,__Map_STestMap_int_float_Serialize_);
+
 
 	class CTest{
 	public:

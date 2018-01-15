@@ -391,6 +391,136 @@ void CSerializeStream::read(std::vector<short>& vecShort)
 }
 
 
+void CSerializeStream::write(float fv) {
+	if (_useBitMark&&0.0 == fv) {
+		markBitFlag(true);
+	}
+	else {
+		markBitFlag(false);
+		int size = CBytesBuffer::getDataSize();
+		resize(size + SIZE_OF_FLOAT);
+		byte_t* dst = reinterpret_cast<byte_t*>(const_cast<char*>(CBytesBuffer::getData() + size));
+		memcpy(dst, &fv, SIZE_OF_FLOAT);
+	}
+}
+
+void CSerializeStream::write(const std::vector<float>& vf) {
+	int size = vf.size();
+	writeSize(size);
+	if (size > 0)
+	{
+		size_t dataSize = CBytesBuffer::getDataSize();
+		resize(size*SIZE_OF_FLOAT + dataSize);
+		char* dst = const_cast<char*>(CBytesBuffer::getData()) + dataSize;
+		for (int i = 0; i < size; i++)
+		{
+			float v = endian(vf[i]);
+			memcpy(dst, &v, SIZE_OF_FLOAT);
+			dst += SIZE_OF_FLOAT;
+		}
+	}
+}
+
+void CSerializeStream::read(float& fv) {
+	if (_useBitMark&&readBitFlag()) {
+		fv = 0.0;
+	}
+	else {
+		checkReadLength(SIZE_OF_FLOAT, "CSerializeStream::read(float& fv)");
+		byte_t* dst = reinterpret_cast<byte_t*>(getReadPoint());
+		memcpy(&fv, dst, SIZE_OF_FLOAT);
+		fv = endian(fv);
+		addReadIndex(SIZE_OF_FLOAT);
+	}
+
+}
+
+void CSerializeStream::read(std::vector<float>& vf) {
+	uint_t size;
+	readSize(size);
+	if (size > 0)
+	{
+		checkReadLength(size*SIZE_OF_FLOAT, "CSerializeStream::read(std::vector<float>& vf)");
+		byte_t *begin = reinterpret_cast<byte_t*>(getReadPoint());
+		vf.resize(size);
+		memcpy(&vf[0], begin, size*SIZE_OF_FLOAT);
+		for (int i = 0; i < size; i++)
+		{
+			vf[i] = endian(vf[i]);
+		}
+		addReadIndex(size*SIZE_OF_FLOAT);
+	}
+	else
+	{
+		vf.clear();
+	}
+}
+
+
+void CSerializeStream::write(double dv) {
+	if (_useBitMark&&0.0 == dv) {
+		markBitFlag(true);
+	}
+	else {
+		markBitFlag(false);
+		int size = CBytesBuffer::getDataSize();
+		resize(size + SIZE_OF_DOUBLE);
+		byte_t* dst = reinterpret_cast<byte_t*>(const_cast<char*>(CBytesBuffer::getData() + size));
+		memcpy(dst, &dv, SIZE_OF_DOUBLE);
+	}
+}
+
+void CSerializeStream::write(const std::vector<double>& vd) {
+	int size = vd.size();
+	writeSize(size);
+	if (size > 0)
+	{
+		size_t dataSize = CBytesBuffer::getDataSize();
+		resize(size*SIZE_OF_DOUBLE + dataSize);
+		char* dst = const_cast<char*>(CBytesBuffer::getData()) + dataSize;
+		for (int i = 0; i < size; i++)
+		{
+			double v = endian(vd[i]);
+			memcpy(dst, &v, SIZE_OF_DOUBLE);
+			dst += SIZE_OF_DOUBLE;
+		}
+	}
+}
+
+void CSerializeStream::read(double& dv) {
+	if (_useBitMark&&readBitFlag()) {
+		dv = 0.0;
+	}
+	else {
+		checkReadLength(SIZE_OF_DOUBLE, "CSerializeStream::read(float& fv)");
+		byte_t* dst = reinterpret_cast<byte_t*>(getReadPoint());
+		memcpy(&dv, dst, SIZE_OF_DOUBLE);
+		dv = endian(dv);
+		addReadIndex(SIZE_OF_DOUBLE);
+	}
+}
+
+void CSerializeStream::read(std::vector<double>& vd) {
+	uint_t size;
+	readSize(size);
+	if (size > 0)
+	{
+		checkReadLength(size*SIZE_OF_DOUBLE, "CSerializeStream::read(std::vector<double>& vd)");
+		byte_t *begin = reinterpret_cast<byte_t*>(getReadPoint());
+		vd.resize(size);
+		memcpy(&vd[0], begin, size*SIZE_OF_DOUBLE);
+		for (int i = 0; i < size; i++)
+		{
+			vd[i] = endian(vd[i]);
+		}
+		addReadIndex(size*SIZE_OF_DOUBLE);
+	}
+	else
+	{
+		vd.clear();
+	}
+}
+
 
 void CSerializeStream::write(int iv)
 {

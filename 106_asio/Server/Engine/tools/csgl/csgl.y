@@ -12,23 +12,44 @@
 #include <json/json.h>
 
 //the following are UBUNTU/LINUX ONLY terminal color codes.
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"      /* Black */
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define BLUE    "\033[34m"      /* Blue */
-#define MAGENTA "\033[35m"      /* Magenta */
-#define CYAN    "\033[36m"      /* Cyan */
-#define WHITE   "\033[37m"      /* White */
-#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+#ifdef _CSG_LINUX_
+	#define RESET   "\033[0m"
+	#define BLACK   "\033[30m"      /* Black */
+	#define RED     "\033[31m"      /* Red */
+	#define GREEN   "\033[32m"      /* Green */
+	#define YELLOW  "\033[33m"      /* Yellow */
+	#define BLUE    "\033[34m"      /* Blue */
+	#define MAGENTA "\033[35m"      /* Magenta */
+	#define CYAN    "\033[36m"      /* Cyan */
+	#define WHITE   "\033[37m"      /* White */
+	#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+	#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+	#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+	#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+	#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+	#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+	#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+	#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+#else
+	#define RESET   ""
+	#define BLACK   ""      /* Black */
+	#define RED     ""      /* Red */
+	#define GREEN   ""      /* Green */
+	#define YELLOW  ""      /* Yellow */
+	#define BLUE    ""      /* Blue */
+	#define MAGENTA ""      /* Magenta */
+	#define CYAN    ""      /* Cyan */
+	#define WHITE   ""      /* White */
+	#define BOLDBLACK   ""      /* Bold Black */
+	#define BOLDRED     ""      /* Bold Red */
+	#define BOLDGREEN   ""      /* Bold Green */
+	#define BOLDYELLOW  ""      /* Bold Yellow */
+	#define BOLDBLUE    ""      /* Bold Blue */
+	#define BOLDMAGENTA ""      /* Bold Magenta */
+	#define BOLDCYAN    ""      /* Bold Cyan */
+	#define BOLDWHITE   ""      /* Bold White */
+
+#endif
 
 using namespace std;
 
@@ -115,6 +136,7 @@ program : program statement|statement{};
 statement : define_line | comment |include | enum |struct |interface{};
 
 
+
 interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 	//classNameDef
 	std::string interfaceName=$1;
@@ -177,6 +199,7 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		tmpIkey.interface=functionName;
 		tmpIkey.interfaceFile=interfaceClassName;
 		mapInterfaceId[tmp.rpcId]=tmpIkey;
+		mapInterfaceFileName[interfaceClassName][functionName]=tmpIkey;
 
 		//class def
 		std::string srvCB=srvCBprefix+functionName;
@@ -493,6 +516,9 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 
 };
 
+
+
+
 define_line: TOKEN_IFNDEF TOKEN_IFNDEF_FILE TOKEN_IFNDEF_END {
 	headDefStream<<"#ifndef "<<$2<<"\n";
 }|TOKEN_IFDEF TOKEN_IFDEF_FILE TOKEN_IFDEF_END {
@@ -501,6 +527,12 @@ define_line: TOKEN_IFNDEF TOKEN_IFNDEF_FILE TOKEN_IFNDEF_END {
 	endDefStream<<$1<<"\n";
 };
 
+
+
+
+
+
+
 comment: TOKEN_COMMENT_START TOKEN_COMMENT_FILE TOKEN_COMMENT_END {
 	outputInfo<<"yacc match comment:"<<BOLDGREEN<<"//"<<$2<<"\r"<<RESET<<"\n";
 }|TOKEN_COMMENT_EX_START TOKEN_COMMENT_EX_FILE TOKEN_COMMENT_EX_END {
@@ -508,9 +540,23 @@ comment: TOKEN_COMMENT_START TOKEN_COMMENT_FILE TOKEN_COMMENT_END {
 }
 ;
 
+
+
+
+
+
+
+
+
 include: TOKEN_INCLUDE_START TOKEN_INCLUDE_SIGN TOKEN_INCLUDE_FILE TOKEN_INCLUDE_END {
 	headIncludeStream<<"#include \""+$3+"\"\n";
 };
+
+
+
+
+
+
 
 enum : TOKEN_ENUM_START TOKEN_ENUM_CONTENT {
 	
@@ -576,6 +622,18 @@ enum : TOKEN_ENUM_START TOKEN_ENUM_CONTENT {
 	cppContentStream<<enumCppStream.content;
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
 struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT_NAME TOKEN_STRUCT_CONTENT {
 	std::string structName=$5;
 	structVec.push_back(structName);
@@ -611,6 +669,9 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 						<<"		:public virtual csg::IMsgBase {\n"
 						<<"	public:\n";
 
+	CSGStream structHeadMapStream;
+	CSGStream structCppMapStream;
+
 	std::string initDef="	";
 	std::string readDef;
 	std::string writeDef;
@@ -631,6 +692,10 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 		structNameSet.insert(tmp.identify);
 
 		std::string valueType;
+		std::string tmpStlStr;
+		std::string tmpMapClassName;
+		bool isMapType=false;
+
 		if("int"==tmp.type){
 			initDef+=tmp.identify+"=0;\n	";
 		}else if("double"==tmp.type){
@@ -645,9 +710,70 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 		}else if("string"==tmp.type){
 			initDef+=tmp.identify+"=\"\";\n	";
 			valueType="std::string";
-		}else{
+		}else if(CSGStlTypeOne==tmp.stlTypeNum){
 			initDef+=tmp.identify+".clear();\n	"; 
-			valueType="std::"+tmp.type;
+			if("long"==tmp.stlType)
+				valueType="std::"+tmp.type+"<long64_t>";
+			else
+				valueType="std::"+tmp.type+"<"+tmp.stlType+">";
+		}else if(CSGStlTypeDouble==tmp.stlTypeNum){
+			isMapType=true;
+			initDef+=tmp.identify+".clear();\n	"; 
+			
+			std::string typeStr;
+			std::string typeStrEx;
+			if("long"==tmp.stlType){
+				typeStr="long64_t";
+			}
+			else{
+				typeStr=tmp.stlType;
+			}
+			if("long"==tmp.stlTypeEx){
+				typeStrEx="long64_t";
+			}
+			else{
+				typeStrEx=tmp.stlTypeEx;
+			}
+
+			tmpStlStr="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
+			valueType+="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
+
+
+
+			tmpMapClassName="__Map_"+structName+"_"+tmp.stlType+"_"+tmp.stlTypeEx+"_Serialize_";
+			structHeadMapStream<<"	class "<<tmpMapClassName<<" {};\n"
+								<<"	void __read(csg::CSerializeStream& __is,"<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n"
+								<<"	void __write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n\n";
+
+			structCppMapStream<<"void Message::__read(csg::CSerializeStream& __is,"<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
+								<<"{\n"
+								<<"	int size=0;\n"
+								<<"	__is.read(size);\n"
+								<<"	for(int i=0;i<size;i++)\n"
+								<<"	{\n"
+								<<"		"<<typeStr<<" key;\n"
+								<<"		__is.read(key);\n"
+								<<"		"<<typeStrEx<<" val;\n"
+								<<"		__is.read(val);\n"
+								<<"		__data[key]=val;\n"
+								<<"	}\n"
+								<<"};\n\n"
+								<<"void Message::__write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
+								<<"{\n"
+								<<"	int size=__data.size();\n"
+								<<"	__os.write(size);\n"
+								<<"	for("<<tmpStlStr<<"::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
+								<<"	{\n"
+								<<"		__os.write(it->first);\n"
+								<<"		__os.write(it->second);\n"
+								<<"	}\n"
+								<<"};\n\n";
+
+		}
+		else{
+			csgInfo("unknow struct type",tmp.type);
+			globalError=true;
+			assert(false);
 		};
 		if(""==valueType){
 			valueType=tmp.type;
@@ -655,8 +781,15 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 
 		structHeadfileStream<<"		"<<valueType<<"  "<<tmp.identify<<";\n";
 
-		readDef+="	__is.read("+tmp.identify+");\n";
-		writeDef+="	__os.write("+tmp.identify+");\n";
+		if(isMapType){
+			readDef+="	Message::__read(__is,"+tmp.identify+","+tmpMapClassName+"());\n";
+			writeDef+="	Message::__write(__os,"+tmp.identify+","+tmpMapClassName+"());\n";
+		}else{
+			readDef+="	__is.read("+tmp.identify+");\n";
+			writeDef+="	__os.write("+tmp.identify+");\n";
+		}
+
+
 
 		operatorEq+=tmp.identify+" = "+"__other."+tmp.identify+";\n	";
 
@@ -689,6 +822,7 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	structHeadfileStream<<"	typedef csg::CSmartPointShare<"<<structName<<"> "<<structName<<"_Ptr;\n\n";
 	
 	headfileContentStream<<structHeadfileStream.content;
+	headfileContentStream<<structHeadMapStream.content;
 
 	//generated cpp code
 	CSGStream structCppStream;
@@ -763,6 +897,8 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	structCppStream<<"void Message::"<<structName<<"::_csg_write(CSerializeStream& __os)const{\n"
 					<<writeDef<<"};\n\n";
 					
+	structCppStream<<structCppMapStream.content;
+
 	cppContentStream<<structCppStream.content;
 };
 
@@ -802,7 +938,8 @@ void csgInfo(std::string type,std::string s){
 		//return ;
 	}
 	
-	outputInfo<<YELLOW<<"csgl:"<<type<<","<<BOLDYELLOW<<"["<<s<<"]"<<RESET<<RESET<<"\n";
+	//outputInfo<<YELLOW<<"csgl:"<<type<<","<<BOLDYELLOW<<"["<<s<<"]"<<RESET<<RESET<<"\n";
+	std::cout<<YELLOW<<"csgl:"<<type<<","<<BOLDYELLOW<<"["<<s<<"]"<<RESET<<RESET<<"\n";
 }
 
 void csgOutputCppHead(std::string fileName){
@@ -852,6 +989,7 @@ void csgOutputEnd(std::string fileName){
 
 void yyerror(const char* s){
 	std::cerr<<"\033[31m"<<"get error:["<<s<<"]\033[0m"<<std::endl;
+	assert(false);
 }
 
 void csgReadJson(Json::Value& jsonInfo){
@@ -901,7 +1039,7 @@ void rewriteJson(){
 	jsonofs<<rewriteStr;
 	jsonofs.flush();
 	jsonofs.close();
-	std::cout<<"rewrite js="<<rewriteStr<<std::endl;
+	//std::cout<<"rewrite js="<<rewriteStr<<std::endl;
 };
 
 
@@ -968,6 +1106,7 @@ int main(int argc,char **argv){
 	fclose(fp);
 
 	if(globalError){
+		assert(false);
 		return 1;
 	}
 	rewriteJson();

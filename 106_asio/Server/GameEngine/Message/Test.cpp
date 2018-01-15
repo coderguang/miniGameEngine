@@ -131,9 +131,236 @@ void Message::STest::_csg_write(CSerializeStream& __os)const{
 	__os.write(ib);
 };
 
+Message::STestMap::STestMap()
+{
+	_csg_init();
+}
+
+Message::STestMap::STestMap(const STestMap& __other)
+{
+	if(this==&__other)
+	{
+		return;
+	}
+	*this=__other;
+}
+
+Message::STestMap& Message::STestMap::operator=(const STestMap& __other)
+{
+	if(this==&__other)
+	{
+		return *this;
+	}
+	IMsgBase::operator=(__other);
+	a = __other.a;
+	ii = __other.ii;
+	il = __other.il;
+	ss = __other.ss;
+	iff = __other.iff;
+	return *this;
+}
+
+int Message::STestMap::getType()const{
+	return _msgType;
+}
+
+csg::IMsgBase* Message::STestMap::clone()
+{
+	return new STestMap(*this);
+}
+
+bool Message::STestMap::operator==(const STestMap& __other)const
+{
+	return !operator!=(__other);
+}
+
+bool Message::STestMap::operator!=(const STestMap& __other)const
+{
+	if(this==&__other)
+	{
+		return false;
+	}
+	if(a != __other.a)
+	{
+		return true;
+	}
+	if(ii != __other.ii)
+	{
+		return true;
+	}
+	if(il != __other.il)
+	{
+		return true;
+	}
+	if(ss != __other.ss)
+	{
+		return true;
+	}
+	if(iff != __other.iff)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Message::STestMap::operator<(const STestMap& __other)const
+{
+	if(this==&__other)
+	{
+		return false;
+	}
+	if(a < __other.a)
+	{
+		return true;
+	}
+	if(ii < __other.ii)
+	{
+		return true;
+	}
+	if(il < __other.il)
+	{
+		return true;
+	}
+	if(ss < __other.ss)
+	{
+		return true;
+	}
+	if(iff < __other.iff)
+	{
+		return true;
+	}
+	return false;
+}
+
+void Message::STestMap::_csg_init(){
+	a=0;
+	ii.clear();
+	il.clear();
+	ss.clear();
+	iff.clear();
+	
+};
+
+void Message::STestMap::_csg_read(CSerializeStream& __is){
+	__is.read(a);
+	Message::__read(__is,ii,__Map_STestMap_int_int_Serialize_());
+	Message::__read(__is,il,__Map_STestMap_int_double_Serialize_());
+	Message::__read(__is,ss,__Map_STestMap_string_string_Serialize_());
+	Message::__read(__is,iff,__Map_STestMap_int_float_Serialize_());
+};
+
+void Message::STestMap::_csg_write(CSerializeStream& __os)const{
+	__os.write(a);
+	Message::__write(__os,ii,__Map_STestMap_int_int_Serialize_());
+	Message::__write(__os,il,__Map_STestMap_int_double_Serialize_());
+	Message::__write(__os,ss,__Map_STestMap_string_string_Serialize_());
+	Message::__write(__os,iff,__Map_STestMap_int_float_Serialize_());
+};
+
+void Message::__read(csg::CSerializeStream& __is,std::map<int,int>& __data,__Map_STestMap_int_int_Serialize_)
+{
+	int size=0;
+	__is.read(size);
+	for(int i=0;i<size;i++)
+	{
+		int key;
+		__is.read(key);
+		int val;
+		__is.read(val);
+		__data[key]=val;
+	}
+};
+
+void Message::__write(csg::CSerializeStream& __os,const std::map<int,int>& __data,__Map_STestMap_int_int_Serialize_)
+{
+	int size=__data.size();
+	__os.write(size);
+	for(std::map<int,int>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	{
+		__os.write(it->first);
+		__os.write(it->second);
+	}
+};
+
+void Message::__read(csg::CSerializeStream& __is,std::map<int,double>& __data,__Map_STestMap_int_double_Serialize_)
+{
+	int size=0;
+	__is.read(size);
+	for(int i=0;i<size;i++)
+	{
+		int key;
+		__is.read(key);
+		double val;
+		__is.read(val);
+		__data[key]=val;
+	}
+};
+
+void Message::__write(csg::CSerializeStream& __os,const std::map<int,double>& __data,__Map_STestMap_int_double_Serialize_)
+{
+	int size=__data.size();
+	__os.write(size);
+	for(std::map<int,double>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	{
+		__os.write(it->first);
+		__os.write(it->second);
+	}
+};
+
+void Message::__read(csg::CSerializeStream& __is,std::map<string,string>& __data,__Map_STestMap_string_string_Serialize_)
+{
+	int size=0;
+	__is.read(size);
+	for(int i=0;i<size;i++)
+	{
+		string key;
+		__is.read(key);
+		string val;
+		__is.read(val);
+		__data[key]=val;
+	}
+};
+
+void Message::__write(csg::CSerializeStream& __os,const std::map<string,string>& __data,__Map_STestMap_string_string_Serialize_)
+{
+	int size=__data.size();
+	__os.write(size);
+	for(std::map<string,string>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	{
+		__os.write(it->first);
+		__os.write(it->second);
+	}
+};
+
+void Message::__read(csg::CSerializeStream& __is,std::map<int,float>& __data,__Map_STestMap_int_float_Serialize_)
+{
+	int size=0;
+	__is.read(size);
+	for(int i=0;i<size;i++)
+	{
+		int key;
+		__is.read(key);
+		float val;
+		__is.read(val);
+		__data[key]=val;
+	}
+};
+
+void Message::__write(csg::CSerializeStream& __os,const std::map<int,float>& __data,__Map_STestMap_int_float_Serialize_)
+{
+	int size=__data.size();
+	__os.write(size);
+	for(std::map<int,float>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	{
+		__os.write(it->first);
+		__os.write(it->second);
+	}
+};
+
 void Message::CTest::regist()
 {
 	csg::CMsgManager::instance()->regist(new STest());
+	csg::CMsgManager::instance()->regist(new STestMap());
 }
 
 void Message::CSrv_ITest_t1::response()

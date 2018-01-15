@@ -1,1 +1,38 @@
-{}
+{
+	"interface" : 
+	[
+		{
+			"file" : "ITest",
+			"name" : "t1",
+			"rpcId" : 11
+		},
+		{
+			"file" : "ITest",
+			"name" : "t2",
+			"rpcId" : 12
+		},
+		{
+			"file" : "ITest",
+			"name" : "t3",
+			"rpcId" : 13
+		}
+	],
+	"struct" : 
+	[
+		{
+			"file" : "Test",
+			"id" : 1,
+			"name" : "STest"
+		},
+		{
+			"file" : "TestStruct",
+			"id" : 5,
+			"name" : "STestStruct"
+		},
+		{
+			"file" : "Test",
+			"id" : 6,
+			"name" : "STestMap"
+		}
+	]
+}

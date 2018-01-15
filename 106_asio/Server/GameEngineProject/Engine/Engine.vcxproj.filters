@@ -79,6 +79,9 @@
     <Filter Include="Src\engine\thread">
       <UniqueIdentifier>{9f1c5323-aaa7-45fd-8787-560e215a2d22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\framework\tool">
+      <UniqueIdentifier>{e34f5233-3553-4db0-85d5-c840cbcd3ad2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp">
@@ -382,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Engine\engine\net\protocol\csgProtocol.h">
       <Filter>Src\engine\net\protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\tool\debugTool.h">
+      <Filter>Src\framework\tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

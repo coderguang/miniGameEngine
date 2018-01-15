@@ -33,8 +33,9 @@ MAP "map"
 VOID "void"
 INTERFACE "interface"
 
-csgKey ({INT}|{BOOL}|{LONG}|{STRING})
-
+csgKey ({INT}|{BOOL}|{LONG}|{STRING}|{DOUBLE}|{FLOAT})
+csgStlOneKey ({VECTOR})
+csgStlDoubleKey ({MAP})
 
 
 %s _IFNDEF_START_ _IFNDEF_FILE_ _IFNDEF_END_
@@ -42,7 +43,9 @@ csgKey ({INT}|{BOOL}|{LONG}|{STRING})
 %s _COMMENT_START_ _COMMENT_FILE_ _COMMENT_EX_START_ _COMMENT_EX_FILE_ 
 %s _INCLUDE_START_ _INCLUDE_FILE_ _INCLUDE_END_
 %s _ENUM_START_ _ENUM_START_EX_ _ENUM_CONTENT_ _ENUM_CONTENT_VALUE_ _ENUM_CONTENT_VALUE_NUM_ _ENUM_CONTENT_VALUE_END_
-%s _STRUCT_START_ _STRUCT_NAME_ _STRUCT_CONTENT_TYPE_ _STRUCT_CONTENT_TYPE_IDENTIFY_ _STRUCT_CONTENT_TYPE_IDENTIFY_END_
+%s _STRUCT_START_ _STRUCT_NAME_ _STRUCT_CONTENT_TYPE_ _STRUCT_CONTENT_TYPE_IDENTIFY_ _STRUCT_CONTENT_TYPE_IDENTIFY_END_ 
+%s _STRUCT_STL_ONE_START_ _STRUCT_STL_ONE_LEFT_ _STRUCT_STL_ONE_KEY_ _STRUCT_STL_ONE_RIGHT_
+%s _STRUCT_STL_DOUBLE_START_ _STRUCT_STL_DOUBLE_LEFT_ _STRUCT_STL_DOUBLE_KEY_LEFT_ _STRUCT_STL_DOUBLE_MIN_ _STRUCT_STL_DOUBLE_KEY_RIGHT_ _STRUCT_STL_DOUBLE_RIGHT_
 %s _ID_START_ _ID_NUM_ _ID_END_
 %s _INTERFACE_START_ _INTERFACE_NAME_ _INTERFACE_CONTENT_ _INTERFACE_ID_START_ _INTERFACE_ID_NUM_ _INTERFACE_ID_END_ _INTERFACE_FUNCTION_NAME_ _INTERFACE_FUNCTION_END_ _INTERFACE_PARAM_ _INTERFACE_PARAM_TYPE_ _INTERFACE_PARAM_NAME_ _INTERFACE_PARAM_IDENTIFY_ _INTERFACE_PARAM_END_
 
@@ -264,17 +267,71 @@ csgKey ({INT}|{BOOL}|{LONG}|{STRING})
 	csgInfo("structtype",yytext);
 	yylval.tmpStructKey.type=yytext;
 };
-<_STRUCT_CONTENT_TYPE_>"vector<"{csgKey}">" {
-	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
-	csgInfo("structv",yytext);
+
+
+<_STRUCT_CONTENT_TYPE_>{csgStlOneKey} {
+	BEGIN _STRUCT_STL_ONE_START_;
+	csgInfo("get stl one",yytext);
+	yylval.tmpStructKey.stlTypeNum=CSGStlTypeOne;
 	yylval.tmpStructKey.type=yytext;
 };
 
-<_STRUCT_CONTENT_TYPE_>"map<"{csgKey}","{csgKey}">" {
+<_STRUCT_STL_ONE_START_>{blank}*"<"{blank}* {
+	BEGIN _STRUCT_STL_ONE_LEFT_;
+	csgInfo("get < info","stlone");
+};
+
+<_STRUCT_STL_ONE_LEFT_>{csgKey} {
+	BEGIN _STRUCT_STL_ONE_KEY_;
+	csgInfo("get stlone key",yytext);
+	yylval.tmpStructKey.stlType=yytext;
+};
+
+>
+<_STRUCT_STL_ONE_KEY_>{blank}*">"{blank}* {
 	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
-	csgInfo("structv",yytext);
+};
+
+
+
+<_STRUCT_CONTENT_TYPE_>{csgStlDoubleKey} {
+	BEGIN _STRUCT_STL_DOUBLE_START_;
+	csgInfo("get stl double",yytext);
+	yylval.tmpStructKey.stlTypeNum=CSGStlTypeDouble;
 	yylval.tmpStructKey.type=yytext;
 };
+<_STRUCT_STL_DOUBLE_START_>{blank}*"<"{blank}* {
+	BEGIN _STRUCT_STL_DOUBLE_LEFT_;
+	csgInfo("get stldouble <","stldouble");
+};
+
+<_STRUCT_STL_DOUBLE_LEFT_>{csgKey} {
+	BEGIN _STRUCT_STL_DOUBLE_KEY_LEFT_;
+	csgInfo("get stldouble left key",yytext);
+	yylval.tmpStructKey.stlType=yytext;
+};
+
+<_STRUCT_STL_DOUBLE_KEY_LEFT_>{blank}*","{blank}* {
+	BEGIN _STRUCT_STL_DOUBLE_MIN_;
+	csgInfo("get stldouble min",yytext);
+};
+
+<_STRUCT_STL_DOUBLE_MIN_>{csgKey} {
+	BEGIN _STRUCT_STL_DOUBLE_KEY_RIGHT_;
+	csgInfo("get stldouble right key",yytext);
+	yylval.tmpStructKey.stlTypeEx=yytext;
+};
+
+<_STRUCT_STL_DOUBLE_KEY_RIGHT_>{blank}*">"{blank}* {
+	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
+};
+
+<_STRUCT_CONTENT_TYPE_>{identify} {
+	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
+	csgInfo("struct by own",yytext);
+	yylval.tmpStructKey.type=yytext;
+};
+
 <_STRUCT_CONTENT_TYPE_IDENTIFY_>{identify} {
 	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_END_;
 	csgInfo("structIdentity",yytext);
@@ -440,9 +497,9 @@ csgKey ({INT}|{BOOL}|{LONG}|{STRING})
 
 .	{
 		std::string msg(yytext);
-		std::string msgEx="\033[31m assert(false)\033[0m,["+msg+"]";
-		csgInfo("unkonw",msgEx);
-		//assert(false);
+		std::string msgEx=msg;
+		csgInfo("unknow,not match anything",msgEx);
+		assert(false);
 	};
 
 <<EOF>>	{
@@ -492,6 +549,7 @@ int yywrap(void){
 .	{
 	std::string msg(yytext);
 	csgInfo("unknow",msg);
+	assert(false);
 	};
 
 

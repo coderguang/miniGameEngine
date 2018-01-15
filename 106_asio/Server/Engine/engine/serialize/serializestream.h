@@ -14,6 +14,8 @@ namespace csg
 	static const size_t SIZE_OF_INT_T = sizeof(int);
 	static const size_t SIZE_OF_SHORT_T = sizeof(short);
 	static const size_t SIZE_OF_LONG64_T = sizeof(long64_t);
+	static const size_t SIZE_OF_FLOAT = sizeof(float);
+	static const size_t SIZE_OF_DOUBLE = sizeof(double);
 	static const byte_t	FLAG_BIT_INIT = 0x80;// 1000 0000 
 	static const unsigned short	SIZE_SHORT_MAX = 0xFFFE;
 	static const unsigned short UNSIGNED_SHORT_MAX = 0xFFFF;
@@ -84,6 +86,20 @@ namespace csg
 		void write(const std::vector<short>&);
 		void read(short&);
 		void read(std::vector<short>&);
+
+
+		/**float**/
+		void write(float);
+		void write(const std::vector<float>&);
+		void read(float&);
+		void read(std::vector<float>&);
+
+		/*double*/
+		void write(double);
+		void write(const std::vector<double>&);
+		void read(double&);
+		void read(std::vector<double>&);
+
 
 		/**
 		* int data operation

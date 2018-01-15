@@ -11,7 +11,7 @@ SRCH_CSGL	:=csgl.hpp
 SRCL	:=$(OBJ).l	
 SRCY	:=$(OBJ).y
 CC	:= clang++
-CFLAGS	:= -std=c++11 -lstdc++ -D _Debug -g -w -I.
+CFLAGS	:= -std=c++11 -lstdc++ -D _Debug -g -w -I. -D _CSG_LINUX_
 LIBS	:=
 LEX	:= flex
 YACC :=bison

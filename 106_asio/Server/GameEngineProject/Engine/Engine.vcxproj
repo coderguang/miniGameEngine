@@ -251,6 +251,7 @@
     <ClInclude Include="..\..\Engine\framework\timer\timeNode.h" />
     <ClInclude Include="..\..\Engine\framework\timer\timer.h" />
     <ClInclude Include="..\..\Engine\framework\timer\timerManager.h" />
+    <ClInclude Include="..\..\Engine\framework\tool\debugTool.h" />
     <ClInclude Include="..\..\Engine\framework\util\CCmdManager.h" />
     <ClInclude Include="..\..\Engine\framework\util\endian.h" />
     <ClInclude Include="..\..\Engine\framework\util\sysUtil.h" />

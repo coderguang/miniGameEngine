@@ -34,12 +34,23 @@ struct CSGEnum{
 	}
 };
 
+enum CSGStlType{
+	CSGStlTypeOne=1,
+	CSGStlTypeDouble=2,
+};
+
 struct CSGStruct{
 	std::string type;
 	std::string identify;
+	int stlTypeNum;
+	std::string stlType; //针对vector,map等的解决方案
+	std::string stlTypeEx;
 	void clear(){
 		type="";
 		identify="";
+		stlType="";
+		stlTypeEx="";
+		stlTypeNum=0;
 	};
 
 };

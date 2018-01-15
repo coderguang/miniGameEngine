@@ -57,8 +57,8 @@ void startSrvEx() {
 void startClientRemote()
 {
 	boost_CSocketClient_ptr client(new CSocketClient());
-	client->init(test_royalchen_url ,test_royalchen_port ,false);
-	//client->init(localhost_url, test_royalchen_port, false);
+	//client->init(test_royalchen_url ,test_royalchen_port ,false);
+	client->init(localhost_url, test_royalchen_port, false);
 	client->startConnect();
 
 	LogDebug("only q will exit,watting.....");
@@ -74,6 +74,18 @@ void startClientRemote()
 	mb->_msgHead.fromId.id = 1992;
 	mb->_msgBase = t;
 
+	STestMap_Ptr tm = new STestMap();
+	tm->a = 99;
+	tm->ii[5] = 35;
+	tm->ii[6] = 36;
+	tm->il[1] = 1.95;
+	tm->il[2] = 9.474;
+	tm->ss["hihi"] = "good";
+	tm->ss["oo"] = "gwgwe";
+	tm->iff[8967] = 6.4888;
+	tm->iff[798] = 876.466;
+
+
 
 	csg_proxy::ITest trpc;
 	do
@@ -85,6 +97,11 @@ void startClientRemote()
 			break;
 		} else if ( "c" == inputStr )
 		{
+			mb->_msgBase = t;
+			client->pushMessage(mb);
+		}
+		else if ("e" == inputStr) {
+			mb->_msgBase = tm;
 			client->pushMessage(mb);
 		}
 		else if ("r" == inputStr) {
