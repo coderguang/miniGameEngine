@@ -243,6 +243,8 @@ csgStlDoubleKey ({MAP})
 	//yylval.clear();
 	return TOKEN_STRUCT_START;
 };
+
+
 <_STRUCT_START_>{identify}+ {
 	BEGIN _STRUCT_NAME_;
 	csgInfo("struct",yytext);
@@ -287,10 +289,20 @@ csgStlDoubleKey ({MAP})
 	yylval.tmpStructKey.stlType=yytext;
 };
 
->
+
+<_STRUCT_STL_ONE_LEFT_>{identify} {
+	BEGIN _STRUCT_STL_ONE_KEY_;
+	csgInfo("get stlone key identify",yytext);
+	yylval.tmpStructKey.stlType=yytext;
+	yylval.tmpStructKey.isStlTypeCsgl=true;
+};
+
+
+
 <_STRUCT_STL_ONE_KEY_>{blank}*">"{blank}* {
 	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
 };
+
 
 
 
@@ -341,6 +353,9 @@ csgStlDoubleKey ({MAP})
 <_STRUCT_CONTENT_TYPE_IDENTIFY_END_>";" {
 	BEGIN _STRUCT_CONTENT_TYPE_;
 }
+
+
+
 
 
 ^{space}*"interface"{blank}+ {

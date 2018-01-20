@@ -304,6 +304,11 @@ void startAsioClient() {
 
 
 	onlyQForExit();
+
+}
+
+void testAsio() {
+	
 }
 
 void testAsioEx(Json::Value& js) {

@@ -41,6 +41,7 @@ Message::STest& Message::STest::operator=(const STest& __other)
 	a = __other.a;
 	b = __other.b;
 	str = __other.str;
+	tt = __other.tt;
 	ib = __other.ib;
 	return *this;
 }
@@ -77,6 +78,10 @@ bool Message::STest::operator!=(const STest& __other)const
 	{
 		return true;
 	}
+	if(tt != __other.tt)
+	{
+		return true;
+	}
 	if(ib != __other.ib)
 	{
 		return true;
@@ -102,6 +107,10 @@ bool Message::STest::operator<(const STest& __other)const
 	{
 		return true;
 	}
+	if(tt < __other.tt)
+	{
+		return true;
+	}
 	if(ib < __other.ib)
 	{
 		return true;
@@ -113,6 +122,7 @@ void Message::STest::_csg_init(){
 	a=0;
 	b=false;
 	str="";
+	tt._csg_init();
 	ib.clear();
 	
 };
@@ -121,6 +131,7 @@ void Message::STest::_csg_read(CSerializeStream& __is){
 	__is.read(a);
 	__is.read(b);
 	__is.read(str);
+	tt._csg_read(__is);
 	__is.read(ib);
 };
 
@@ -128,6 +139,7 @@ void Message::STest::_csg_write(CSerializeStream& __os)const{
 	__os.write(a);
 	__os.write(b);
 	__os.write(str);
+	tt._csg_write(__os);
 	__os.write(ib);
 };
 

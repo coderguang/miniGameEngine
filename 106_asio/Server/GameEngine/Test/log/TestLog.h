@@ -85,6 +85,10 @@ void startClientRemote()
 	tm->iff[8967] = 6.4888;
 	tm->iff[798] = 876.466;
 
+	STest_Ptr tp = new STest();
+	tp->a = 4644;
+	tp->tt.a = 2432;
+	tp->tt.ib.push_back(555);
 
 
 	csg_proxy::ITest trpc;
@@ -102,6 +106,10 @@ void startClientRemote()
 		}
 		else if ("e" == inputStr) {
 			mb->_msgBase = tm;
+			client->pushMessage(mb);
+		}
+		else if ("t"==inputStr) {
+			mb->_msgBase = tp;
 			client->pushMessage(mb);
 		}
 		else if ("r" == inputStr) {

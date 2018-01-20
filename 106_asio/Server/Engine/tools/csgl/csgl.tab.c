@@ -561,7 +561,7 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,   134,   134,   134,   136,   136,   136,   136,   136,   136,
-     139,   518,   520,   522,   526,   528,   533,   537,   601
+     140,   522,   524,   526,   536,   538,   551,   561,   637
 };
 #endif
 
@@ -1496,7 +1496,7 @@ yyreduce:
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 139 "csgl.y"
+#line 140 "csgl.y"
     {
 	//classNameDef
 	std::string interfaceName=(yyvsp[(1) - (2)].t_string);
@@ -1879,7 +1879,7 @@ yyreduce:
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 518 "csgl.y"
+#line 522 "csgl.y"
     {
 	headDefStream<<"#ifndef "<<(yyvsp[(2) - (3)].t_string)<<"\n";
 }
@@ -1887,7 +1887,7 @@ yyreduce:
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 520 "csgl.y"
+#line 524 "csgl.y"
     {
 	headDefStream<<"#define "<<(yyvsp[(2) - (3)].t_string)<<"\n";
 }
@@ -1895,7 +1895,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 522 "csgl.y"
+#line 526 "csgl.y"
     {
 	endDefStream<<(yyvsp[(1) - (1)].t_string)<<"\n";
 }
@@ -1903,7 +1903,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 526 "csgl.y"
+#line 536 "csgl.y"
     {
 	outputInfo<<"yacc match comment:"<<BOLDGREEN<<"//"<<(yyvsp[(2) - (3)].t_string)<<"\r"<<RESET<<"\n";
 }
@@ -1911,7 +1911,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 528 "csgl.y"
+#line 538 "csgl.y"
     {
 	outputInfo<<"yacc match commentex:"<<BOLDGREEN<<"/**"<<(yyvsp[(2) - (3)].t_string)<<"\r"<<RESET<<"\n";
 }
@@ -1919,7 +1919,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 533 "csgl.y"
+#line 551 "csgl.y"
     {
 	headIncludeStream<<"#include \""+(yyvsp[(3) - (4)].t_string)+"\"\n";
 }
@@ -1927,7 +1927,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 537 "csgl.y"
+#line 561 "csgl.y"
     {
 	
 	std::string enumName=(yyvsp[(1) - (2)].t_string);
@@ -1996,7 +1996,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 601 "csgl.y"
+#line 637 "csgl.y"
     {
 	std::string structName=(yyvsp[(5) - (6)].t_string);
 	structVec.push_back(structName);
@@ -2032,6 +2032,9 @@ yyreduce:
 						<<"		:public virtual csg::IMsgBase {\n"
 						<<"	public:\n";
 
+	CSGStream structHeadMapStream;
+	CSGStream structCppMapStream;
+
 	std::string initDef="	";
 	std::string readDef;
 	std::string writeDef;
@@ -2052,6 +2055,11 @@ yyreduce:
 		structNameSet.insert(tmp.identify);
 
 		std::string valueType;
+		std::string tmpStlStr;
+		std::string tmpMapClassName;
+		bool isMapType=false;
+		bool isCsgStructType=false;
+
 		if("int"==tmp.type){
 			initDef+=tmp.identify+"=0;\n	";
 		}else if("double"==tmp.type){
@@ -2066,9 +2074,74 @@ yyreduce:
 		}else if("string"==tmp.type){
 			initDef+=tmp.identify+"=\"\";\n	";
 			valueType="std::string";
-		}else{
+		}else if(CSGStlTypeOne==tmp.stlTypeNum){
 			initDef+=tmp.identify+".clear();\n	"; 
-			valueType="std::"+tmp.type;
+			if("long"==tmp.stlType)
+				valueType="std::"+tmp.type+"<long64_t>";
+			else
+				valueType="std::"+tmp.type+"<"+tmp.stlType+">";
+		}else if(CSGStlTypeDouble==tmp.stlTypeNum){
+			isMapType=true;
+			initDef+=tmp.identify+".clear();\n	"; 
+			
+			std::string typeStr;
+			std::string typeStrEx;
+			if("long"==tmp.stlType){
+				typeStr="long64_t";
+			}
+			else{
+				typeStr=tmp.stlType;
+			}
+			if("long"==tmp.stlTypeEx){
+				typeStrEx="long64_t";
+			}
+			else{
+				typeStrEx=tmp.stlTypeEx;
+			}
+
+			tmpStlStr="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
+			valueType+="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
+
+
+
+			tmpMapClassName="__Map_"+structName+"_"+tmp.stlType+"_"+tmp.stlTypeEx+"_Serialize_";
+			structHeadMapStream<<"	class "<<tmpMapClassName<<" {};\n"
+								<<"	void __read(csg::CSerializeStream& __is,"<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n"
+								<<"	void __write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n\n";
+
+			structCppMapStream<<"void Message::__read(csg::CSerializeStream& __is,"<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
+								<<"{\n"
+								<<"	int size=0;\n"
+								<<"	__is.read(size);\n"
+								<<"	for(int i=0;i<size;i++)\n"
+								<<"	{\n"
+								<<"		"<<typeStr<<" key;\n"
+								<<"		__is.read(key);\n"
+								<<"		"<<typeStrEx<<" val;\n"
+								<<"		__is.read(val);\n"
+								<<"		__data[key]=val;\n"
+								<<"	}\n"
+								<<"};\n\n"
+								<<"void Message::__write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
+								<<"{\n"
+								<<"	int size=__data.size();\n"
+								<<"	__os.write(size);\n"
+								<<"	for("<<tmpStlStr<<"::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
+								<<"	{\n"
+								<<"		__os.write(it->first);\n"
+								<<"		__os.write(it->second);\n"
+								<<"	}\n"
+								<<"};\n\n";
+
+		}
+		else{
+			if(mapStructName.find(tmp.type)==mapStructName.end()){
+				csgInfo("unknow csgl struct type",tmp.type);
+				globalError=true;
+				assert(false);
+			}
+			initDef+=tmp.identify+"._csg_init();\n	";
+			isCsgStructType=true;
 		};
 		if(""==valueType){
 			valueType=tmp.type;
@@ -2076,8 +2149,19 @@ yyreduce:
 
 		structHeadfileStream<<"		"<<valueType<<"  "<<tmp.identify<<";\n";
 
-		readDef+="	__is.read("+tmp.identify+");\n";
-		writeDef+="	__os.write("+tmp.identify+");\n";
+		if(isMapType){
+			readDef+="	Message::__read(__is,"+tmp.identify+","+tmpMapClassName+"());\n";
+			writeDef+="	Message::__write(__os,"+tmp.identify+","+tmpMapClassName+"());\n";
+		}else if(isCsgStructType){
+			readDef+="	"+tmp.identify+"._csg_read(__is);\n";
+			writeDef+="	"+tmp.identify+"._csg_write(__os);\n";
+		}
+		else{
+			readDef+="	__is.read("+tmp.identify+");\n";
+			writeDef+="	__os.write("+tmp.identify+");\n";
+		}
+
+
 
 		operatorEq+=tmp.identify+" = "+"__other."+tmp.identify+";\n	";
 
@@ -2110,6 +2194,7 @@ yyreduce:
 	structHeadfileStream<<"	typedef csg::CSmartPointShare<"<<structName<<"> "<<structName<<"_Ptr;\n\n";
 	
 	headfileContentStream<<structHeadfileStream.content;
+	headfileContentStream<<structHeadMapStream.content;
 
 	//generated cpp code
 	CSGStream structCppStream;
@@ -2184,13 +2269,15 @@ yyreduce:
 	structCppStream<<"void Message::"<<structName<<"::_csg_write(CSerializeStream& __os)const{\n"
 					<<writeDef<<"};\n\n";
 					
+	structCppStream<<structCppMapStream.content;
+
 	cppContentStream<<structCppStream.content;
 }
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 2194 "csgl.tab.c"
+#line 2281 "csgl.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2422,7 +2509,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 792 "csgl.y"
+#line 915 "csgl.y"
 
 
 
@@ -2559,7 +2646,7 @@ void rewriteJson(){
 	jsonofs<<rewriteStr;
 	jsonofs.flush();
 	jsonofs.close();
-	std::cout<<"rewrite js="<<rewriteStr<<std::endl;
+	//std::cout<<"rewrite js="<<rewriteStr<<std::endl;
 };
 
 

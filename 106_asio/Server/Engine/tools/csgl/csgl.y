@@ -694,7 +694,8 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 		std::string valueType;
 		std::string tmpStlStr;
 		std::string tmpMapClassName;
-		bool isMapType=false;
+		bool isStlType=false;
+		bool isCsgStructType=false;
 
 		if("int"==tmp.type){
 			initDef+=tmp.identify+"=0;\n	";
@@ -717,7 +718,7 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 			else
 				valueType="std::"+tmp.type+"<"+tmp.stlType+">";
 		}else if(CSGStlTypeDouble==tmp.stlTypeNum){
-			isMapType=true;
+			isStlType=true;
 			initDef+=tmp.identify+".clear();\n	"; 
 			
 			std::string typeStr;
@@ -771,9 +772,13 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 
 		}
 		else{
-			csgInfo("unknow struct type",tmp.type);
-			globalError=true;
-			assert(false);
+			if(mapStructName.find(tmp.type)==mapStructName.end()){
+				csgInfo("unknow csgl struct type",tmp.type);
+				globalError=true;
+				assert(false);
+			}
+			initDef+=tmp.identify+"._csg_init();\n	";
+			isCsgStructType=true;
 		};
 		if(""==valueType){
 			valueType=tmp.type;
@@ -781,10 +786,14 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 
 		structHeadfileStream<<"		"<<valueType<<"  "<<tmp.identify<<";\n";
 
-		if(isMapType){
+		if(isStlType){
 			readDef+="	Message::__read(__is,"+tmp.identify+","+tmpMapClassName+"());\n";
 			writeDef+="	Message::__write(__os,"+tmp.identify+","+tmpMapClassName+"());\n";
-		}else{
+		}else if(isCsgStructType){
+			readDef+="	"+tmp.identify+"._csg_read(__is);\n";
+			writeDef+="	"+tmp.identify+"._csg_write(__os);\n";
+		}
+		else{
 			readDef+="	__is.read("+tmp.identify+");\n";
 			writeDef+="	__os.write("+tmp.identify+");\n";
 		}

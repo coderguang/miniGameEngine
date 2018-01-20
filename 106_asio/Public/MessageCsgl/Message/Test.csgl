@@ -1,6 +1,8 @@
 #ifndef _MESSAGE_TEST_H_
 #define _MESSAGE_TEST_H_
 
+#include "TestStruct.h"
+
 // for test
 enum ETest{
 	ETestOne=1,
@@ -10,8 +12,9 @@ enum ETest{
 
 ["id":1] struct STest{
 	int a;
-	bool b;
+	STestStruct b;
 	string str;
+	STestStruct tt;
 	vector<int> ib;
 };
 

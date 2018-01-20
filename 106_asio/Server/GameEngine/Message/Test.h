@@ -12,6 +12,7 @@
 #include "engine/mq/msgManager.h"
 #include "engine/rpc/rmiObject.h"
 
+#include "TestStruct.h"
 
 using namespace csg;
 
@@ -33,6 +34,7 @@ namespace Message {
 		int  a;
 		bool  b;
 		std::string  str;
+		STestStruct  tt;
 		std::vector<int>  ib;
 
 	public:

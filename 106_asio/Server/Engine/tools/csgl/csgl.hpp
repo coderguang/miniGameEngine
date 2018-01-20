@@ -24,7 +24,7 @@
 #include <vector>
 #include <map>
 
-struct CSGEnum{
+struct CSGEnum{ //记录 enum 內单个枚举的结构
 	std::string identify;
 	int value;
 	void clear(){
@@ -34,28 +34,32 @@ struct CSGEnum{
 	}
 };
 
-enum CSGStlType{
+enum CSGStlType{  //判断是vector还是map
 	CSGStlTypeOne=1,
 	CSGStlTypeDouble=2,
 };
 
-struct CSGStruct{
+struct CSGStruct{  // 记录结构体内,单个成员变量的信息
 	std::string type;
 	std::string identify;
 	int stlTypeNum;
 	std::string stlType; //针对vector,map等的解决方案
 	std::string stlTypeEx;
+	bool isStlTypeCsgl; // 容器类型的第一个参数是否是自定义结构体
+	bool isStlTypeExCsgl; // 容器类型的第二个参数是否是自定义结构体
 	void clear(){
 		type="";
 		identify="";
 		stlType="";
 		stlTypeEx="";
 		stlTypeNum=0;
+		isStlTypeCsgl=false;
+		isStlTypeExCsgl=false;
 	};
 
 };
 
-struct CSGInterfaceParam{
+struct CSGInterfaceParam{  // 记录接口中，单个参数的数据信息
 	std::string type;
 	bool isOut;
 	std::string identify;
@@ -66,7 +70,7 @@ struct CSGInterfaceParam{
 	}
 };
 
-struct CSGInterface{
+struct CSGInterface{  //单个接口的所有信息
 	int rpcId;
 	std::string funcName;
 	std::vector<CSGInterfaceParam> paramList;
@@ -78,7 +82,7 @@ struct CSGInterface{
 };
 
 
-struct CSGType{
+struct CSGType{  //单个文件内的所有信息
 	int id; //identify id
 	int t_int;
 	float t_float;
