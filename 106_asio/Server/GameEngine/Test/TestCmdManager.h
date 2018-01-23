@@ -9,6 +9,7 @@
 #include "logic/ITestImpl.h"
 #include "net/TestAsio.h"
 #include "framework/tool/debugTool.h"
+#include <string>
 
 using namespace csg;
 using namespace Message;
@@ -36,10 +37,11 @@ void startRegistCmd()
 	LogDebug("start regist cmd........");
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
 	CCmdManager::instance()->registCmd("b", "test asio net ex", testAsioEx);
-	//csg::CDebugToolManager::instance()->setShowCallStack(true);
+	csg::CDebugToolManager::instance()->setShowCallStack(true);
+	csg::CDebugToolManager::instance()->setShowMemSize(true);
 	std::string callInfo;
-	//csg::CDebugToolManager::instance()->getCallStackInfo(callInfo);
-	//LogDebug("test stack info:"<<callInfo);
+	csg::CDebugToolManager::instance()->getCurrentStack(callInfo);
+	LogDebug("test stack info:"<<callInfo);
 }
 
 #endif

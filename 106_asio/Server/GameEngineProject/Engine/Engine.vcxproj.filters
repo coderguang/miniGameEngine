@@ -204,6 +204,9 @@
     <ClCompile Include="..\..\Engine\engine\net\protocol\csgProtocol.cpp">
       <Filter>Src\engine\net\protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\tool\debugTool.cpp">
+      <Filter>Src\framework\tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Engine\engine\serialize\bytesbuffer.h">

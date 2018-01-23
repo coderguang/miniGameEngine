@@ -12,7 +12,7 @@ enum ETest{
 
 ["id":1] struct STest{
 	int a;
-	STestStruct b;
+	bool b;
 	string str;
 	STestStruct tt;
 	vector<int> ib;

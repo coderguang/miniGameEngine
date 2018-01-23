@@ -190,6 +190,7 @@
     <ClCompile Include="..\..\Engine\framework\timer\timeNode.cpp" />
     <ClCompile Include="..\..\Engine\framework\timer\timer.cpp" />
     <ClCompile Include="..\..\Engine\framework\timer\timerManager.cpp" />
+    <ClCompile Include="..\..\Engine\framework\tool\debugTool.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\CCmdManager.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\sysUtil.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\typetransform.cpp" />

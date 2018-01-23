@@ -19,7 +19,7 @@ namespace csg
 		
 		void startUpdateDtServer();
 
-		void startLogServer(std::string path,std::string logFileName);
+		void startLogServer(std::string path,std::string logFileName,bool showConsole=false);
 
 		void startMainLogicServer();
 

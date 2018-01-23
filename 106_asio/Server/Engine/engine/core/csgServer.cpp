@@ -20,13 +20,11 @@ void csg::CCsgServer::startUpdateDtServer()
 	LogInfo("start update dt server complete!");
 }
 
-void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName)
+void csg::CCsgServer::startLogServer(std::string path ,std::string logFileName, bool showConsole)
 {
 	_logger= boost::shared_ptr<CLoggerWritterTask>(new CLoggerWritterTask());
 	_logger->setFileDir(path ,logFileName);
-#ifdef _DEBUG
-	_logger->setConsoleInfo(true);
-#endif
+	_logger->setConsoleInfo(showConsole);
 	_logger->initLogMsgMap();
 	CCsgIoMgr::instance()->getLogService()->post(boost::bind(&CLoggerWritterTask::run ,_logger));
 
