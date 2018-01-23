@@ -18,6 +18,15 @@ void csg::CDebugToolManager::getCurrentStack(std::string &str)
 }
 
 
+void csg::CDebugToolManager::getCurrentMemInfo(std::string &str)
+{
+#ifdef CSG_WIN
+	getCurrentMemInfoInWin(str);
+#elif defined(CSG_LINUX)
+	getCurrentMemInfoInLinux(str);
+#endif
+}
+
 void csg::CDebugToolManager::getCurrentStatckInWin(std::string &info)
 {
 #ifdef CSG_WIN
@@ -93,6 +102,39 @@ void csg::CDebugToolManager::getCurrentStatckInWin(std::string &info)
 	}
 	::SymCleanup(::GetCurrentProcess());
 	info += sstream.str();
+#endif
+
+}
+
+void csg::CDebugToolManager::getCurrentMemInfoInWin(std::string& str)
+{
+#ifdef CSG_WIN
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+	hProcess = GetCurrentProcess();
+	std::stringstream ss;
+	ss << "\n";
+	if (hProcess && GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc)))
+	{
+		ss<<"size:\t"<<pmc.WorkingSetSize<<" byte.\n";
+	}
+	str += ss.str();
+	return ;
+#endif
+
+}
+
+void csg::CDebugToolManager::getCurrentMemInfoInLinux(std::string& str)
+{
+#ifdef CSG_LINUX
+	std::stringstream ss;
+	ss << "\n";
+	struct rusage r_usage;
+	if (getrusage(RUSAGE_SELF, &r_usage) == 0)
+	{
+		ss<<"size:\t"<<(size_t)(r_usage.ru_maxrss * 1024L)<<" byte.\n";
+	}
+	str += ss.str();
 #endif
 
 }

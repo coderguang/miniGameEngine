@@ -5,10 +5,13 @@
 
 #ifdef CSG_LINUX
 #include <execinfo.h>
+#include <cxxabi.h>
+#include <sys/resource.h>
 #elif defined(CSG_WIN)
 #include <windows.h>
 #include <imagehlp.h>
 #include <tchar.h>
+#include <psapi.h>
 
 // 需要在项目链接器---输入--附加依赖项中 加入 "Imagehlp.lib"
 
@@ -51,10 +54,16 @@ namespace csg
 
 		void getCurrentStack(std::string &str);
 
+		void getCurrentMemInfo(std::string &str);
+
 	protected:
 		void getCurrentStackInLinux(std::string &str);
 
 		void getCurrentStatckInWin(std::string &str);
+
+		void getCurrentMemInfoInWin(std::string& str);
+
+		void getCurrentMemInfoInLinux(std::string& str);
 
 
 	private:

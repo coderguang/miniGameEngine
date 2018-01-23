@@ -15,6 +15,7 @@
 #include "../../Message/Test.h"
 #include "../logic/ITestImpl.h"
 #include <stdlib.h>
+#include "framework/tool/debugTool.h"
 
 using namespace csg;
 using namespace Message;
@@ -250,6 +251,20 @@ void testAsio(Json::Value& js)
 		}
 		break;
 	}
+}
+
+
+
+void testStackBrace() {
+	std::string callInfo;
+	csg::CDebugToolManager::instance()->getCurrentStack(callInfo);
+	LogDebug("test stack info:" << callInfo);
+}
+
+void testMemInfo() {
+	std::string memInfo;
+	csg::CDebugToolManager::instance()->getCurrentMemInfo(memInfo);
+	LogDebug("test meminfo:" << memInfo);
 }
 
 
