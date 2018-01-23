@@ -19,6 +19,12 @@ using namespace Message;
 void quickTest() {
 	//startSrv();
 	//startSrvEx();
+	// 	csg::CDebugToolManager::instance()->setShowCallStack(true);
+	// 	csg::CDebugToolManager::instance()->setShowMemSize(true);
+	// 	testStackBrace();
+	// 	initMemTimer();
+	//testCatchExcept();
+	testSignal();
 }
 
 
@@ -58,10 +64,8 @@ void startRegistCmd()
 	LogDebug("start regist cmd........");
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
 	CCmdManager::instance()->registCmd("b", "test asio net ex", testAsioEx);
-	csg::CDebugToolManager::instance()->setShowCallStack(true);
-	csg::CDebugToolManager::instance()->setShowMemSize(true);
-	testStackBrace();
-	initMemTimer();
+
+
 }
 
 #endif

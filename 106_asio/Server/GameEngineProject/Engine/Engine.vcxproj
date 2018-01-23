@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\Engine\framework\timer\timer.cpp" />
     <ClCompile Include="..\..\Engine\framework\timer\timerManager.cpp" />
     <ClCompile Include="..\..\Engine\framework\tool\debugTool.cpp" />
+    <ClCompile Include="..\..\Engine\framework\tool\signalTool.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\CCmdManager.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\sysUtil.cpp" />
     <ClCompile Include="..\..\Engine\framework\util\typetransform.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="..\..\Engine\framework\timer\timer.h" />
     <ClInclude Include="..\..\Engine\framework\timer\timerManager.h" />
     <ClInclude Include="..\..\Engine\framework\tool\debugTool.h" />
+    <ClInclude Include="..\..\Engine\framework\tool\signalTool.h" />
     <ClInclude Include="..\..\Engine\framework\util\CCmdManager.h" />
     <ClInclude Include="..\..\Engine\framework\util\endian.h" />
     <ClInclude Include="..\..\Engine\framework\util\sysUtil.h" />

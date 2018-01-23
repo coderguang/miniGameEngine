@@ -16,6 +16,7 @@
 #include "../logic/ITestImpl.h"
 #include <stdlib.h>
 #include "framework/tool/debugTool.h"
+#include "framework/tool/signalTool.h"
 
 using namespace csg;
 using namespace Message;
@@ -266,6 +267,36 @@ void testMemInfo() {
 	csg::CDebugToolManager::instance()->getCurrentMemInfo(memInfo);
 	LogDebug("test meminfo:" << memInfo);
 }
+
+void testExceptionBrace(int k) {
+
+	LogDebug(",k="<<k);
+	throw csg::CException("test,tt");
+}
+
+void testCatchExcept() {
+
+	try {
+		int k=0;
+		LogDebug("enter k value:");
+		k<<std::cin.get();
+		testExceptionBrace(k);
+	}
+	catch (...) {
+		std::string callInfo;
+		csg::CDebugToolManager::instance()->getCurrentStack(callInfo);
+		LogDebug("exception stack info:" << callInfo);
+	}
+}
+
+void testSignal() {
+	
+// 	signal(SIGINT, &csg::signalHandleExit);
+// 	signal(SIGTERM, &csg::signalHandleKill);
+
+	registSignalHandle();
+}
+
 
 
 #endif

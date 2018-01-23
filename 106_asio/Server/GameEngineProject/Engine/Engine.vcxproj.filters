@@ -207,6 +207,9 @@
     <ClCompile Include="..\..\Engine\framework\tool\debugTool.cpp">
       <Filter>Src\framework\tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\tool\signalTool.cpp">
+      <Filter>Src\framework\tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Engine\engine\serialize\bytesbuffer.h">
@@ -390,6 +393,9 @@
       <Filter>Src\engine\net\protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Engine\framework\tool\debugTool.h">
+      <Filter>Src\framework\tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\tool\signalTool.h">
       <Filter>Src\framework\tool</Filter>
     </ClInclude>
   </ItemGroup>
