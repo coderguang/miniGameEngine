@@ -9,10 +9,10 @@ int csg::CCsgProtocol::handleRecvData(const CSessionPtr session,const void* inDa
 {
 	CAutoLock l(_readLock);
 	_recvBuffer->append(inData, len);
-#ifdef _DEBUG
-	std::string str(_recvBuffer->getData(), _recvBuffer->getDataSize());
-	LogDebug("receive is " << str);
-#endif
+// #ifdef _DEBUG
+// 	std::string str(_recvBuffer->getData(), _recvBuffer->getDataSize());
+// 	LogDebug("receive is " << str);
+// #endif
 
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CCsgProtocol::handleReadData,this,session));
 	return 0;

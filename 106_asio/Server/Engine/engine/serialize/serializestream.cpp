@@ -271,7 +271,7 @@ void CSerializeStream::read(byte_t &v)
 
 void CSerializeStream::read(std::vector<byte_t>& vecBt)
 {
-	uint_t size;
+	int size;
 	readSize(size);
 	if ( size > 0 )
 	{

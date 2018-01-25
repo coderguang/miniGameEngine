@@ -15,6 +15,21 @@
 			"file" : "ITest",
 			"name" : "t3",
 			"rpcId" : 13
+		},
+		{
+			"file" : "ITest",
+			"name" : "t4",
+			"rpcId" : 14
+		},
+		{
+			"file" : "ITest",
+			"name" : "t5",
+			"rpcId" : 15
+		},
+		{
+			"file" : "ITest",
+			"name" : "t6",
+			"rpcId" : 16
 		}
 	],
 	"struct" : 

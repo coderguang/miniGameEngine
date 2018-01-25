@@ -24,7 +24,7 @@ void quickTest() {
 	// 	testStackBrace();
 	// 	initMemTimer();
 	//testCatchExcept();
-	testSignal();
+	//testSignal();
 }
 
 
@@ -35,6 +35,7 @@ void registStruct() {
 
 void registImpl() {
 	CRMIObjectAdapter::instance()->addRmiObject("Test", new ITestImpl());
+	CRMIObjectAdapter::instance()->addRmiObject("TestEx", new ITestImpl());
 }
 
 class CPrintMemTimer :public csg::CTimerBase {

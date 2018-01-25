@@ -48,6 +48,8 @@ csgStlDoubleKey ({MAP})
 %s _STRUCT_STL_DOUBLE_START_ _STRUCT_STL_DOUBLE_LEFT_ _STRUCT_STL_DOUBLE_KEY_LEFT_ _STRUCT_STL_DOUBLE_MIN_ _STRUCT_STL_DOUBLE_KEY_RIGHT_ _STRUCT_STL_DOUBLE_RIGHT_
 %s _ID_START_ _ID_NUM_ _ID_END_
 %s _INTERFACE_START_ _INTERFACE_NAME_ _INTERFACE_CONTENT_ _INTERFACE_ID_START_ _INTERFACE_ID_NUM_ _INTERFACE_ID_END_ _INTERFACE_FUNCTION_NAME_ _INTERFACE_FUNCTION_END_ _INTERFACE_PARAM_ _INTERFACE_PARAM_TYPE_ _INTERFACE_PARAM_NAME_ _INTERFACE_PARAM_IDENTIFY_ _INTERFACE_PARAM_END_
+%s _INTERFACE_STL_ONE_START_ _INTERFACE_STL_ONE_LEFT_ _INTERFACE_STL_ONE_KEY_ _INTERFACE_STL_ONE_RIGHT_
+%s _INTERFACE_STL_DOUBLE_START_ _INTERFACE_STL_DOUBLE_LEFT_ _INTERFACE_STL_DOUBLE_KEY_LEFT_ _INTERFACE_STL_DOUBLE_MIN_ _INTERFACE_STL_DOUBLE_KEY_RIGHT_ _INTERFACE_STL_DOUBLE_RIGHT_
 
 %%
 
@@ -294,12 +296,11 @@ csgStlDoubleKey ({MAP})
 	BEGIN _STRUCT_STL_ONE_KEY_;
 	csgInfo("get stlone key identify",yytext);
 	yylval.tmpStructKey.stlType=yytext;
-	yylval.tmpStructKey.isStlTypeCsgl=true;
 };
 
 
 
-<_STRUCT_STL_ONE_KEY_>{blank}*">"{blank}* {
+<_STRUCT_STL_ONE_KEY_>{blank}*">"{blank}+ {
 	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
 };
 
@@ -323,6 +324,13 @@ csgStlDoubleKey ({MAP})
 	yylval.tmpStructKey.stlType=yytext;
 };
 
+<_STRUCT_STL_DOUBLE_LEFT_>{identify} {
+	BEGIN _STRUCT_STL_DOUBLE_KEY_LEFT_;
+	csgInfo("get stldouble left csgl key",yytext);
+	yylval.tmpStructKey.stlType=yytext;
+};
+
+
 <_STRUCT_STL_DOUBLE_KEY_LEFT_>{blank}*","{blank}* {
 	BEGIN _STRUCT_STL_DOUBLE_MIN_;
 	csgInfo("get stldouble min",yytext);
@@ -334,7 +342,14 @@ csgStlDoubleKey ({MAP})
 	yylval.tmpStructKey.stlTypeEx=yytext;
 };
 
-<_STRUCT_STL_DOUBLE_KEY_RIGHT_>{blank}*">"{blank}* {
+<_STRUCT_STL_DOUBLE_MIN_>{identify} {
+	BEGIN _STRUCT_STL_DOUBLE_KEY_RIGHT_;
+	csgInfo("get stldouble right csgl key",yytext);
+	yylval.tmpStructKey.stlTypeEx=yytext;
+};
+
+
+<_STRUCT_STL_DOUBLE_KEY_RIGHT_>{blank}*">"{blank}+ {
 	BEGIN _STRUCT_CONTENT_TYPE_IDENTIFY_;
 };
 
@@ -419,24 +434,99 @@ csgStlDoubleKey ({MAP})
 	yylval.tmpInterfaceKey.clear();
 };
 
-<_INTERFACE_PARAM_>{csgKey} {
-	BEGIN _INTERFACE_PARAM_TYPE_;
-	csgInfo("interfaceparamtype",yytext);
-	yylval.tmpInterfaceParamKey.type=yytext;
-};	
-
 <_INTERFACE_PARAM_>"out"{blank}+ {
 	if(yylval.tmpInterfaceParamKey.isOut){
 		csgInfo("interface","more than one out in one param");
+		assert(false);
 	}
 	csgInfo("interface","get a out param");
 	yylval.tmpInterfaceParamKey.isOut=true;
 };
 
+<_INTERFACE_PARAM_>{csgKey} {
+	BEGIN _INTERFACE_PARAM_TYPE_;
+	csgInfo("interfaceparam type",yytext);
+	yylval.tmpInterfaceParamKey.type=yytext;
+};	
+
+
+<_INTERFACE_PARAM_>{csgStlOneKey} {
+	BEGIN _INTERFACE_STL_ONE_START_;
+	csgInfo("interfaceparam type stl one start",yytext);
+	yylval.tmpInterfaceParamKey.type=yytext;
+	yylval.tmpInterfaceParamKey.stlTypeNum=CSGStlTypeOne;
+};
+<_INTERFACE_STL_ONE_START_>{blank}*"<"{blank}* {
+	BEGIN _INTERFACE_STL_ONE_LEFT_;
+	csgInfo("interfaceparam type stl one left",yytext);
+};
+<_INTERFACE_STL_ONE_LEFT_>{csgKey} {
+	BEGIN _INTERFACE_STL_ONE_KEY_;
+	csgInfo("interfaceparam type stl one base type",yytext);
+	yylval.tmpInterfaceParamKey.stlType=yytext;
+};
+<_INTERFACE_STL_ONE_LEFT_>{identify} {
+	BEGIN _INTERFACE_STL_ONE_KEY_;
+	csgInfo("interfaceparam type stl one csgl type",yytext);
+	yylval.tmpInterfaceParamKey.stlType=yytext;
+};
+<_INTERFACE_STL_ONE_KEY_>{blank}*">"{blank}+ {
+	BEGIN _INTERFACE_PARAM_TYPE_;
+	csgInfo("interfaceparam type stl one csgl type",yytext);
+};
+
+
+<_INTERFACE_PARAM_>{csgStlDoubleKey} {
+	BEGIN _INTERFACE_STL_DOUBLE_START_;
+	csgInfo("interfaceparam type stl double start",yytext);
+	yylval.tmpInterfaceParamKey.type=yytext;
+	yylval.tmpInterfaceParamKey.stlTypeNum=CSGStlTypeDouble;
+};
+<_INTERFACE_STL_DOUBLE_START_>{blank}*"<"{blank}* {
+	BEGIN _INTERFACE_STL_DOUBLE_LEFT_;
+	csgInfo("interfaceparam type stl double left",yytext);
+};
+<_INTERFACE_STL_DOUBLE_LEFT_>{csgKey} {
+	BEGIN _INTERFACE_STL_DOUBLE_KEY_LEFT_;
+	csgInfo("interfaceparam type stl double left key base type",yytext);
+	yylval.tmpInterfaceParamKey.stlType=yytext;
+};
+<_INTERFACE_STL_DOUBLE_LEFT_>{identify} {
+	BEGIN _INTERFACE_STL_DOUBLE_KEY_LEFT_;
+	csgInfo("interfaceparam type stl double left key csgl type",yytext);
+	yylval.tmpInterfaceParamKey.stlType=yytext;
+};
+<_INTERFACE_STL_DOUBLE_KEY_LEFT_>{blank}*","{blank}* {
+	BEGIN _INTERFACE_STL_DOUBLE_MIN_;
+	csgInfo("interfaceparam type stl double min",yytext);
+};
+<_INTERFACE_STL_DOUBLE_MIN_>{csgKey} {
+	BEGIN _INTERFACE_STL_DOUBLE_KEY_RIGHT_;
+	csgInfo("interfaceparam type stl double right key base type",yytext);
+	yylval.tmpInterfaceParamKey.stlTypeEx=yytext;
+};
+<_INTERFACE_STL_DOUBLE_MIN_>{identify} {
+	BEGIN _INTERFACE_STL_DOUBLE_KEY_RIGHT_;
+	csgInfo("interfaceparam type stl double right key csgl type",yytext);
+	yylval.tmpInterfaceParamKey.stlTypeEx=yytext;
+};
+<_INTERFACE_STL_DOUBLE_KEY_RIGHT_>{blank}*">"{blank}+ {
+	BEGIN _INTERFACE_PARAM_TYPE_;
+	csgInfo("interfaceparam type stl double end",yytext);
+};
+
+
+<_INTERFACE_PARAM_>{identify} {
+	BEGIN _INTERFACE_PARAM_TYPE_;
+	csgInfo("interfaceparam type csgl type param",yytext);
+	yylval.tmpInterfaceParamKey.type=yytext;
+};
+
+
 <_INTERFACE_PARAM_TYPE_>{identify} {
 	BEGIN _INTERFACE_PARAM_IDENTIFY_;
 	yylval.tmpInterfaceParamKey.identify=yytext;
-	csgInfo("interfaceparamidentify",yytext);
+	csgInfo("interfaceparam identify",yytext);
 };
 
 <_INTERFACE_PARAM_IDENTIFY_>"," {

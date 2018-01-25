@@ -33,7 +33,7 @@ namespace Message {
 		int  a;
 		bool  b;
 		std::string  str;
-		std::vector<int>  ib;
+		std::vector<int> ib;
 
 	public:
 		STestStruct();

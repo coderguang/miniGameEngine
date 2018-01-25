@@ -23,6 +23,8 @@
 #include <string.h>
 #include <vector>
 #include <map>
+#include <set>
+#include <cassert>
 
 struct CSGEnum{ //记录 enum 內单个枚举的结构
 	std::string identify;
@@ -45,28 +47,30 @@ struct CSGStruct{  // 记录结构体内,单个成员变量的信息
 	int stlTypeNum;
 	std::string stlType; //针对vector,map等的解决方案
 	std::string stlTypeEx;
-	bool isStlTypeCsgl; // 容器类型的第一个参数是否是自定义结构体
-	bool isStlTypeExCsgl; // 容器类型的第二个参数是否是自定义结构体
 	void clear(){
 		type="";
 		identify="";
 		stlType="";
 		stlTypeEx="";
 		stlTypeNum=0;
-		isStlTypeCsgl=false;
-		isStlTypeExCsgl=false;
 	};
 
 };
 
 struct CSGInterfaceParam{  // 记录接口中，单个参数的数据信息
-	std::string type;
-	bool isOut;
-	std::string identify;
+	std::string type;    //类型
+	bool isOut;			 //是否是返回值
+	std::string identify;  // identify
+	int stlTypeNum;        // vector or map
+	std::string stlType;  // vector
+	std::string stlTypeEx;
 	void clear(){
 		type="";
 		isOut=false;
 		identify="";
+		stlTypeNum=0;
+		stlType="";
+		stlTypeEx="";
 	}
 };
 
@@ -171,6 +175,53 @@ static CSGStream& operator<<(CSGStream& os,std::string str){
 	return os;
 };
 
+static const std::string CSGL_INT="int";
+static const std::string CSGL_FLOAT="float";
+static const std::string CSGL_DOUBLE="double";
+static const std::string CSGL_BOOL="bool";
+static const std::string CSGL_LONG="long";
+static const std::string CSGL_LONG64="long64_t";
+static const std::string CSGL_STRING="string";
+static const std::string CSGL_STD_STRING="std::string";
+
+
+
+static std::set<std::string> baseTypeSet={CSGL_INT,CSGL_FLOAT,CSGL_DOUBLE,CSGL_BOOL,CSGL_LONG,CSGL_STRING};
+
+static bool isBaseType(std::string type){
+	return baseTypeSet.count(type)>0;
+}
+
+static std::string getCsglType(std::string type){
+	if(CSGL_INT==type||CSGL_FLOAT==type||CSGL_DOUBLE==type||CSGL_BOOL==type)
+		return type;
+	if(CSGL_LONG==type)
+		return CSGL_LONG64;
+	if(CSGL_STRING==type)
+		return CSGL_STD_STRING;
+	return type; //自定义结构体
+}
+
+static std::string getInitTypeString(std::string type){
+	if(CSGL_INT==type){
+		return "0";
+	}
+	else if(CSGL_FLOAT==type){
+		return "0.0f";
+	}else if(CSGL_DOUBLE==type){
+		return "0.0";
+	}else if(CSGL_BOOL==type){
+		return "false";
+	}else if(CSGL_LONG==type){
+		return "0";
+	}else if(CSGL_STRING==type){
+		return "\"\"";
+	}
+
+	assert(false);
+	std::cout<<"getInitTypeString:error type:"<<type<<std::endl;
+	return "";
+}
 
 extern "C"{
 	extern int yylex(void);

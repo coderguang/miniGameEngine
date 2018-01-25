@@ -96,6 +96,15 @@ MapInterfaceId mapInterfaceId;
 MapInterfaceFileName mapInterfaceFileName;
 std::string nowInputFile;
 
+bool checkIsCsglType(std::string type,std::string msg){
+	if(mapStructName.find(type)==mapStructName.end()){
+		csgInfo(msg,type);
+		globalError=true;
+		assert(false);
+	}
+};
+
+
 %}
 // ifndef token
 %token TOKEN_IFNDEF TOKEN_IFNDEF_END TOKEN_IFDEF TOKEN_IFDEF_END 
@@ -139,10 +148,9 @@ statement : define_line | comment |include | enum |struct |interface{};
 
 interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 	//classNameDef
+
 	std::string interfaceName=$1;
 	std::vector<CSGInterface> interfaceList=$2;
-	bool isFirstOutParam=true;
-	bool isFirstParam=true;
 
 	outputInfo<<"yacc match interface:"<<interfaceName<<"\n";
 	//classNameDef
@@ -153,10 +161,11 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 	std::string mNamespace="Message";
 	std::string proxyNamespace="csg_proxy";
 
-	//======================Server callBack start==============
+	//======================Server callBack start============== 服务器回调对象定义及实现
 	CSGStream callBackDef;
 	CSGStream cppCallBack;
 
+	
 	callBackDef<<"namespace "<<mNamespace<<"\n"
 				<<"{\n";
 
@@ -172,7 +181,7 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 			assert(false);
 		}
 		interfaceNameSet.insert(functionName);
-
+		//check
 		MapInterfaceId::iterator rpcIdIter=mapInterfaceId.find(tmp.rpcId);
 		if(rpcIdIter!=mapInterfaceId.end()){
 			if(rpcIdIter->second.interfaceFile!=interfaceClassName||rpcIdIter->second.interface!=functionName){
@@ -215,8 +224,11 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 
 		CSGStream cppCallBackWrite;
 
-		isFirstOutParam=true;
-		isFirstParam=true;
+		bool isFirstOutParam=true;
+		bool isFirstParam=true;
+		CSGStream callBackStlWriteDef;
+		CSGStream cppCallStlWriteBack;
+
 
 		std::set<std::string> paramNameSet;
 		for(int j=0;j<tmp.paramList.size();j++){
@@ -224,7 +236,7 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 			bool isOut=param.isOut;
 			std::string type=param.type;
 			std::string identify=param.identify;
-
+			//检测重复的参数
 			if(paramNameSet.count(identify)>0){
 				std::cerr<<"error interface function,duplicate param file:"<<interfaceName<<",identify:"<<functionName<<",param:"<<identify<<std::endl;
 				globalError=true;
@@ -232,22 +244,103 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 			}
 			paramNameSet.insert(identify);
 
+			CSGStream tmpCallBack;
+
 			if(isOut){
-				if(isFirstOutParam){
-					callBackDef<<param.type<<" "<<param.identify;
-					cppCallBack<<param.type<<" "<<param.identify;
-					isFirstOutParam=false;
-				}else{
-					callBackDef<<","<<param.type<<" "<<param.identify;		
-					cppCallBack<<","<<param.type<<" "<<param.identify;		
+				if(!isFirstOutParam) //第一个回调参数前不需要加逗号
+				{
+					tmpCallBack<<",";		
 				}
-				cppCallBackWrite<<"	__os->write("<<param.identify<<");\n";
+				if(isBaseType(param.type)){ //返回值类型参数为基础类型
+					tmpCallBack<<"const "<<getCsglType(param.type)<<" "<<param.identify;
+					cppCallBackWrite<<"	__os->write("<<param.identify<<");\n";
+				}else if(CSGStlTypeOne==param.stlTypeNum){ //返回值类型参数为vector
+					if(!isBaseType(param.stlType)){
+						 //元素类型为自定义结构类型
+						checkIsCsglType(param.stlType,"out param stl one is not a define struct");
+
+						//额外的写方法(回调对象只需要写方法),命名规则=前缀+接口文件名+接口名+类型+元素类型+identify
+						std::string classWriteName="__STL_TYPE_ONE__Interface__CSrv__Write__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.identify;
+
+						callBackStlWriteDef<<"	class "<<classWriteName<<"{};\n"
+											<<"	void __write(csg::CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&,"<<classWriteName<<");\n\n";
+						cppCallStlWriteBack<<"void Message::__write(csg::CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& __data,"<<classWriteName<<")\n"
+											<<"{\n"
+											<<"	int size=__data.size();\n"
+											<<"	__os.writeSize(size);\n"
+											<<"	for(int i=0;i<size;i++)\n"
+											<<"	{\n"
+											<<"		__data[i]._csg_write(__os);\n"
+											<<"	}\n"
+											<<"};\n\n";
+						cppCallBackWrite<<"	Message::__write(*__os,"<<param.identify<<","<<classWriteName<<"());\n";
+					}else{
+						cppCallBackWrite<<"	__os->write("<<param.identify<<");\n";
+					}
+					tmpCallBack<<"const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& "<<param.identify;
+
+				}else if(CSGStlTypeDouble==param.stlTypeNum){
+					if(!isBaseType(param.stlType)){
+						 //元素类型为自定义结构类型
+						checkIsCsglType(param.stlType,"out param stl double left key is not a define struct");
+					}
+					if(!isBaseType(param.stlTypeEx)){
+						 //元素类型为自定义结构类型
+						checkIsCsglType(param.stlTypeEx,"out param stl double right key is not a define struct");
+					}
+
+					//额外的写方法(回调对象只需要写方法),命名规则=前缀+接口文件名+接口名+类型+元素类型+identify
+					std::string classWriteName="__STL_TYPE_ONE__Interface__CSrv__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.stlTypeEx+"__"+param.identify;
+					callBackStlWriteDef<<"	class "<<classWriteName<<"{};\n"
+											<<"	void __write(csg::CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&,"<<classWriteName<<");\n\n";
+					cppCallStlWriteBack<<"void Message::__write(csg::CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& __data,"<<classWriteName<<")\n"
+										<<"{\n"
+										<<"	int size=__data.size();\n"
+										<<"	__os.writeSize(size);\n"
+										<<"	for(std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
+										<<"	{\n";
+					if(!isBaseType(param.stlType)){
+						 //元素类型为自定义结构类型
+						cppCallStlWriteBack<<"		it->first._csg_write(__os);\n";
+					}else{
+						cppCallStlWriteBack<<"		__os.write(it->first);\n";
+					}
+					if(!isBaseType(param.stlTypeEx)){
+						 //元素类型为自定义结构类型
+						cppCallStlWriteBack<<"		it->second._csg_write(__os);\n";
+					}else{
+						cppCallStlWriteBack<<"		__os.write(it->second);\n";
+					}
+					
+					cppCallStlWriteBack<<"	}\n"
+										<<"};\n\n";
+
+					cppCallBackWrite<<"	Message::__write(*__os,"<<param.identify<<","<<classWriteName<<"());\n";
+
+
+					tmpCallBack<<"const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& "<<param.identify;
+					
+				}else{ //自定义结构体返回值
+
+					checkIsCsglType(param.type,"interface unknow csgl struct type");
+					tmpCallBack<<"const "<<getCsglType(param.type)<<"& "<<param.identify;
+
+					cppCallBackWrite<<"	"<<param.identify<<"._csg_write(*__os);\n";
+				}
+				isFirstOutParam=false;
 			}
+
+			callBackDef<<tmpCallBack.content;
+			cppCallBack<<tmpCallBack.content;
 		}
+
+
 
 		callBackDef<<");\n"
 					<<"	};\n"
 					<<"	typedef CSmartPointShare<"<<srvCB<<"> "<<srvCBPtr<<";\n\n";
+		callBackDef<<callBackStlWriteDef.content;
+
 		cppCallBack<<")\n"
 					<<"{\n"
 					<<"	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());\n"
@@ -259,19 +352,24 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 					<<cppCallBackWrite.content<<"\n"
 					<<"	CRpcHelper::toReturn(_session,__os);\n\n"
 					<<"}\n\n";	
+		cppCallBack<<cppCallStlWriteBack.content;
+
 	}
 
 	callBackDef<<"}\n\n"<<"\n";
+	
 	headInterfaceStream<<callBackDef.content<<"\n";
+
 	cppInterfaceStream<<cppCallBack.content;
 
 	//*************************Server callBack end******************************
 
-	//======================Server interface class struct and onCall Def start==============
+	//======================Server interface class struct and onCall Def start============== 服务器onCall函数+ rpc注册(cpp部分)
 
 	CSGStream cppClassStruct;
 	CSGStream cppClassOncall;
 
+	
 	cppClassStruct<<"Message::"<<interfaceClassName<<"::"<<interfaceClassName<<"()\n"
 					<<"{\n"
 					<<"	SRMIInfo rmiInfo;\n"
@@ -314,16 +412,21 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 					<<"	}\n\n"
 					<<"	return ERMIDispatchObjectNotExist;\n\n"
 					<<"}\n\n";
+		
 
 	cppInterfaceStream<<cppClassStruct.content;
 	cppInterfaceStream<<cppClassOncall.content;
 
 	//*********************Server interface class struct  and onCall Def end*************
 
-	//======================Server interface class start==============
+	//======================Server interface class start============== 服务器onCall函数+ rpc注册+rpc分发
 
 	CSGStream classDef;
 	CSGStream cppClassInterface;
+
+	CSGStream functionDefStlWrite; //额外的读函数
+	CSGStream functionCppStlWrite; //额外的读函数
+	
 	classDef<<"namespace "<<mNamespace<<"\n"
 				<<"{\n"
 				<<"	class "<<interfaceClassName<<":public virtual CRMIObject\n"
@@ -337,7 +440,7 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		std::string functionName=tmp.funcName;
 
 		//class def
-		std::string srvCB=srvCBprefix+functionName;
+		std::string srvCB=srvCBprefix+functionName;  
 		std::string srvCBPtr=srvCB+"_Ptr";
 		std::string cliCB=cliCBprefix+functionName;
 		std::string cliCBPtr=cliCB+"_Ptr";
@@ -345,29 +448,102 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		CSGStream functionDefStream;
 		CSGStream cppClassProxyParam;
 
+
 		functionDefStream<<"		ERMIDispatchResult __"<<functionName<<"_async("<<"const CSessionPtr&,const SRMICall&,CSerializeStream&);\n\n";
 		functionDefStream<<"		virtual void "<<functionName<<"_async(const CSessionPtr& ,"<<mNamespace<<"::"<<srvCBPtr<<"&";
 
 		cppClassInterface<<"csg::ERMIDispatchResult Message::"<<interfaceName<<"::__"<<functionName<<"_async(const CSessionPtr& session,const SRMICall& rmiCall,CSerializeStream& __is)\n"
 						<<"{\n";
 
-		isFirstOutParam=true;
-		isFirstParam=true;
 		for(int j=0;j<tmp.paramList.size();j++){
 			CSGInterfaceParam param=tmp.paramList[j];
-			bool isOut=param.isOut;
-			std::string type=param.type;
-			std::string identify=param.identify;
 
-			if(!isOut){
-				functionDefStream<<","<<type;
-				cppClassInterface<<"	"<<param.type<<" "<<param.identify<<";\n"
+			if(!param.isOut){
+				if(isBaseType(param.type)){
+					functionDefStream<<","<<getCsglType(param.type);
+					cppClassInterface<<"	"<<getCsglType(param.type)<<" "<<param.identify<<";\n"
 							<<"	__is.read("<<param.identify<<");\n";
+
+				}else if(CSGStlTypeOne==param.stlTypeNum){
+
+					functionDefStream<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&";
+
+					cppClassInterface<<"	std::"<<param.type<<"<"<<getCsglType(param.stlType)<<"> "<<param.identify<<";\n";
+
+					if(isBaseType(param.stlType)){
+						cppClassInterface<<"	__is.read("<<param.identify<<");\n";
+
+					}else{ //元素类型为自定义结构
+						//命名规则=前缀+接口文件+接口名+类型+元素+identify
+						std::string classWriteFunctionName="__STL_TYPE_ONE__Interface_CSrv__Read__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.identify;
+						
+						functionDefStlWrite<<"	class "<<classWriteFunctionName<<"{};\n"
+											<<"	void __read(CSerializeStream&,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&,"<<classWriteFunctionName<<");\n\n";
+
+						functionCppStlWrite<<"void Message::__read(CSerializeStream& __is,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& __data,"<<classWriteFunctionName<<")\n"
+											<<"{\n"
+											<<"	int size=0;\n"
+											<<"	__is.readSize(size);\n"
+											<<"	for(int i=0;i<size;i++)\n"
+											<<"	{\n"
+											<<"		"<<getCsglType(param.stlType)<<" val;\n"
+											<<"		val._csg_read(__is);\n"
+											<<"		__data.push_back(val);\n"
+											<<"	}\n"
+											<<"}\n\n";
+						cppClassInterface<<"	Message::__read(__is,"<<param.identify<<","<<classWriteFunctionName<<"());\n";
+					}
+				}else if(CSGStlTypeDouble==param.stlTypeNum){
+					functionDefStream<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&";
+					cppClassInterface<<"	std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<"> "<<param.identify<<";\n";
+
+					//map类均为自定义读函数
+					//命名规则=前缀+接口文件+接口名+类型+元素1+元素2+identify
+					std::string classWriteFunctionName="__STL_TYPE_DOUBLE__Interface_CSrv__Read__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.stlTypeEx+"__"+param.identify;
+
+					functionDefStlWrite<<"	class "<<classWriteFunctionName<<"{};\n"
+											<<"	void __read(CSerializeStream&,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&,"<<classWriteFunctionName<<");\n\n";
+
+					functionCppStlWrite<<"void Message::__read(CSerializeStream& __is,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& __data,"<<classWriteFunctionName<<")\n"
+										<<"{\n"
+										<<"	int size=0;\n"
+										<<"	__is.readSize(size);\n"
+										<<"	for(int i=0;i<size;i++)\n"
+										<<"	{\n"
+										<<"		"<<getCsglType(param.stlType)<<" key;\n";
+					if(isBaseType(param.stlType)){
+						functionCppStlWrite<<"		__is.read(key);\n";
+					}else{
+						functionCppStlWrite<<"		key._csg_read(__is);\n";
+					}
+
+					functionCppStlWrite<<"		"<<getCsglType(param.stlTypeEx)<<" val;\n";
+
+					if(isBaseType(param.stlTypeEx)){
+						functionCppStlWrite<<"		__is.read(val);\n";
+					}else{
+						functionCppStlWrite<<"		val._csg_read(__is);\n";
+					}
+					functionCppStlWrite<<"		__data[key]=val;\n"
+										<<"	}\n"
+										<<"}\n\n";
+
+					cppClassInterface<<"	Message::__read(__is,"<<param.identify<<","<<classWriteFunctionName<<"());\n";
+
+				}else{
+					checkIsCsglType(param.type,"interface param error");
+					functionDefStream<<",const "<<getCsglType(param.type)<<" &";
+					cppClassInterface<<"	"<<getCsglType(param.type)<<" "<<param.identify<<";\n";
+					cppClassInterface<<"	"<<param.identify<<"._csg_read(__is);\n";
+				}
+
 				cppClassProxyParam<<","<<param.identify;
 			}
 		}
 		functionDefStream<<")=0;\n\n";
+
 		classDef<<functionDefStream.content;
+
 
 		cppClassInterface<<"	"<<srvCBPtr<<" cb=new "<<srvCB<<"();\n"
 						<<"	cb->setSession(session,rmiCall);\n"
@@ -376,19 +552,29 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 						<<"}\n\n";
 	}
 
-	classDef<<"	};\n"
-			<<"}\n";
+	classDef<<"	};\n\n";
+	classDef<<functionDefStlWrite.content;
+	classDef<<"}\n";
+	
 	headInterfaceStream<<classDef.content<<"\n";
+
+
 	cppInterfaceStream<<cppClassInterface.content;
-	//*************************SServer interface class end******************************
+	cppInterfaceStream<<functionCppStlWrite.content;
 
 
-	//======================proxy callBack start==============
+	//*************************Server interface class end******************************
+
+	// 客户端部分使用代码
+	//======================proxy callBack start============== //客户端回调对象
 
 	CSGStream proxyCallBackDef;
 	CSGStream cppProxyCallBack;
+
+	
 	proxyCallBackDef<<"namespace "<<proxyNamespace<<"\n"
-					<<"{\n";
+					<<"{\n"
+					<<"	using namespace Message;\n\n";
 
 	for(int i=0;i<interfaceList.size();i++){
 		CSGInterface tmp=interfaceList[i];
@@ -403,6 +589,9 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		CSGStream cppProxyCallBackParam;
 		CSGStream cppProxyReturnParam;
 
+		CSGStream functionDefStlRead; //额外的读函数
+		CSGStream functionCppStlRead; //额外的读函数
+
 		proxyCallBackDef<<"	class "<<cliCB<<":public virtual CRMIProxyCallBackObject\n"
 						<<"	{\n"
 						<<"	public:\n"
@@ -411,23 +600,101 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 						<<"{\n";
 
 
-		isFirstOutParam=true;
-		isFirstParam=true;
+		bool isFirstOutParam=true;
+		bool isFirstParam=true;
 		
 		for(int j=0;j<tmp.paramList.size();j++){
-			CSGInterfaceParam tmpParam=tmp.paramList[j];
+			CSGInterfaceParam param=tmp.paramList[j];
 
-			if(tmpParam.isOut){
-				if(isFirstOutParam){
-					proxyCallBackDef<<tmpParam.type<<" "<<tmpParam.identify;
-					cppProxyReturnParam<<tmpParam.identify;
-					isFirstOutParam=false;
-				}else{
-					proxyCallBackDef<<","<<tmpParam.type<<" "<<tmpParam.identify;
-					cppProxyReturnParam<<","<<tmpParam.identify;
+			if(param.isOut){
+				if(!isFirstOutParam){
+					proxyCallBackDef<<",";
+					cppProxyReturnParam<<",";				
 				}
-				cppProxyCallBackParam<<"	"<<tmpParam.type<<" "<<tmpParam.identify<<";\n"
-								<<"	__is.read("<<tmpParam.identify<<");\n";
+
+				if(isBaseType(param.type)){
+					proxyCallBackDef<<"const "<<getCsglType(param.type);
+
+					cppProxyCallBackParam<<"	"<<getCsglType(param.type)<<" "<<param.identify<<";\n"
+										<<"	__is.read("<<param.identify<<");\n";
+
+				}else if(CSGStlTypeOne==param.stlTypeNum){
+					proxyCallBackDef<<"const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& ";
+					cppProxyCallBackParam<<"	std::"<<param.type<<"<"<<getCsglType(param.stlType)<<"> "<<param.identify<<";\n";
+					if(isBaseType(param.stlType)){
+						cppProxyCallBackParam<<"	__is.read("<<param.identify<<");\n";
+					}else{
+						//命名规则=前缀+接口文件+接口名+类型+元素+identify
+						std::string classReadFunctionName="__STL_TYPE_ONE__Interface_CCli__Read__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.identify;
+
+						functionDefStlRead<<"	class "<<classReadFunctionName<<" {};\n"
+											<<"	void __read(CSerializeStream&,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&,"<<classReadFunctionName<<");\n\n";
+
+						functionCppStlRead<<"void "<<proxyNamespace<<"::__read(CSerializeStream& __is,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& __data,"<<classReadFunctionName<<")\n"
+											<<"{\n"
+											<<"	int size=0;\n"
+											<<"	__is.readSize(size);\n"
+											<<"	for(int i=0;i<size;i++)\n"
+											<<"	{\n"
+											<<"		"<<getCsglType(param.stlType)<<" val;\n"
+											<<"		val._csg_read(__is);\n"
+											<<"		__data.push_back(val);\n"
+											<<"	}\n"
+											<<"}\n\n";
+
+						cppProxyCallBackParam<<"	"<<proxyNamespace<<"::__read(__is,"<<param.identify<<","<<classReadFunctionName<<"());\n";
+					}
+
+
+					
+				}else if(CSGStlTypeDouble==param.stlTypeNum){
+					proxyCallBackDef<<"const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)
+<<">&";
+					cppProxyCallBackParam<<"	std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<"> "<<param.identify<<";\n";
+
+					//命名规则=前缀+接口文件+接口名+类型+元素1+元素2+identify
+					std::string classReadFunctionName="__STL_TYPE_DOUBLE__Interface_CCli__Read__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.stlTypeEx+"__"+param.identify;
+
+					functionDefStlRead<<"	class "<<classReadFunctionName<<" {};\n"
+										<<"	void __read(CSerializeStream&,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&,"<<classReadFunctionName<<");\n\n";
+
+					functionCppStlRead<<"void "<<proxyNamespace<<"::__read(CSerializeStream& __is,std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& __data,"<<classReadFunctionName<<")\n"
+										<<"{\n"
+										<<"	int size=0;\n"
+										<<"	__is.readSize(size);\n"
+										<<"	for(int i=0;i<size;i++)\n"
+										<<"	{\n"
+										<<"		"<<getCsglType(param.stlType)<<" key;\n";
+					
+					if(isBaseType(param.stlType)){
+						functionCppStlRead<<"		__is.read(key);\n";
+					}else{
+						functionCppStlRead<<"		key._csg_read(__is);\n";
+					}
+					functionCppStlRead<<"		"<<getCsglType(param.stlTypeEx)<<" val;\n";
+
+					if(isBaseType(param.stlTypeEx)){
+						functionCppStlRead<<"		__is.read(val);\n";
+					}else{
+						functionCppStlRead<<"		val._csg_read(__is);\n";
+					}
+					functionCppStlRead<<"		__data[key]=val;\n"
+										<<"	}\n"
+										<<"}\n\n";
+
+					cppProxyCallBackParam<<"	"<<proxyNamespace<<"::__read(__is,"<<param.identify<<","<<classReadFunctionName<<"());\n";
+
+
+				}else{ //自定义结构体
+					checkIsCsglType(param.type,"client respond not define struct");
+					proxyCallBackDef<<"const "<<getCsglType(param.type)<<"&";
+
+					cppProxyCallBackParam<<"	"<<getCsglType(param.type)<<" "<<param.identify<<";\n"
+										<<"	"<<param.identify<<"._csg_read(__is);\n";
+
+				}
+				isFirstOutParam=false;
+				cppProxyReturnParam<<param.identify;
 			}
 		}
 		proxyCallBackDef<<")=0;\n"
@@ -435,27 +702,34 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 						<<"		virtual void __response(CSerializeStream& __is);\n"
 						<<"	};\n"
 						<<"	typedef CSmartPointShare<"<<cliCB<<"> "<<cliCBPtr<<";\n\n";
+
+		proxyCallBackDef<<functionDefStlRead.content;
+
 		cppProxyCallBack<<cppProxyCallBackParam.content
 						<<"\n"
 						<<"	response("<<cppProxyReturnParam.content<<");\n\n"
 						<<"}\n\n";
+		cppProxyCallBack<<functionCppStlRead.content;
 
 	}
 
 	proxyCallBackDef<<"}\n";
-
+	
 	headInterfaceStream<<proxyCallBackDef.content<<"\n";
 	cppInterfaceStream<<cppProxyCallBack.content;
 	//*************************proxy callBack end******************************
 
-	//======================proxy class start==============
+
+	//======================proxy class start============== //客户端调用接口
 
 	CSGStream proxyClassDef;
 	CSGStream cppProxyClass;
 	CSGStream cppProxyFunction;
 
+	
 	proxyClassDef<<"namespace "<<proxyNamespace<<"\n"
 					<<"{\n"
+					<<"	using namespace Message;\n\n"
 					<<"	class "<<interfaceClassName<<":public virtual CRMIProxyObject\n"
 					<<"	{\n"
 					<<"	public:\n"
@@ -463,6 +737,9 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 	cppProxyClass<<"csg_proxy::"<<interfaceClassName<<"::"<<interfaceClassName<<"()\n"
 					<<"{\n"
 					<<"}\n\n";
+
+	CSGStream proxyWriteFunctionDef;
+	CSGStream proxyWriteFunctionCpp;
 
 	for(int i=0;i<interfaceList.size();i++){
 		CSGInterface tmp=interfaceList[i];
@@ -480,16 +757,81 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 		proxyClassDef<<"		void "<<functionName<<"_async(const CSessionPtr&,const "<<cliCBPtr<<"&";
 		cppProxyFunction<<"void csg_proxy::"<<interfaceName<<"::"<<functionName<<"_async(const CSessionPtr& session,const "<<cliCBPtr<<"& cb";
 
-		isFirstOutParam=true;
-		isFirstParam=true;
+		bool isFirstOutParam=true;
+		bool isFirstParam=true;
 		
 		for(int j=0;j<tmp.paramList.size();j++){
-			CSGInterfaceParam tmpParam=tmp.paramList[j];
+			CSGInterfaceParam param=tmp.paramList[j];
 
-			if(!tmpParam.isOut){
-				proxyClassDef<<","<<tmpParam.type;
-				cppProxyFunction<<","<<tmpParam.type<<" "<<tmpParam.identify;
-				cppProxyCallWrite<<"	__os->write("<<tmpParam.identify<<");\n";
+			if(!param.isOut){
+				if(isBaseType(param.type)){
+					proxyClassDef<<",const "<<getCsglType(param.type);
+					cppProxyFunction<<",const "<<getCsglType(param.type)<<" "<<param.identify;
+					cppProxyCallWrite<<"	__os->write("<<param.identify<<");\n";
+				}else if(CSGStlTypeOne==param.stlTypeNum){
+					proxyClassDef<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&";
+					cppProxyFunction<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& "<<param.identify;
+
+					if(isBaseType(param.stlType)){
+						cppProxyCallWrite<<"	__os->write("<<param.identify<<");\n";
+					}else{
+						//命名规则=前缀+接口文件+接口名+类型+元素+identify
+						std::string classWriteFunctionName="__STL_TYPE_ONE__Interface_CCli__Write__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.stlTypeEx+"__"+param.identify;
+
+						proxyWriteFunctionDef<<"	class "<<classWriteFunctionName<<" {};\n"
+												<<"	void __write(CSerializeStream&,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">&,"<<classWriteFunctionName<<");\n\n";
+						proxyWriteFunctionCpp<<"void csg_proxy::__write(CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<">& __data,"<<classWriteFunctionName<<")\n"
+												<<"{\n"
+												<<"	int size=__data.size();\n"
+												<<"	__os.writeSize(size);\n"
+												<<"	for(int i=0;i<size;i++)\n"
+												<<"	{\n"
+												<<"		__data[i]._csg_write(__os);\n"
+												<<"	}\n"
+												<<"}\n\n";
+
+						cppProxyCallWrite<<"	csg_proxy::__write(*__os,"<<param.identify<<","<<classWriteFunctionName<<"());\n";
+					}						
+
+
+				}else if(CSGStlTypeDouble==param.stlTypeNum){
+					proxyClassDef<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&";
+					cppProxyFunction<<",const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& "<<param.identify;
+
+					//命名规则=前缀+接口文件+接口名+类型+元素1+元素2+identify
+					std::string classWriteFunctionName="__STL_TYPE_DOUBLE__Interface_CCli__Write__"+interfaceName+"__"+functionName+"__"+param.type+"__"+param.stlType+"__"+param.stlTypeEx+"__"+param.identify;
+
+					proxyWriteFunctionDef<<"	class "<<classWriteFunctionName<<" {};\n"
+												<<"	void __write(CSerializeStream&,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">&,"<<classWriteFunctionName<<");\n\n";
+					proxyWriteFunctionCpp<<"void csg_proxy::__write(CSerializeStream& __os,const std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">& __data,"<<classWriteFunctionName<<")\n"
+										<<"{\n"
+										<<"	int size=__data.size();\n"
+										<<"	__os.writeSize(size);\n"
+										<<"	for(std::"<<param.type<<"<"<<getCsglType(param.stlType)<<","<<getCsglType(param.stlTypeEx)<<">::const_iterator it=__data.cbegin();it!=__data.end();++it)\n"
+										<<"	{\n";
+					if(isBaseType(param.stlType)){
+						proxyWriteFunctionCpp<<"		__os.write(it->first);\n";
+					}else{
+						proxyWriteFunctionCpp<<"		it->first._csg_write(__os);\n";
+					}
+
+					if(isBaseType(param.stlTypeEx)){
+						proxyWriteFunctionCpp<<"		__os.write(it->second);\n";
+					}else{
+						proxyWriteFunctionCpp<<"		it->second._csg_write(__os);\n";
+					}
+
+					proxyWriteFunctionCpp<<"	}\n"
+											<<"}\n\n";
+
+
+					cppProxyCallWrite<<"	csg_proxy::__write(*__os,"<<param.identify<<","<<classWriteFunctionName<<"());\n";
+				}else{
+					checkIsCsglType(param.type,"interface client call function param undefine");
+					proxyClassDef<<",const "<<getCsglType(param.type)<<"&";
+					cppProxyFunction<<",const "<<getCsglType(param.type)<<"& "<<param.identify;
+					cppProxyCallWrite<<"	"<<param.identify<<"._csg_write(*__os);\n";
+				}
 			}
 		}
 		proxyClassDef<<");\n\n";
@@ -506,12 +848,16 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 						<<"}\n\n";
 	}
 
-	proxyClassDef<<"	};\n"
+	proxyClassDef<<"	};\n\n"
+				<<proxyWriteFunctionDef.content
 				<<"}\n";
-
+	
+	
 	headInterfaceStream<<proxyClassDef.content<<"\n";
 	cppInterfaceStream<<cppProxyClass.content;
 	cppInterfaceStream<<cppProxyFunction.content;
+	cppInterfaceStream<<proxyWriteFunctionCpp.content;
+
 	//**********************proxy class start end******************************
 
 };
@@ -669,18 +1015,20 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 						<<"		:public virtual csg::IMsgBase {\n"
 						<<"	public:\n";
 
-	CSGStream structHeadMapStream;
-	CSGStream structCppMapStream;
+	//针对vector,map类型的成员变量,额外另生成方法读写
+	CSGStream stlStructHeadStream;   //生成额外读写方法的头文件内容
+	CSGStream stlStructCppStream;	//生成额外读写方法的cpp文件内容
 
-	std::string initDef="	";
-	std::string readDef;
-	std::string writeDef;
+	//每个结构体变量成员，都需要有 init,read,write,=,!=,< 这几个方法
+	std::string initDef="	";		// _csg_init()函数内容
+	std::string readDef;			// _csg_read()函数内容
+	std::string writeDef;			// _csg_write()函数内容
 	
 	std::string operatorEq="	";
 	std::string operatorEqEq;
 	std::string operatorless;
 	
-	std::set<std::string> structNameSet;
+	std::set<std::string> structNameSet; //判断结构体内同名的identify
 
 	for(int i=0;i<$6.size();i++){
 		CSGStruct tmp=$6[i];
@@ -691,122 +1039,171 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 		}
 		structNameSet.insert(tmp.identify);
 
-		std::string valueType;
-		std::string tmpStlStr;
-		std::string tmpMapClassName;
-		bool isStlType=false;
-		bool isCsgStructType=false;
+		if(isBaseType(tmp.type)){  //基础类型结构体成员变量
 
-		if("int"==tmp.type){
-			initDef+=tmp.identify+"=0;\n	";
-		}else if("double"==tmp.type){
-			initDef+=tmp.identify+"=0.0;\n	";
-		}else if("float"==tmp.type){
-			initDef+=tmp.identify+"=0.0f;\n	";
-		}else if("bool"==tmp.type){
-			initDef+=tmp.identify+"=false;\n	";
-		}else if("long"==tmp.type){
-			initDef+=tmp.identify+"=0;\n	";
-			valueType="long64_t";
-		}else if("string"==tmp.type){
-			initDef+=tmp.identify+"=\"\";\n	";
-			valueType="std::string";
-		}else if(CSGStlTypeOne==tmp.stlTypeNum){
+			structHeadfileStream<<"		"<<getCsglType(tmp.type)<<"  "<<tmp.identify<<";\n";  //类型显示处理  getCsglType
+
+			initDef+=tmp.identify+"="+getInitTypeString(tmp.type)+";\n	"; //代码初始值根据类型初始化 getInitTypeString
+			readDef+="	__is.read("+tmp.identify+");\n";
+			writeDef+="	__os.write("+tmp.identify+");\n";
+
+		}else if(CSGStlTypeOne==tmp.stlTypeNum){   // vector类结构体成员变量处理
+			
+			structHeadfileStream<<"		std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<"> "<<tmp.identify<<";\n";  //变量定义
+
 			initDef+=tmp.identify+".clear();\n	"; 
-			if("long"==tmp.stlType)
-				valueType="std::"+tmp.type+"<long64_t>";
-			else
-				valueType="std::"+tmp.type+"<"+tmp.stlType+">";
-		}else if(CSGStlTypeDouble==tmp.stlTypeNum){
-			isStlType=true;
+
+			if(isBaseType(tmp.stlType)){
+				readDef+="	__is.read("+tmp.identify+");\n";
+				writeDef+="	__os.write("+tmp.identify+");\n";
+			}else{ //vector类自定义结构体成员变量
+				// vector<A> ai;
+				// tmp.type=vector
+				// tmp.stlType=A
+				// tmp.identify=ai
+				// check
+
+				checkIsCsglType(tmp.stlType,"unknow csgl struct type from struct stl one");
+
+
+				//函数命名规则= 前缀+结构体名+stl类型+stl内的元素类型+identify
+				std::string classFunctionName="__STL_TYPE_ONE__Struct__"+structName+"__"+tmp.type+"__"+tmp.stlType+"__"+tmp.identify+"__Serialize";
+
+				readDef+="	Message::__read(__is,"+tmp.identify+","+classFunctionName+"());\n";
+				writeDef+="	Message::__write(__os,"+tmp.identify+","+classFunctionName+"());\n";
+
+				stlStructHeadStream<<"	class "<<classFunctionName<<" {};\n"
+								<<"	void __read(csg::CSerializeStream& __is,std::"<<tmp.type+"<"<<getCsglType(tmp.stlType)<<">"<<"&,"<<classFunctionName<<");\n"
+								<<"	void __write(csg::CSerializeStream& __os,const std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<">&,"<<classFunctionName<<");\n\n";
+				
+				stlStructCppStream<<"void Message::__read(csg::CSerializeStream& __is,std::"<<tmp.type+"<"<<getCsglType(tmp.stlType)<<">"<<"& __data,"<<classFunctionName<<")\n"
+									<<"{\n"
+									<<"	int size=0;\n"
+									<<"	__is.readSize(size);\n"
+									<<"	for(int i=0;i<size;i++)\n"
+									<<"	{\n"
+									<<"		"<<tmp.stlType<<" val;\n"
+									<<"		val._csg_read(__is);\n"
+									<<"		__data.push_back(val);\n"
+									<<"	}\n"
+									<<"};\n\n"
+
+									<<"void Message::__write(csg::CSerializeStream& __os,const std::"<<tmp.type<<"<"<<tmp.stlType<<">& __data,"<<classFunctionName<<")\n\n"
+									<<"{\n"
+									<<"	int size=__data.size();\n"
+									<<"	__os.writeSize(size);\n"
+									<<"	for(std::"<<tmp.type<<"<"<<tmp.stlType<<">::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
+									<<"	{\n"
+									<<"		(*it)._csg_write(__os);\n"
+									<<"	}\n"
+									<<"};\n\n";				
+			}
+
+
+		}else if(CSGStlTypeDouble==tmp.stlTypeNum){ //map类结构体成员变量
+			// map<A,B> ab;
+			// tmp.type=map
+			// tmp.stlType=A
+			// tmp.stlTypeEx=B
+			// tmp.identify=ab
+
+			structHeadfileStream<<"		std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<"> "<<tmp.identify<<";\n";  //变量定义
 			initDef+=tmp.identify+".clear();\n	"; 
 			
-			std::string typeStr;
-			std::string typeStrEx;
-			if("long"==tmp.stlType){
-				typeStr="long64_t";
-			}
-			else{
-				typeStr=tmp.stlType;
-			}
-			if("long"==tmp.stlTypeEx){
-				typeStrEx="long64_t";
-			}
-			else{
-				typeStrEx=tmp.stlTypeEx;
-			}
+			//函数命名规则= 前缀+结构体名+stl类型+stlEx类型+stl内的元素类型+identify
+			std::string classFunctionName="__STL_TYPE_DOUBLE__Struct__"+structName+"__"+tmp.type+"__"+tmp.stlType+"__"+tmp.stlTypeEx+"__"+tmp.identify+"__Serialize";
 
-			tmpStlStr="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
-			valueType+="std::"+tmp.type+"<"+typeStr+","+typeStrEx+">";
+			readDef+="	Message::__read(__is,"+tmp.identify+","+classFunctionName+"());\n";
+			writeDef+="	Message::__write(__os,"+tmp.identify+","+classFunctionName+"());\n";
 
 
+			stlStructHeadStream<<"	class "<<classFunctionName<<" {};\n"
+								<<"	void __read(csg::CSerializeStream& __is,std::"<<tmp.type+"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<">"<<"&,"<<classFunctionName<<");\n"
+								<<"	void __write(csg::CSerializeStream& __os,const std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<">&,"<<classFunctionName<<");\n\n";
 
-			tmpMapClassName="__Map_"+structName+"_"+tmp.stlType+"_"+tmp.stlTypeEx+"_Serialize_";
-			structHeadMapStream<<"	class "<<tmpMapClassName<<" {};\n"
-								<<"	void __read(csg::CSerializeStream& __is,"<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n"
-								<<"	void __write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"&,"<<tmpMapClassName<<");\n\n";
-
-			structCppMapStream<<"void Message::__read(csg::CSerializeStream& __is,"<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
+			
+			stlStructCppStream<<"void Message::__read(csg::CSerializeStream& __is,std::"<<tmp.type+"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<">"<<"& __data,"<<classFunctionName<<")\n"
 								<<"{\n"
 								<<"	int size=0;\n"
-								<<"	__is.read(size);\n"
+								<<"	__is.readSize(size);\n"
 								<<"	for(int i=0;i<size;i++)\n"
 								<<"	{\n"
-								<<"		"<<typeStr<<" key;\n"
-								<<"		__is.read(key);\n"
-								<<"		"<<typeStrEx<<" val;\n"
-								<<"		__is.read(val);\n"
-								<<"		__data[key]=val;\n"
-								<<"	}\n"
-								<<"};\n\n"
-								<<"void Message::__write(csg::CSerializeStream& __os,const "<<tmpStlStr<<"& __data,"<<tmpMapClassName<<")\n"
-								<<"{\n"
-								<<"	int size=__data.size();\n"
-								<<"	__os.write(size);\n"
-								<<"	for("<<tmpStlStr<<"::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
-								<<"	{\n"
-								<<"		__os.write(it->first);\n"
-								<<"		__os.write(it->second);\n"
+								<<"		"<<getCsglType(tmp.stlType)<<" key;\n";
+
+			//根据类型,使用不同的读方法
+			if(isBaseType(tmp.stlType)){
+				stlStructCppStream<<"		__is.read(key);\n";
+			}else{
+				//check
+				checkIsCsglType(tmp.stlType,"unknow csgl struct type from struct stl double first key ");
+
+				stlStructCppStream<<"		key._csg_read(__is);\n";
+			}
+					
+			stlStructCppStream<<"		"<<getCsglType(tmp.stlTypeEx)<<" val;\n";
+
+			//根据类型,使用不同的读方法
+			if(isBaseType(tmp.stlTypeEx)){
+				stlStructCppStream<<"		__is.read(val);\n";
+			}else{
+				//check
+				checkIsCsglType(tmp.stlTypeEx,"unknow csgl struct type from struct stl double second key");
+
+				stlStructCppStream<<"		val._csg_read(__is);\n";
+			}
+
+			stlStructCppStream<<"		__data[key]=val;\n"
 								<<"	}\n"
 								<<"};\n\n";
 
-		}
-		else{
-			if(mapStructName.find(tmp.type)==mapStructName.end()){
-				csgInfo("unknow csgl struct type",tmp.type);
-				globalError=true;
-				assert(false);
+			stlStructCppStream<<"void Message::__write(csg::CSerializeStream& __os,const std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<">& __data,"<<classFunctionName<<")\n\n"
+								<<"{\n"
+								<<"	int size=__data.size();\n"
+								<<"	__os.writeSize(size);\n"
+								<<"	for(std::"<<tmp.type<<"<"<<getCsglType(tmp.stlType)<<","<<getCsglType(tmp.stlTypeEx)<<">"<<"::const_iterator it=__data.cbegin();it!=__data.cend();++it)\n"
+								<<"	{\n";
+			//根据类型,使用不同的写方法
+			if(isBaseType(tmp.stlType)){
+				stlStructCppStream<<"		__os.write(it->first);\n";
+			}else{
+				stlStructCppStream<<"		it->first._csg_write(__os);\n";
 			}
-			initDef+=tmp.identify+"._csg_init();\n	";
-			isCsgStructType=true;
-		};
-		if(""==valueType){
-			valueType=tmp.type;
+			//根据类型,使用不同的读方法
+			if(isBaseType(tmp.stlTypeEx)){
+				stlStructCppStream<<"		__os.write(it->second);\n";
+			}else{
+				stlStructCppStream<<"		it->second._csg_write(__os);\n";
+			}
+				
+			stlStructCppStream<<"	}\n"
+								<<"};\n\n";
 		}
+		else{ //自定义结构体成员变量
+			checkIsCsglType(tmp.type,"unknow csgl struct type");
 
-		structHeadfileStream<<"		"<<valueType<<"  "<<tmp.identify<<";\n";
+			structHeadfileStream<<"		"<<tmp.type<<"  "<<tmp.identify<<";\n";  //类型显示处理  getCsglType
 
-		if(isStlType){
-			readDef+="	Message::__read(__is,"+tmp.identify+","+tmpMapClassName+"());\n";
-			writeDef+="	Message::__write(__os,"+tmp.identify+","+tmpMapClassName+"());\n";
-		}else if(isCsgStructType){
+			initDef+=tmp.identify+"._csg_init();\n	"; //代码初始值根据类型初始化 getInitTypeString
+
 			readDef+="	"+tmp.identify+"._csg_read(__is);\n";
 			writeDef+="	"+tmp.identify+"._csg_write(__os);\n";
-		}
-		else{
-			readDef+="	__is.read("+tmp.identify+");\n";
-			writeDef+="	__os.write("+tmp.identify+");\n";
-		}
 
+		};
 
-
+		//判断==的方法都是一样的
 		operatorEq+=tmp.identify+" = "+"__other."+tmp.identify+";\n	";
-
 		operatorEqEq+="	if("+tmp.identify+" !="+" __other."+tmp.identify+")\n"
-						+"	{\n"+"		return true;\n	}\n";
-
+						+"	{\n"
+						+"		return true;\n"
+						+"	}\n";
 		operatorless+="	if("+tmp.identify+" <"+" __other."+tmp.identify+")\n"
-						+"	{\n"+"		return true;\n	}\n";
+						+"	{\n"
+						+"		return true;\n"
+						+"	}\n"
+						+"	else if(__other."+tmp.identify+"<"+tmp.identify+")\n"
+						+"	{\n"
+						+"		return false;\n"
+						+"	}\n";
 	}
 	
 	structHeadfileStream<<"\n";
@@ -831,7 +1228,7 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	structHeadfileStream<<"	typedef csg::CSmartPointShare<"<<structName<<"> "<<structName<<"_Ptr;\n\n";
 	
 	headfileContentStream<<structHeadfileStream.content;
-	headfileContentStream<<structHeadMapStream.content;
+	headfileContentStream<<stlStructHeadStream.content;
 
 	//generated cpp code
 	CSGStream structCppStream;
@@ -906,7 +1303,7 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 	structCppStream<<"void Message::"<<structName<<"::_csg_write(CSerializeStream& __os)const{\n"
 					<<writeDef<<"};\n\n";
 					
-	structCppStream<<structCppMapStream.content;
+	structCppStream<<stlStructCppStream.content;
 
 	cppContentStream<<structCppStream.content;
 };
