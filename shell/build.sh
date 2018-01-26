@@ -75,6 +75,7 @@ function build_apps(){
 		cd $tmpDir
 		svn update .
 
+		#build with dynamic libs
 		echo -e "$GREEN first clean $name $BLACK"
 		time make -f makefile_for_srv clean SRV_NAME="$name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$LIBS"
 		echo -e "$GREEN start build $name... $BLACK"
@@ -86,7 +87,23 @@ function build_apps(){
   		fi
 		
 		echo -e "$GREEN build $name success! $BLACK"
+
+		#build with static libs
+		static_name=$name"_static"
+		echo -e "$GREEN first clean $static_name $BLACK"
+		time make -f makefile_for_srv clean SRV_NAME="$static_name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$STATIC_LIBS"
+		echo -e "$GREEN start build $static_name... $BLACK"
+		time make -f makefile_for_srv all SRV_NAME="$static_name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$STATIC_LIBS"
+		EXCODE=$?
+  		if [ "$EXCODE" != "0" ]; then
+   	 		echo -e "$RED build $static_name error,please check$BLACK"
+   	 		exit 1
+  		fi
+		
+		echo -e "$GREEN build $static_name success! $BLACK"
 		#back to cur dir
+
+
 		cd $SHELL_ROOT_DIR
 	done
 
@@ -143,9 +160,9 @@ function update_svn_code(){
 }
 
 
-update_svn_code
-clean_all
-build_engine
-build_libs
-build_apps
+#update_svn_code
+#clean_all
+#build_engine
+#build_libs
+build_apps 
 

@@ -57,8 +57,12 @@ void startSrvEx() {
 	onlyQForExit();
 }
 
-void sendMsgToSrv(boost_CSocketClient_ptr client) {
-	LogDebug("only q will exit,watting.....");
+
+void sendMsgToSrv(boost_CSocketClient_ptr client, int sendType) {
+
+	if (client->getSession()->getStatus() != ESessionStatusConnected)
+		return;
+
 	STestStruct_Ptr t = new STestStruct();
 	t->a = 35356;
 	t->b = 342423;
@@ -90,136 +94,124 @@ void sendMsgToSrv(boost_CSocketClient_ptr client) {
 
 
 	csg_proxy::ITest trpc;
+
+
+		
+	if (1==sendType)
+	{
+		mb->_msgBase = t;
+		client->pushMessage(mb);
+	}
+	else if (2==sendType) {
+		mb->_msgBase = tm;
+		client->pushMessage(mb);
+	}
+	else if (3 == sendType) {
+		mb->_msgBase = tp;
+		client->pushMessage(mb);
+	}
+	else if (4== sendType) {
+		LogDebug("start rpc test t3");
+		CCli_ITest_t3_CallBackPtr cb = new CCli_ITest_t3_CallBack();
+		trpc.t3_async(client->getSession(), cb, 2523, "oojigwoeg");
+		trpc.t3_async(client->getSession(), NULL, 2523, "oojigwoeg");
+	}
+	else if (5 == sendType) {
+		LogDebug("start rpc test t4");
+		CCli_ITest_t4_CallBackPtr cb = new CCli_ITest_t4_CallBack();
+		Message::STestMap mm;
+		mm.a = 12312;
+		mm.ss["11"] = "242343";
+		mm.ss["ge"] = "ges";
+		STestStruct st;
+		st.a = 99;
+		st.ib.push_back(2432);
+		mm.msstring[st] = "msstring";
+		trpc.t4_async(client->getSession(), cb, mm);
+	}
+	else if (6 == sendType) {
+		LogDebug("start rpc test t5");
+		CCli_ITest_t5_CallBackPtr cb = new CCli_ITest_t5_CallBack();
+		std::vector<STest> vt;
+		for (int i = 0; i < 99; i++) {
+			STest s;
+			s.a = i;
+			s.str = ToStr(i);
+			vt.push_back(s);
+		}
+		trpc.t5_async(client->getSession(), cb, vt);
+	}
+	else if (7 == sendType) {
+		LogDebug("start rpc test t6");
+		CCli_ITest_t6_CallBackPtr cb = new CCli_ITest_t6_CallBack();
+		std::map<std::string, STest> ms;
+		for (int i = 0; i < 99; i++) {
+			STest s;
+			s.a = i;
+			s.str = ToStr(i);
+			ms[ToStr(i)] =s;
+		}
+		trpc.t6_async(client->getSession(), cb, ms);
+	}
+}
+
+
+void sendMsgToSrvByOpt(boost_CSocketClient_ptr client) {
 	do
 	{
 		std::string inputStr;
 		getline(std::cin, inputStr);
-		if ("b" == inputStr)
-		{
+		if ("1" == inputStr) {
+			sendMsgToSrv(client, 1);
+		}
+		else if ("2" == inputStr) {
+			sendMsgToSrv(client, 2);
+		}
+		else if ("3" == inputStr) {
+			sendMsgToSrv(client, 3);
+		}
+		else if ("4" == inputStr) {
+			sendMsgToSrv(client, 3);
+		}
+		else if ("5" == inputStr) {
+			sendMsgToSrv(client, 3);
+		}
+		else if ("6" == inputStr) {
+			sendMsgToSrv(client, 3);
+		}
+		else if ("7" == inputStr) {
+			sendMsgToSrv(client, 3);
+		}
+		else if ("0" == inputStr)
 			break;
-		}
-		else if ("a" == inputStr)
-		{
-			mb->_msgBase = t;
-			client->pushMessage(mb);
-		}
-		else if ("c" == inputStr) {
-			mb->_msgBase = tm;
-			client->pushMessage(mb);
-		}
-		else if ("d" == inputStr) {
-			mb->_msgBase = tp;
-			client->pushMessage(mb);
-		}
-		else if ("e" == inputStr) {
-			LogDebug("start rpc test t3");
-			CCli_ITest_t3_CallBackPtr cb = new CCli_ITest_t3_CallBack();
-			trpc.t3_async(client->getSession(), cb, 2523, "oojigwoeg");
-			trpc.t3_async(client->getSession(), NULL, 2523, "oojigwoeg");
-		}
-		else if ("f" == inputStr) {
-			LogDebug("start rpc test t4");
-			CCli_ITest_t4_CallBackPtr cb = new CCli_ITest_t4_CallBack();
-			Message::STestMap mm;
-			mm.a = 12312;
-			mm.ss["11"] = "242343";
-			mm.ss["ge"] = "ges";
-			STestStruct st;
-			st.a = 99;
-			st.ib.push_back(2432);
-			mm.msstring[st] = "msstring";
-			trpc.t4_async(client->getSession(), cb, mm);
-		}
-		else if ("g" == inputStr) {
-			LogDebug("start rpc test t5");
-			CCli_ITest_t5_CallBackPtr cb = new CCli_ITest_t5_CallBack();
-			std::vector<STest> vt;
-			for (int i = 0; i < 99; i++) {
-				STest s;
-				s.a = i;
-				s.str = ToStr(i);
-				vt.push_back(s);
-			}
-			trpc.t5_async(client->getSession(), cb, vt);
-		}
-		else if ("h" == inputStr) {
-			LogDebug("start rpc test t6");
-			CCli_ITest_t6_CallBackPtr cb = new CCli_ITest_t6_CallBack();
-			std::map<std::string, STest> ms;
-			for (int i = 0; i < 99; i++) {
-				STest s;
-				s.a = i;
-				s.str = ToStr(i);
-				ms[ToStr(i)] =s;
-			}
-			trpc.t6_async(client->getSession(), cb, ms);
-		}
-
-
 	} while (true);
 
 	onlyQForExit();
-
 }
 
-void startClientRemote()
+void startSendMsg(std::string url)
 {
 	boost_CSocketClient_ptr client(new CSocketClient());
-	client->init(test_royalchen_url ,test_royalchen_port ,false);
+	client->init(url ,test_royalchen_port ,false);
 	client->startConnect();
-	sendMsgToSrv(client);
+	sendMsgToSrvByOpt(client);
 }
 
-void startClientLocal()
+void startSendLoop(std::string url)
 {
 	boost_CSocketClient_ptr client(new CSocketClient());
-	client->init(localhost_url, test_royalchen_port, false);
-	client->startConnect();
-	sendMsgToSrv(client);
-}
-
-
-void startClientLocalLoop()
-{
-	boost_CSocketClient_ptr client(new CSocketClient());
-	//client->init(test_royalchen_url, test_royalchen_port, false);
-	client->init(localhost_url, test_royalchen_port, false);
+	client->init(url, test_royalchen_port, false);
 	client->startConnect();
 
-	CThread::sleep_for(2000);
-
-	LogDebug("only q will exit,watting.....");
-	STestStruct_Ptr t = new STestStruct();
-	t->a = 35356;
-	t->b = 342423;
-	t->ib.push_back(3);
-	t->ib.push_back(5);
-	t->str = "good,nice";
-
-	CMsgBlockPtr mb = new CMsgBlock();
-	mb->_msgHead.command = 988;
-	mb->_msgHead.fromId.id = 1992;
-	mb->_msgBase = t;
-
-
-	csg_proxy::ITest trpc;
 	do
 	{
-		int num = rand() % 2;
-		if (0 == num) {
-			client->pushMessage(mb);
-		}
-		else {
-			LogDebug("start rpc test");
-			CCli_ITest_t3_CallBackPtr cb = new CCli_ITest_t3_CallBack();
-			trpc.t3_async(client->getSession(), cb, 2523, "oojigwoeg");
-		}
+		int num = rand() % 10;
+
+		sendMsgToSrv(client, num);
 		CThread::sleep_for(200);
 	} while (true);
 
 	onlyQForExit();
-
-
 }
 
 
@@ -235,7 +227,7 @@ void testAsio(Json::Value& js)
 		break;
 		case 2:
 		{
-			startClientRemote();
+			startSendMsg(localhost_url);
 		}
 		break;
 		case 3:
@@ -250,11 +242,15 @@ void testAsio(Json::Value& js)
 		break;
 		case 5:
 		{
-			startClientLocal();
+			startSendMsg(test_royalchen_url);
 		}
 		break;
 		case 6: {
-			startClientLocalLoop();
+			startSendLoop(localhost_url);
+		}
+		break;
+		case 7: {
+			startSendLoop(test_royalchen_url);
 		}
 		break;
 	}

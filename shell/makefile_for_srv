@@ -36,7 +36,7 @@ $(foreach tmp,$(CUR_OBJ_EX),$(eval $(call build_obj,$(tmp).o,$(tmp).cpp)))
 all:$(SRV_NAME)
 
 $(SRV_NAME):$(CUR_OBJ)
-	$(CC) $(CFLAG) -o $(PROJECT_BIN_DIR)$@ $^ $(LIBS)
+	$(CC) $(CFLAG) $^ $(LIBS) -o $(PROJECT_BIN_DIR)$@
 
 
 .PHONY:clean
