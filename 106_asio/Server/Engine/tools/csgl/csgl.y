@@ -60,6 +60,7 @@ std::string toStr(int);
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern int yylineno;
 
 ofstream ofs;
 ofstream ofscpp;
@@ -106,6 +107,9 @@ bool checkIsCsglType(std::string type,std::string msg){
 
 
 %}
+
+
+
 // ifndef token
 %token TOKEN_IFNDEF TOKEN_IFNDEF_END TOKEN_IFDEF TOKEN_IFDEF_END 
 %token <t_string> TOKEN_IFNDEF_FILE TOKEN_IFDEF_FILE TOKEN_ENDIF
@@ -1394,7 +1398,7 @@ void csgOutputEnd(std::string fileName){
 
 
 void yyerror(const char* s){
-	std::cerr<<"\033[31m"<<"get error:["<<s<<"]\033[0m"<<std::endl;
+	std::cerr<<"\033[31m"<<"get error:["<<s<<"]\033[0m"<<",line "<<yylineno<<std::endl;
 	assert(false);
 }
 

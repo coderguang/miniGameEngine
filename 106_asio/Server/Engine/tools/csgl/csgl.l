@@ -8,6 +8,8 @@ extern void csgInfo(std::string type,std::string s);
 
 %}
 
+%option yylineno
+
 space [ \t]
 blank {space}+
 letter [a-zA-Z_]+
