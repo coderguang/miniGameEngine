@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Src">
+      <UniqueIdentifier>{ea9be1d0-eff4-470f-acc8-de1dc019ab3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine">
+      <UniqueIdentifier>{4dea0210-9faa-499c-8d76-722274754eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\serialize">
+      <UniqueIdentifier>{8f432538-acc2-4f93-9bc9-db24614d9f16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework">
+      <UniqueIdentifier>{b55874e5-df11-420f-a044-0a9d26266ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\def">
+      <UniqueIdentifier>{bc4d9cb3-baa9-4cbf-9b33-e195d1099855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\exception">
+      <UniqueIdentifier>{8d18fa5f-f6d4-4c05-8ce3-ba6bd4362aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\allocator">
+      <UniqueIdentifier>{0744868a-ea1b-404e-a055-1f13ce38f250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\lock">
+      <UniqueIdentifier>{9a31506a-2cad-4597-80c2-c0fd8b00eebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\io">
+      <UniqueIdentifier>{e8f42863-9b12-46a9-8c63-8d25632912b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\util">
+      <UniqueIdentifier>{12336bf6-8520-44dc-ab99-5486f2a2e2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\counter">
+      <UniqueIdentifier>{63c143d5-54ce-4d29-bb37-326f4a57d921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\DesignPattern">
+      <UniqueIdentifier>{8943d14f-7e1b-4f19-a002-f501718db109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\log">
+      <UniqueIdentifier>{bb29d86c-db9d-4eaa-aa30-264417e25500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\datetime">
+      <UniqueIdentifier>{a0e5a09b-6498-4892-9a28-cfc929d2c834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\baseServer">
+      <UniqueIdentifier>{fe4043c7-baaa-4aa5-bc9a-a6e5981b977b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\SmartPoint">
+      <UniqueIdentifier>{a8036387-b69b-4256-ab82-00003197bdcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\mq">
+      <UniqueIdentifier>{8a199e4a-e873-4092-830d-25e9e00e2656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\rpc">
+      <UniqueIdentifier>{39bacef8-3a57-4fd2-986c-f81623b2188d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\json">
+      <UniqueIdentifier>{83a20b49-2f55-4356-88bf-828646f309e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\timer">
+      <UniqueIdentifier>{c2d11af0-a8b2-43b1-b77f-591fe0cbc4e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\core">
+      <UniqueIdentifier>{1836f78e-6e47-422c-b1ad-26cd49cc81ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\net">
+      <UniqueIdentifier>{da771a7a-ebfd-48e9-9bdb-094238f502e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\net\session">
+      <UniqueIdentifier>{f9756758-cd76-4897-a594-715c2d66c6a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\net\protocol">
+      <UniqueIdentifier>{fc4187bd-0e4b-43d1-b586-4dc2542c0da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\engine\thread">
+      <UniqueIdentifier>{9f1c5323-aaa7-45fd-8787-560e215a2d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\framework\tool">
+      <UniqueIdentifier>{e34f5233-3553-4db0-85d5-c840cbcd3ad2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp">
+      <Filter>Src\engine\serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\exception\exception.cpp">
+      <Filter>Src\framework\exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\allocator\allocator.cpp">
+      <Filter>Src\engine\allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\lock\lock.cpp">
+      <Filter>Src\engine\lock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\lock\lockObjectManager.cpp">
+      <Filter>Src\engine\lock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\counter\counterHandler.cpp">
+      <Filter>Src\framework\counter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\counter\counterHandlerManager.cpp">
+      <Filter>Src\framework\counter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\serialize\serializestream.cpp">
+      <Filter>Src\engine\serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\datetime\datetime.cpp">
+      <Filter>Src\framework\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\datetime\datetimeHelper.cpp">
+      <Filter>Src\framework\datetime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\baseServer\updateDtTask.cpp">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\baseServer\loggerWritter.cpp">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\log\Log.cpp">
+      <Filter>Src\framework\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\util\typetransform.cpp">
+      <Filter>Src\framework\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\SmartPoint\smartPoint.cpp">
+      <Filter>Src\framework\SmartPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\SmartPoint\refObject.cpp">
+      <Filter>Src\framework\SmartPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\util\sysUtil.cpp">
+      <Filter>Src\framework\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\mq\msgBlock.cpp">
+      <Filter>Src\engine\mq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\mq\msgManager.cpp">
+      <Filter>Src\engine\mq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\mq\msgQueue.cpp">
+      <Filter>Src\engine\mq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\baseServer\mainLogicTask.cpp">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\rpc\rmiObject.cpp">
+      <Filter>Src\engine\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\rpc\rmidef.cpp">
+      <Filter>Src\engine\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\rpc\rpcHelper.cpp">
+      <Filter>Src\engine\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\rpc\rmiObjectAdapter.cpp">
+      <Filter>Src\engine\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\json\json_reader.cpp">
+      <Filter>Src\framework\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\json\json_value.cpp">
+      <Filter>Src\framework\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\json\json_writer.cpp">
+      <Filter>Src\framework\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\timer\timeNode.cpp">
+      <Filter>Src\framework\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\timer\timer.cpp">
+      <Filter>Src\framework\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\timer\timerManager.cpp">
+      <Filter>Src\framework\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\util\CCmdManager.cpp">
+      <Filter>Src\framework\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\net\session\session.cpp">
+      <Filter>Src\engine\net\session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\core\csgIoMgr.cpp">
+      <Filter>Src\engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\core\csgServer.cpp">
+      <Filter>Src\engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\thread\thread.cpp">
+      <Filter>Src\engine\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\net\session\sessionMgr.cpp">
+      <Filter>Src\engine\net\session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\baseServer\SocketServer.cpp">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\baseServer\SocketClient.cpp">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\engine\net\protocol\csgProtocol.cpp">
+      <Filter>Src\engine\net\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\tool\debugTool.cpp">
+      <Filter>Src\framework\tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\tool\signalTool.cpp">
+      <Filter>Src\framework\tool</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Engine\engine\serialize\bytesbuffer.h">
+      <Filter>Src\engine\serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\def\csg_def.h">
+      <Filter>Src\engine\def</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\exception\exception.h">
+      <Filter>Src\framework\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\allocator\allocator.h">
+      <Filter>Src\engine\allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\lock\lock.h">
+      <Filter>Src\engine\lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\lock\lockObjectManager.h">
+      <Filter>Src\engine\lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\io\IOHandler.h">
+      <Filter>Src\framework\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\counter\counterHandler.h">
+      <Filter>Src\framework\counter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\counter\counterHandlerManager.h">
+      <Filter>Src\framework\counter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\DesignPattern\Singleton.h">
+      <Filter>Src\framework\DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\io\PrintIOHandler.h">
+      <Filter>Src\framework\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\log\Log.h">
+      <Filter>Src\framework\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\serialize\serializestream.h">
+      <Filter>Src\engine\serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\util\endian.h">
+      <Filter>Src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\datetime\datetime.h">
+      <Filter>Src\framework\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\datetime\datetimeHelper.h">
+      <Filter>Src\framework\datetime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\updateDtTask.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\baseServerDef.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\loggerWritter.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\util\typetransform.h">
+      <Filter>Src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\SmartPoint\smartPoint.h">
+      <Filter>Src\framework\SmartPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\SmartPoint\refObject.h">
+      <Filter>Src\framework\SmartPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\util\sysUtil.h">
+      <Filter>Src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\def\environment_def.h">
+      <Filter>Src\engine\def</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\mq\msgBlock.h">
+      <Filter>Src\engine\mq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\mq\msgManager.h">
+      <Filter>Src\engine\mq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\mq\msgQueue.h">
+      <Filter>Src\engine\mq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\DesignPattern\objectPool.h">
+      <Filter>Src\framework\DesignPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\mainLogicTask.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\rpc\rmiObject.h">
+      <Filter>Src\engine\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\rpc\rmidef.h">
+      <Filter>Src\engine\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\rpc\rpcHelper.h">
+      <Filter>Src\engine\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\rpc\rmiObjectAdapter.h">
+      <Filter>Src\engine\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\allocator.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\assertions.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\autolink.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\config.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\features.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\forwards.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\json.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\reader.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\value.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\version.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\writer.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\json\json_tool.h">
+      <Filter>Src\framework\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\timer\timeNode.h">
+      <Filter>Src\framework\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\timer\timer.h">
+      <Filter>Src\framework\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\timer\timerManager.h">
+      <Filter>Src\framework\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\def\color_def.h">
+      <Filter>Src\engine\def</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\util\CCmdManager.h">
+      <Filter>Src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\def\boost_def.h">
+      <Filter>Src\engine\def</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\session\session.h">
+      <Filter>Src\engine\net\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\protocol\protocol.h">
+      <Filter>Src\engine\net\protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\core\csgIoMgr.h">
+      <Filter>Src\engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\core\csgServer.h">
+      <Filter>Src\engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\thread\thread.h">
+      <Filter>Src\engine\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\session\sessionMgr.h">
+      <Filter>Src\engine\net\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\SocketServer.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\baseServer\SocketClient.h">
+      <Filter>Src\engine\baseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\engine\net\protocol\csgProtocol.h">
+      <Filter>Src\engine\net\protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\tool\debugTool.h">
+      <Filter>Src\framework\tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\tool\signalTool.h">
+      <Filter>Src\framework\tool</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Engine\framework\json\json_valueiterator.inl">
+      <Filter>Src\framework\json</Filter>
+    </None>
+    <None Include="..\..\Engine\framework\json\version.h.in">
+      <Filter>Src\framework\json</Filter>
+    </None>
+  </ItemGroup>
+</Project>
