@@ -26,10 +26,12 @@ BIN_DIR=$PRO_ROOT_DIR/runnable/
 LIB_DIR=$PRO_ROOT_DIR/lib/
 
 CC="clang++"
+CCEX="clang"
 
 #lib build params
 LIB_CFLAG="-std=c++11 -MMD -MP -g -D _DEBUG -I. -I$PRO_ROOT_DIR/Engine"
 
+LIB_CFLAG_EX=" -MMD -MP -g -D _DEBUG -I -I$PRO_ROOT_DIR/Engine"
 
 #bin build params
 BIN_CFLAG="-std=c++11 -MMD -MP -lstdc++ -g -D _DEBUG -L../../lib -L../../../../lib/linuxlib/mongodb-c++-driver -L../../../../lib/linuxlib/boost -I. -I../../Engine/ -I../../../../lib/include -I../Message"

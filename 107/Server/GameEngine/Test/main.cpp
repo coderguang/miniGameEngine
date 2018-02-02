@@ -3,6 +3,7 @@
 #include "TestCmdManager.h"
 #include "log/TestLog.h"
 #include "framework/util/CCmdManager.h"
+#include "lua/testLua.h"
 
 using namespace csg;
 
@@ -42,6 +43,7 @@ void start_main(int argc ,char** argv)
 
 }
 
+
 int main(int argc ,char **argv)
 {
 
@@ -64,6 +66,9 @@ int main(int argc ,char **argv)
 	CCsgServer::instance()->startLogServer("./log" ,"TestLog",true);
 
 	CCsgServer::instance()->startMainLogicServer();
+
+
+	start_lua();
 
 	start_main(argc ,argv);
 

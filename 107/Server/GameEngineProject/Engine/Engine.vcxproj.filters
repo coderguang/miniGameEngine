@@ -82,6 +82,9 @@
     <Filter Include="Src\framework\tool">
       <UniqueIdentifier>{e34f5233-3553-4db0-85d5-c840cbcd3ad2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\framework\lua">
+      <UniqueIdentifier>{d90429ab-05ac-4ede-93e3-93d98bb31e39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Engine\engine\serialize\bytesbuffer.cpp">
@@ -209,6 +212,105 @@
     </ClCompile>
     <ClCompile Include="..\..\Engine\framework\tool\signalTool.cpp">
       <Filter>Src\framework\tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lapi.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lauxlib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lbaselib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lbitlib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lcode.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lcorolib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lctype.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ldblib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ldebug.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ldo.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ldump.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lfunc.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lgc.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\linit.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\liolib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\llex.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lmathlib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lmem.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\loadlib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lobject.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lopcodes.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\loslib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lparser.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lstate.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lstring.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lstrlib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ltable.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ltablib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\ltm.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lundump.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lutf8lib.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lvm.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\lzio.c">
+      <Filter>Src\framework\lua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,6 +500,84 @@
     <ClInclude Include="..\..\Engine\framework\tool\signalTool.h">
       <Filter>Src\framework\tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lapi.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lauxlib.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lcode.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lctype.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\ldebug.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\ldo.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lfunc.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lgc.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\llex.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\llimits.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lmem.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lobject.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lopcodes.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lparser.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lprefix.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lstate.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lstring.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\ltable.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\ltm.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lua.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lua.hpp">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\luaconf.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lualib.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lundump.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lvm.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lzio.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Engine\framework\json\json_valueiterator.inl">
@@ -405,6 +585,9 @@
     </None>
     <None Include="..\..\Engine\framework\json\version.h.in">
       <Filter>Src\framework\json</Filter>
+    </None>
+    <None Include="..\..\Engine\framework\lua\Makefile">
+      <Filter>Src\framework\lua</Filter>
     </None>
   </ItemGroup>
 </Project>

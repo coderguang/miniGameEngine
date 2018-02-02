@@ -13,6 +13,9 @@
     <Filter Include="Src\net">
       <UniqueIdentifier>{77bcdbc7-4afe-4d79-b198-94e8b3450545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\lua">
+      <UniqueIdentifier>{7c18d7cf-d580-4424-bf15-2cabcd42af83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\GameEngine\Test\main.cpp">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="..\..\GameEngine\Test\net\TestAsio.h">
       <Filter>Src\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameEngine\Test\lua\testLua.h">
+      <Filter>Src\lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

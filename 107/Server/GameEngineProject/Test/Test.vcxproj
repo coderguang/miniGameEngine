@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\GameEngine\Test\Logic\ITestImpl.h" />
     <ClInclude Include="..\..\GameEngine\Test\log\TestLog.h" />
+    <ClInclude Include="..\..\GameEngine\Test\lua\testLua.h" />
     <ClInclude Include="..\..\GameEngine\Test\net\TestAsio.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestCmdManager.h" />
     <ClInclude Include="..\..\GameEngine\Test\TestDef.h" />
@@ -80,7 +81,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>..\..\lib\mongodb-c++-driver;..\..\lib\boost_1_65_140;..\..\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Configuration)\..\..\runnable\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -108,9 +109,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../lib/Engine.lib;../lib/Message.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;Message.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
