@@ -26,11 +26,11 @@ function build_engine(){
 	cp makefile_for_lib $ENGINE_CODE_DIR
 	cd $ENGINE_CODE_DIR
 	svn update .
-	echo -e "$GREEN first clean $BLACK"
+	#echo -e "$GREEN first clean $BLACK"
 	#time make -f makefile_for_lib clean
-	time make -f makefile_for_lib clean LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
+	#time make -f makefile_for_lib clean LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" DEP_CFLAG="$LIB_DEP_CFLAG"
 	echo -e "$GREEN start build Engine... $BLACK"
-	time make -f makefile_for_lib all LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
+	time make -f makefile_for_lib all LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" DEP_CFLAG="$LIB_DEP_CFLAG"
 	EXCODE=$?
   	if [ "$EXCODE" != "0" ]; then
    	 echo -e "$RED build Engine error,please check$BLACK"
@@ -50,8 +50,8 @@ function build_libs(){
 		cd $tmpDir
 
 		svn update .
-		echo -e "$GREEN first clean $name $BLACK"
-		time make -f makefile_for_lib clean LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
+		#echo -e "$GREEN first clean $name $BLACK"
+		#time make -f makefile_for_lib clean LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
 		echo -e "$GREEN start build $name... $BLACK"
 		time make -f makefile_for_lib all LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
 		EXCODE=$?
@@ -76,8 +76,8 @@ function build_apps(){
 		svn update .
 
 		#build with dynamic libs
-		echo -e "$GREEN first clean $name $BLACK"
-		time make -f makefile_for_srv clean SRV_NAME="$name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$LIBS"
+		#echo -e "$GREEN first clean $name $BLACK"
+		#time make -f makefile_for_srv clean SRV_NAME="$name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$LIBS"
 		echo -e "$GREEN start build $name... $BLACK"
 		time make -f makefile_for_srv all SRV_NAME="$name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$LIBS"
 		EXCODE=$?
@@ -90,8 +90,8 @@ function build_apps(){
 
 		#build with static libs
 		static_name=$name"_static"
-		echo -e "$GREEN first clean $static_name $BLACK"
-		time make -f makefile_for_srv clean SRV_NAME="$static_name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$STATIC_LIBS"
+		#echo -e "$GREEN first clean $static_name $BLACK"
+		#time make -f makefile_for_srv clean SRV_NAME="$static_name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$STATIC_LIBS"
 		echo -e "$GREEN start build $static_name... $BLACK"
 		time make -f makefile_for_srv all SRV_NAME="$static_name" CC="$CC" CFLAG="$BIN_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" LIBS="$STATIC_LIBS"
 		EXCODE=$?
@@ -160,9 +160,9 @@ function update_svn_code(){
 }
 
 
-#update_svn_code
+update_svn_code
 #clean_all
-#build_engine
-#build_libs
+build_engine
+build_libs
 build_apps 
 

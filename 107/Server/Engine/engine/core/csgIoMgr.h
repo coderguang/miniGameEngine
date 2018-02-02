@@ -42,6 +42,7 @@ namespace csg
 		std::vector<boost_work_ptr> _workPool;
 		std::vector<boost_thread_ptr> _threadPool;
 		int _nextIoService;
+		CLock _io_lock;
 	};
 	
 }

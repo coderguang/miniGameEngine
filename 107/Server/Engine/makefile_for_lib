@@ -6,6 +6,7 @@
 LIB_NAME:= 
 CC	:= 
 CFLAG	:= 
+DEP_CFLAG :=
 
 ################################################don't edit next code ###########
 
@@ -21,20 +22,25 @@ CUR_CPP 	:= $(filter %.cpp, $(CUR_SRC))
 CUR_OBJ		:=$(strip $(CUR_CPP:.cpp=.o))
 CUR_OBJ_EX	:=$(patsubst %.o,%,$(CUR_OBJ))
 
+-include $(CUR_CPP:.cpp=.d)
+
 
 define build_obj
-$1:$2
-	$(CC) -c $(CFLAG) -o $1 $2 
+$1:$2 
+	$(CC) -c $(CFLAG) -o $1 $2
 endef
+
 
 $(foreach tmp,$(CUR_OBJ_EX),$(eval $(call build_obj,$(tmp).o,$(tmp).cpp)))
 
 .PHONY:all
 all:$(LIB_NAME)
 
+
 $(LIB_NAME):$(CUR_OBJ)
 	ar cr $(PROJECT_LIB_DIR)$@ $^ 
 
+
 .PHONY:clean
 clean :
-	@$(RM) -rf $(CUR_OBJ) $(PROJECT_LIB_DIR)$(LIB_NAME) 
+	@$(RM) -rf $(CUR_OBJ) $(PROJECT_LIB_DIR)$(LIB_NAME) $(CUR_DEP)

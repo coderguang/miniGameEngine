@@ -25,6 +25,7 @@ void quickTest() {
 	// 	initMemTimer();
 	//testCatchExcept();
 	//testSignal();
+	LogInfo("quick test1232..61325.23");
 }
 
 

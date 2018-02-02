@@ -41,6 +41,7 @@ void csg::CCsgIoMgr::init()
 
 boost_io_service_ptr csg::CCsgIoMgr::getIoService()
 {
+	CAutoLock l(_io_lock);
 	if ( _nextIoService >= _ioPool.size() )
 		_nextIoService = 0;
 	return _ioPool[_nextIoService++];

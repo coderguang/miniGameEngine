@@ -23,6 +23,7 @@ CUR_CPP 	:= $(filter %.cpp, $(CUR_SRC))
 #set obj dir
 CUR_OBJ		:=$(strip $(CUR_CPP:.cpp=.o))
 CUR_OBJ_EX	:=$(patsubst %.o,%,$(CUR_OBJ))
+-include $(CUR_CPP:.cpp=.d)
 
 
 define build_obj
