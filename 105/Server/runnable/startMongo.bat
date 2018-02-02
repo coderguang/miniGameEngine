@@ -1,1 +1,0 @@
-..\..\..\tools\mongodb\bin\mongod --dbpath dbdata
