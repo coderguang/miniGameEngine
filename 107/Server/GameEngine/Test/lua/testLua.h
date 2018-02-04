@@ -51,13 +51,13 @@ void testLuaFile() {
 
 	LogDebug("get str=" << str);
 
-	lua_getglobal(L, "tb1");
-
-	lua_getfield(L, -1, "name");
-	
-	str = lua_tostring(L, -1);
-
-	LogDebug("get name=" << str);
+// 	lua_getglobal(L, "tb1");
+// 
+// 	lua_getfield(L, -1, "name");
+// 	
+// 	str = lua_tostring(L, -1);
+// 
+// 	LogDebug("get name=" << str);
 
 
 
@@ -89,9 +89,85 @@ void testLua() {
 }
 
 
+void testCppCallLuaFunction() {
+	lua_State* L = luaL_newstate();
+	if (L == NULL) {
+		LogErr("create lua state failed");
+		return;
+	}
+	luaL_openlibs(L);
+
+	int bRet = luaL_dofile(L, "hi.lua");
+
+	if (bRet) {
+		LogErr("load lua file error");
+		return;
+	}
+
+//	hi.lua---
+// 	str = "I am so cool"
+// 		tbl = { name = "shun", id = 20114442 }
+// 		function add(a, b)
+// 		return a + b
+// 		end
+
+
+
+	lua_getglobal(L, "add");
+	lua_pushinteger(L, 10);
+	lua_pushinteger(L, 20);
+	lua_pushinteger(L, 15);
+
+	lua_call(L, 3, 2);
+
+	int sum = (int)lua_tointeger(L, -2);
+	int c = (int)lua_tointeger(L, -1);
+
+	lua_pop(L, -2);
+
+	lua_close(L);
+
+	LogDebug("sum=" << sum<<",c="<<c);
+
+	return;
+}
+
+
+static int cpp_average(lua_State *L) {
+	int n = lua_gettop(L);
+	double sum = 0;
+	int i;
+	for (i = 1; i <= n; i++) {
+		sum += lua_tonumber(L, i);
+	}
+	lua_pushnumber(L, sum / n);
+	lua_pushnumber(L, sum);
+
+	return 2;
+}
+
+void testLuaCallCpp() {
+	lua_State *L = luaL_newstate();
+
+	luaL_openlibs(L);
+
+	lua_register(L, "cpp_average", cpp_average);
+
+	luaL_dofile(L, "avg.lua");
+
+	lua_close(L);
+
+	LogDebug("test lua call cpp ok");
+	return;
+}
+
+
+
 
 void start_lua() {
-	testLuaFile();
+	testLuaCallCpp();
+	//testCppCallLuaFunction();
+	//testLuaFile();
 	//testLua();
 }
 
