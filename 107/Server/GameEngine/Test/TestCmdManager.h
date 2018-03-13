@@ -66,7 +66,7 @@ void startRegistCmd()
 	LogDebug("start regist cmd........");
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
 	CCmdManager::instance()->registCmd("b", "test asio net ex", testAsioEx);
-
+	CCmdManager::instance()->registCmd("s", "test scapy for test", testSendString);
 
 }
 

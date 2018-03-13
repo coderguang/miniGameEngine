@@ -128,6 +128,33 @@ namespace Message {
 	void __read(csg::CSerializeStream& __is,std::map<STestStruct,std::string>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__STestStruct__string__msstring__Serialize);
 	void __write(csg::CSerializeStream& __os,const std::map<STestStruct,std::string>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__STestStruct__string__msstring__Serialize);
 
+	class SScapyTest
+		:public virtual csg::IMsgBase {
+	public:
+		std::string  str;
+
+	public:
+		SScapyTest();
+		SScapyTest(const SScapyTest &);
+		SScapyTest& operator=(const SScapyTest &);
+
+	public:
+		bool operator==(const SScapyTest &)const;
+		bool operator!=(const SScapyTest &)const;
+		bool operator<(const SScapyTest &)const;
+
+		void _csg_init();
+		void _csg_read(CSerializeStream&);
+		void _csg_write(CSerializeStream&)const;
+
+		virtual IMsgBase* clone();
+		virtual int getType()const;
+	private:
+		static const int _msgType = 150;
+	};
+
+	typedef csg::CSmartPointShare<SScapyTest> SScapyTest_Ptr;
+
 
 	class CTest{
 	public:

@@ -33,6 +33,10 @@ enum ETest{
 	map<STestStruct,string> msstring;
 };
 
+["id":150] struct SScapyTest{
+	string str;
+};
+
 
 interface ITest{
 

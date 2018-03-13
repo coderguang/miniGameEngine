@@ -48,6 +48,11 @@
 			"file" : "Test",
 			"id" : 6,
 			"name" : "STestMap"
+		},
+		{
+			"file" : "Test",
+			"id" : 150,
+			"name" : "SScapyTest"
 		}
 	]
 }

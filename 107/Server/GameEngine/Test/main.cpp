@@ -44,8 +44,32 @@ void start_main(int argc ,char** argv)
 }
 
 
+void start_lua() {
+
+	lua_State *L = luaL_newstate();
+
+	luaL_openlibs(L);
+
+	luaL_dofile(L, "../LuaScript/Main.lua");
+	//luaL_dofile(L, "../../LuaScript/Main.lua");
+
+	lua_close(L);
+
+	LogDebug("start lua ok");
+	return;
+
+}
+
+
 int main(int argc ,char **argv)
 {
+
+	//start_lua();
+
+	//start_main(argc ,argv);
+	//onlyQForExit();
+
+	//return 0;
 
 	LogDebug("Program run in below environment !!!");
 #ifdef _DEBUG
@@ -66,9 +90,6 @@ int main(int argc ,char **argv)
 	CCsgServer::instance()->startLogServer("./log" ,"TestLog",true);
 
 	CCsgServer::instance()->startMainLogicServer();
-
-
-	start_lua();
 
 	start_main(argc ,argv);
 

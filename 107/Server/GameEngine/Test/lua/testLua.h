@@ -164,7 +164,7 @@ void testLuaCallCpp() {
 
 
 
-void start_lua() {
+void start_lua_ex() {
 	testLuaCallCpp();
 	//testCppCallLuaFunction();
 	//testLuaFile();

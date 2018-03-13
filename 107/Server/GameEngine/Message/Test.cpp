@@ -610,10 +610,93 @@ void Message::__write(csg::CSerializeStream& __os,const std::map<STestStruct,std
 	}
 };
 
+Message::SScapyTest::SScapyTest()
+{
+	_csg_init();
+}
+
+Message::SScapyTest::SScapyTest(const SScapyTest& __other)
+{
+	if(this==&__other)
+	{
+		return;
+	}
+	*this=__other;
+}
+
+Message::SScapyTest& Message::SScapyTest::operator=(const SScapyTest& __other)
+{
+	if(this==&__other)
+	{
+		return *this;
+	}
+	IMsgBase::operator=(__other);
+	str = __other.str;
+	return *this;
+}
+
+int Message::SScapyTest::getType()const{
+	return _msgType;
+}
+
+csg::IMsgBase* Message::SScapyTest::clone()
+{
+	return new SScapyTest(*this);
+}
+
+bool Message::SScapyTest::operator==(const SScapyTest& __other)const
+{
+	return !operator!=(__other);
+}
+
+bool Message::SScapyTest::operator!=(const SScapyTest& __other)const
+{
+	if(this==&__other)
+	{
+		return false;
+	}
+	if(str != __other.str)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Message::SScapyTest::operator<(const SScapyTest& __other)const
+{
+	if(this==&__other)
+	{
+		return false;
+	}
+	if(str < __other.str)
+	{
+		return true;
+	}
+	else if(__other.str<str)
+	{
+		return false;
+	}
+	return false;
+}
+
+void Message::SScapyTest::_csg_init(){
+	str="";
+	
+};
+
+void Message::SScapyTest::_csg_read(CSerializeStream& __is){
+	__is.read(str);
+};
+
+void Message::SScapyTest::_csg_write(CSerializeStream& __os)const{
+	__os.write(str);
+};
+
 void Message::CTest::regist()
 {
 	csg::CMsgManager::instance()->regist(new STest());
 	csg::CMsgManager::instance()->regist(new STestMap());
+	csg::CMsgManager::instance()->regist(new SScapyTest());
 }
 
 void Message::CSrv_ITest_t1::response()
