@@ -103,16 +103,16 @@ void csg::CLoggerWritterTask::setInfoColor(const int logLv)
 
 void csg::CLoggerWritterTask::write(const CLogRecord& record)
 {
-#ifndef _DEBUG
-	if ( ELogDebug == it->logLv )
-		continue;
-#endif
+// #ifndef _DEBUG
+// 	if ( ELogDebug == record.logLv )
+// 		return ;
+// #endif
 
 	std::string preLog = "[" + ToStr(record.pid) + "][" + ToStr(record.threadId) + "] " + record.logDt.asString()+":";
 	std::string logMsg=
-#ifndef _DEBUG
-		 it->fileName + " " + it->functionName + ":" + ToStr(it->lineNum) + " "+
-#endif
+// #ifndef _DEBUG
+// 		record.fileName + " " + record.functionName + ":" + ToStr(record.lineNum) + " "+
+// #endif
 		  " : " + record.logStr;
 
 

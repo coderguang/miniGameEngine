@@ -50,7 +50,7 @@ void csg::CSocketClient::handleConnect(CSessionPtr session ,boost::system::error
 	} else
 	{
 		LogDebug("CSocketClient::handleConnect connect...");
-		IProtocolPtr protocol = new CCsgProtocol();
+		IProtocolPtr protocol = new CCsgProtocol(PROTOCOL_RECV_MAX_SIZE_LIMIT_CLIENT,PROTOCOL_RECV_BUFF_MAX_SIZE_LIMIT_CLIENT);
 		session->setProtocol(protocol);
 		session->setStatus(ESessionStatusConnected);
 		CSessionMgr::instance()->addSession(_session);

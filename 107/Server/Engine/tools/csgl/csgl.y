@@ -551,7 +551,15 @@ interface : TOKEN_INTERFACE_NAME TOKEN_INTERFACE_CONTENT {
 
 		cppClassInterface<<"	"<<srvCBPtr<<" cb=new "<<srvCB<<"();\n"
 						<<"	cb->setSession(session,rmiCall);\n"
-						<<"	"<<functionName<<"_async(session,cb"<<cppClassProxyParam.content<<");\n\n"
+						<<"	try{\n"
+						<<"		"<<functionName<<"_async(session,cb"<<cppClassProxyParam.content<<");\n"
+						<<"	}catch(const csg::CException &ex){\n"
+						<<"		cb->exception(ex);\n"
+						<<"	}catch(const std::exception& ex){\n"
+						<<"		cb->exception(ex);\n"
+						<<"	}catch(...){\n"
+						<<"		cb->exception(\"ExceptionCodeUnknow\");\n"
+						<<"	}\n"
 						<<"	return ERMIDispatchResultOk;\n\n"
 						<<"}\n\n";
 	}

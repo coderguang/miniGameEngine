@@ -1,5 +1,7 @@
 #include "engine/rpc/rmiObject.h"
 #include "framework/log/Log.h"
+#include "rpcHelper.h"
+#include "rmidef.h"
 
 
 using namespace csg;
@@ -141,6 +143,18 @@ csg::CRMIProxyCallBackObject::~CRMIProxyCallBackObject()
 	_count.decreaseCount(1);
 }
 
+void csg::CRMIProxyCallBackObject::__exception(CSerializeStream& __is)
+{
+	CException ex;
+	__is.read(ex);
+	exception(ex);
+}
+
+void csg::CRMIProxyCallBackObject::exception(const csg::CException& ex)
+{
+
+}
+
 bool csg::CRMIObjectBind::bindProxyCallBackObject(const CRMIProxyCallBackObjectPtr& object)
 {
 	if ( _callBack )
@@ -152,8 +166,29 @@ bool csg::CRMIObjectBind::bindProxyCallBackObject(const CRMIProxyCallBackObjectP
 	return true;
 }
 
+
 void csg::CRMIObjectCallBackObject::setSession(const CSessionPtr& session ,const SRMICall& rmiCall)
 {
 	_session = session;
 	_rmiCall = rmiCall;
+}
+
+void csg::CRMIObjectCallBackObject::exception(const csg::CException& ex)
+{
+	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());
+	SRMIReturn rmiReturn;
+	rmiReturn.dispatchStatus = ERMIDispatchResultException;
+	rmiReturn.messageId = _rmiCall.messageId;
+	CRpcHelper::prepareToReturn(_session, __os, rmiReturn);
+	__os->setUseBitMark(true);
+	__os->write(ex);
+	CRpcHelper::toReturn(_session, __os);
+}
+
+void csg::CRMIObjectCallBackObject::exception(const std::exception& ex)
+{
+	CException cex;
+	cex.setCode(ExceptionCodeStd);
+	std::string whatStr = ex.what();
+	exception(cex);
 }

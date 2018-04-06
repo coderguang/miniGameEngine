@@ -4,15 +4,24 @@
 #include "../../mq/msgBlock.h"
 #include "../../rpc/rmiObjectAdapter.h"
 #include "../../core/csgIoMgr.h"
+#include "../session/sessionMgr.h"
 
 int csg::CCsgProtocol::handleRecvData(const CSessionPtr session,const void* inData, const int len)
 {
 	CAutoLock l(_readLock);
+
+	std::string str = "hello";
+	handleSendData(session, str.c_str(), str.length());
+
+	return 0;
+	if (_recvBuffer->getDataSize() + len > _maxRecvBuffSize) {
+		LogErr(__FUNCTION__ << " recieve buffer size out of limit,now=" << (_recvBuffer->getDataSize() + len )<< ",limit=" << _maxRecvBuffSize);
+		//超过缓冲区大小时直接断开连接
+		session->getSocket()->close();
+		CSessionMgr::instance()->delSession(session);
+		return -1;
+	}
 	_recvBuffer->append(inData, len);
-// #ifdef _DEBUG
-// 	std::string str(_recvBuffer->getData(), _recvBuffer->getDataSize());
-// 	LogDebug("receive is " << str);
-// #endif
 
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CCsgProtocol::handleReadData,this,session));
 	return 0;
@@ -36,15 +45,18 @@ int csg::CCsgProtocol::handleReadData(const CSessionPtr session)
 			if (_recvBuffer->getDataSize() < _protocolHead.msgSize)
 			{
 				//data not enough for a packet
-				return true;
+				return 0;
 			}
 			else
 			{
 				//data enough for a packet
-				if (!handlePacket(session, _recvBuffer->getData() + SIZE_OF_PROTOCOL_HEAD, _protocolHead.msgSize))
+				if (-1==handlePacket(session, _recvBuffer->getData() + SIZE_OF_PROTOCOL_HEAD, _protocolHead.msgSize))
 				{
-					LogInfo("CProtocol::handlePacket error");
-					return false;
+					LogInfo("CProtocol::handlePacket error,close the socket...");
+					//解包错误时直接断开连接
+					session->getSocket()->close();
+					CSessionMgr::instance()->delSession(session);
+					return -1;
 				}
 				_recvBuffer->popData(_protocolHead.msgSize + SIZE_OF_PROTOCOL_HEAD);
 				_receiveHead = false;
@@ -56,18 +68,19 @@ int csg::CCsgProtocol::handleReadData(const CSessionPtr session)
 			{
 				memcpy(&_protocolHead, _recvBuffer->getData(), SIZE_OF_PROTOCOL_HEAD);
 				_protocolHead.msgSize = endian(_protocolHead.msgSize);
+				if (_protocolHead.msgSize > _maxRecvSize) {
+					LogErr(__FUNCTION__<<" recieve package size out of limit,now="<<(int)_protocolHead.msgSize<<",limit="<<_maxRecvSize);
+				}
 				_receiveHead = true;
 			}
 			else
 			{
-				return true;
+				return 0;
 			}
 		}
 	} while (true);
 
-	return false;
-
-	return 0;
+	return -1;
 }
 
 int csg::CCsgProtocol::handleWriteData(const CSessionPtr session)
@@ -123,7 +136,7 @@ int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packa
 		if (!msg)
 		{
 			assert(false);
-			return false;
+			return -1;
 		}
 		msg->_msgBase->print();
 	}
@@ -133,18 +146,13 @@ int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packa
 		SRMICall rmiCall;
 		rmiCall._csg_read(*is);
 
-		MapRMIObject mapObject;
-		if (!CRMIObjectAdapter::instance()->findRmiObject("Test", mapObject))
+		CRMIObjectPtr rmiOjbect;
+		if (!CRMIObjectAdapter::instance()->findRmiObject(rmiCall.rpcId, rmiOjbect))
 		{
-			return false;
-		}
-		MapRMIObject::iterator it = mapObject.find(rmiCall.rpcId);
-		if (it == mapObject.end())
-		{
-			return false;
+			return -1;
 		}
 		is->setUseBitMark(true);
-		it->second->__onCall(session, rmiCall, *is);
+		rmiOjbect->__onCall(session, rmiCall, *is);
 	}
 	break;
 	case csg::ERMIMessageTypeCallRet:
@@ -157,16 +165,21 @@ int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packa
 		LogInfo("CProtocol::handlePacket" << ",messageId=" << rmiReturn.messageId);
 
 		if (rmiReturn.messageId <= 0)
-			return true;
+			return 0;
 
 		CRMIObjectBindPtr backObject;
 		if (!session->getCallBackObject(rmiReturn.messageId, backObject))
 		{
-			return false;
+			return -1;
 		}
 		if (backObject->_callBack)
 		{
-			backObject->_callBack->__response(*is);
+			if (ERMIDispatchResultOk == rmiReturn.dispatchStatus) {
+				backObject->_callBack->__response(*is);
+			}
+			else {
+				backObject->_callBack->__exception(*is);
+			}
 		}
 	}
 	break;
@@ -174,11 +187,11 @@ int csg::CCsgProtocol::handlePacket(const CSessionPtr session, const void *packa
 	{
 		LogErr("unkonw type=" << mqType);
 		assert(false);
-		return false;
+		return -1;
 	}
 	}
 
-	return true;
+	return 0;
 }
 
 int csg::CCsgProtocol::handleWriteDataEx(const CSessionPtr session, boost::system::error_code err)

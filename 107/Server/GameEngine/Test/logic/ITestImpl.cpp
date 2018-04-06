@@ -11,7 +11,8 @@ void ITestImpl::t1_async(const CSessionPtr& session,CSrv_ITest_t1_Ptr& cb)
 {
 	LogInfo("t1_async be call");
 
-	cb->response();
+	//cb->response();
+	cb->exception("hello");
 }
 
 void ITestImpl::t2_async(const CSessionPtr& ,Message::CSrv_ITest_t2_Ptr& cb,const int param,const string str)
@@ -43,7 +44,8 @@ void ITestImpl::t5_async(const CSessionPtr&, Message::CSrv_ITest_t5_Ptr& cb, con
 	std::vector<long64_t> vl;
 	for (int i = 0; i < 500; i++)
 		vl.push_back(111111111 * i);
-	cb->response(vl);
+	//cb->response(vl);
+	cb->exception("hello");
 }
 
 void ITestImpl::t6_async(const CSessionPtr&, Message::CSrv_ITest_t6_Ptr& cb, const std::map<std::string, STest>& ss)
@@ -73,6 +75,11 @@ void CCli_ITest_t4_CallBack::response(const STestMap& t)
 void CCli_ITest_t5_CallBack::response(const std::vector<long64_t>& vl)
 {
 	LogInfo("CSrv_ITest_t5_CallBack");
+}
+
+void CCli_ITest_t5_CallBack::exception(const csg::CException& ex)
+{
+	LogInfo("CSrv_ITest_t5_CallBack exception code="<<ex.code()<<",ex.what="<<ex.what() );
 }
 
 void CCli_ITest_t6_CallBack::response(const std::map<STest, long64_t>& msl)

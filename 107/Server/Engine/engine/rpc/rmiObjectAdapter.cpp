@@ -30,6 +30,14 @@ bool csg::CRMIObjectAdapter::addRmiObject(const std::string& endPoint,const CRMI
 			return false;
 		}
 		endPointIter->second[*it] = rmiObject;
+
+		MapIdRMIObject::iterator idMapIter = _idRmiObjectMap.find(*it);
+		if (idMapIter != _idRmiObjectMap.end()) {
+			LogErr("CRMIObjectAdapter::addRmiObject,conflict rpcId,name=" << endPoint << ",rpcId=" << *it);
+			assert(false);
+			return false;
+		}
+		_idRmiObjectMap[*it] = rmiObject;
 	}
 	return true;
 }
@@ -43,6 +51,17 @@ bool csg::CRMIObjectAdapter::findRmiObject(const std::string& endPoint ,MapRMIOb
 		return false;
 	}
 	mapRmiObject = it->second;
+	return true;
+}
+
+bool csg::CRMIObjectAdapter::findRmiObject(const int rpcId, CRMIObjectPtr& rmiObj)
+{
+	CAutoLock l(getLock());
+	MapIdRMIObject::iterator idMapIter = _idRmiObjectMap.find(rpcId);
+	if (idMapIter == _idRmiObjectMap.end()) {
+		return false;
+	}
+	rmiObj=idMapIter->second;
 	return true;
 }
 

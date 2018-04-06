@@ -83,7 +83,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;WIN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SDLCheck>false</SDLCheck>
@@ -188,10 +188,7 @@
     <ClCompile Include="..\..\Engine\framework\lua\lapi.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lauxlib.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lbaselib.c" />
-    <ClCompile Include="..\..\Engine\framework\lua\lbitlib.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lcode.c" />
-    <ClCompile Include="..\..\Engine\framework\lua\lcorolib.c" />
-    <ClCompile Include="..\..\Engine\framework\lua\lctype.c" />
     <ClCompile Include="..\..\Engine\framework\lua\ldblib.c" />
     <ClCompile Include="..\..\Engine\framework\lua\ldebug.c" />
     <ClCompile Include="..\..\Engine\framework\lua\ldo.c" />
@@ -215,9 +212,9 @@
     <ClCompile Include="..\..\Engine\framework\lua\ltablib.c" />
     <ClCompile Include="..\..\Engine\framework\lua\ltm.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lundump.c" />
-    <ClCompile Include="..\..\Engine\framework\lua\lutf8lib.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lvm.c" />
     <ClCompile Include="..\..\Engine\framework\lua\lzio.c" />
+    <ClCompile Include="..\..\Engine\framework\lua\print.c" />
     <ClCompile Include="..\..\Engine\framework\SmartPoint\refObject.cpp" />
     <ClCompile Include="..\..\Engine\framework\SmartPoint\smartPoint.cpp" />
     <ClCompile Include="..\..\Engine\framework\timer\timeNode.cpp" />
@@ -284,7 +281,6 @@
     <ClInclude Include="..\..\Engine\framework\lua\lapi.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lauxlib.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lcode.h" />
-    <ClInclude Include="..\..\Engine\framework\lua\lctype.h" />
     <ClInclude Include="..\..\Engine\framework\lua\ldebug.h" />
     <ClInclude Include="..\..\Engine\framework\lua\ldo.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lfunc.h" />
@@ -295,7 +291,6 @@
     <ClInclude Include="..\..\Engine\framework\lua\lobject.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lopcodes.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lparser.h" />
-    <ClInclude Include="..\..\Engine\framework\lua\lprefix.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lstate.h" />
     <ClInclude Include="..\..\Engine\framework\lua\lstring.h" />
     <ClInclude Include="..\..\Engine\framework\lua\ltable.h" />

@@ -15,6 +15,8 @@ namespace csg
 
 	static const std::string localhost_url = "127.0.0.1";
 
+	static const std::string vm_url = "192.168.247.130";
+
 	static const int test_royalchen_port = 8989;
 	static const std::string test_royalchen_port_str = "8989";
 

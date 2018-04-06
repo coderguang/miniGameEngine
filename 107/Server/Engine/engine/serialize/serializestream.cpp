@@ -695,6 +695,24 @@ void CSerializeStream::write(const std::vector<std::string>& strV)
 		_useBitMark = originalUseBitMark;
 	}
 }
+
+void csg::CSerializeStream::write(const csg::CException& ex)
+{
+	write(ex.code());
+	std::string whatStr = ex.what();
+	write(whatStr);
+}
+
+void csg::CSerializeStream::read(csg::CException& ex)
+{
+	int code;
+	std::string whatStr;
+	read(code);
+	read(whatStr);
+	ex.setCode(code);
+	ex.setMessage(whatStr);
+}
+
 void CSerializeStream::read(std::string& str)
 {
 	uint_t size;

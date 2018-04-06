@@ -888,8 +888,15 @@ csg::ERMIDispatchResult Message::ITest::__t1_async(const CSessionPtr& session,co
 {
 	CSrv_ITest_t1_Ptr cb=new CSrv_ITest_t1();
 	cb->setSession(session,rmiCall);
-	t1_async(session,cb);
-
+	try{
+		t1_async(session,cb);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }
@@ -902,8 +909,15 @@ csg::ERMIDispatchResult Message::ITest::__t2_async(const CSessionPtr& session,co
 	__is.read(s);
 	CSrv_ITest_t2_Ptr cb=new CSrv_ITest_t2();
 	cb->setSession(session,rmiCall);
-	t2_async(session,cb,a,s);
-
+	try{
+		t2_async(session,cb,a,s);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }
@@ -916,8 +930,15 @@ csg::ERMIDispatchResult Message::ITest::__t3_async(const CSessionPtr& session,co
 	__is.read(s);
 	CSrv_ITest_t3_Ptr cb=new CSrv_ITest_t3();
 	cb->setSession(session,rmiCall);
-	t3_async(session,cb,a,s);
-
+	try{
+		t3_async(session,cb,a,s);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }
@@ -928,8 +949,15 @@ csg::ERMIDispatchResult Message::ITest::__t4_async(const CSessionPtr& session,co
 	t._csg_read(__is);
 	CSrv_ITest_t4_Ptr cb=new CSrv_ITest_t4();
 	cb->setSession(session,rmiCall);
-	t4_async(session,cb,t);
-
+	try{
+		t4_async(session,cb,t);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }
@@ -940,8 +968,15 @@ csg::ERMIDispatchResult Message::ITest::__t5_async(const CSessionPtr& session,co
 	Message::__read(__is,v,__STL_TYPE_ONE__Interface_CSrv__Read__ITest__t5__vector__STest__v());
 	CSrv_ITest_t5_Ptr cb=new CSrv_ITest_t5();
 	cb->setSession(session,rmiCall);
-	t5_async(session,cb,v);
-
+	try{
+		t5_async(session,cb,v);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }
@@ -952,8 +987,15 @@ csg::ERMIDispatchResult Message::ITest::__t6_async(const CSessionPtr& session,co
 	Message::__read(__is,mss,__STL_TYPE_DOUBLE__Interface_CSrv__Read__ITest__t6__map__string__STest__mss());
 	CSrv_ITest_t6_Ptr cb=new CSrv_ITest_t6();
 	cb->setSession(session,rmiCall);
-	t6_async(session,cb,mss);
-
+	try{
+		t6_async(session,cb,mss);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
 	return ERMIDispatchResultOk;
 
 }

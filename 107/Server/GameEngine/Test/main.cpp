@@ -64,12 +64,10 @@ void start_lua() {
 int main(int argc ,char **argv)
 {
 
-	//start_lua();
-
-	//start_main(argc ,argv);
-	//onlyQForExit();
-
-	//return 0;
+// 	start_lua();
+// 	start_main(argc ,argv);
+// 	onlyQForExit();
+// 	return 0;
 
 	LogDebug("Program run in below environment !!!");
 #ifdef _DEBUG

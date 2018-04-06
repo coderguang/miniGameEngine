@@ -18,12 +18,14 @@ namespace csg
 
 	enum ECSGEErrorCodeSystem
 	{
-		ExceptionCodeUnknow = 10000 ,
-		ExceptionCodeOutOffMemery = 10001 ,
-		ExceptionCodeReadOnly = 10002 ,  // searilize exception
-		ExceptionCodeDatetime = 10003 ,//datetime exception
+		ExceptionCodeUnknow = 10000,
+		ExceptionCodeOutOffMemery = 10001,
+		ExceptionCodeReadOnly = 10002,  // searilize exception
+		ExceptionCodeDatetime = 10003,//datetime exception
 		ExceptionCodeMsgTypeNotRegist = 10004, //mq msg type not regist
 		ExceptionCodeSerialize = 10005, //serialize error
+		ExceptionCodeStd = 10006, //std::exception
+		ExceptionCodeCsg = 10007, //logic exception,code by config
 	};
 
 

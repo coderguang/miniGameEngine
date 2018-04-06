@@ -17,6 +17,9 @@ namespace csg
 
 	static const size_t SIZE_OF_PROTOCOL_HEAD = sizeof(SProtocolHead);
 
+	static const int PROTOCOL_RECV_MAX_SIZE_LIMIT_CLIENT = 4096;  //客户端单包大小限制
+	static const int PROTOCOL_RECV_BUFF_MAX_SIZE_LIMIT_CLIENT = 4096 * 250; //客户端总buff大小限制,超出时会断开连接
+	static const int PROTOCOL_RECV_MAX_SIZE_LIMIT_SERVER = 4096 * 100; //服务器单包大小限制
 
 	class CSession;
 
@@ -26,8 +29,8 @@ namespace csg
 	{
 	public:
 
-		IProtocol() :_recvBuffer(CSerializeStreamPool::instance()->newObject()) ,
-			_sendBuffer(CSerializeStreamPool::instance()->newObject()),_receiveHead(false)
+		IProtocol(int recvSizeLimit,int recvBuffSizeLimit) :_recvBuffer(CSerializeStreamPool::instance()->newObject()),
+			_sendBuffer(CSerializeStreamPool::instance()->newObject()), _receiveHead(false), _maxRecvSize(recvSizeLimit),_maxRecvBuffSize(recvBuffSizeLimit)
 		{
 
 		}
@@ -47,6 +50,8 @@ namespace csg
 		CAutoSerializeStream _sendBuffer;
 		SProtocolHead _protocolHead;
 		bool _receiveHead;
+		int _maxRecvSize;
+		int _maxRecvBuffSize;
 	};
 
 	typedef CSmartPointShare<IProtocol> IProtocolPtr;

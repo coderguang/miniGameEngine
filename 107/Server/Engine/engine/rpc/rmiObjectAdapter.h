@@ -15,6 +15,7 @@ namespace csg
 	typedef std::map<int ,CRMIObjectPtr> MapRMIObject;
 
 	typedef std::map<std::string ,MapRMIObject> MapEndPointRMIObject; //区分哪些连接可以使用哪些接口
+	typedef std::map<int, CRMIObjectPtr>	MapIdRMIObject; //根据rpcid唯一确定一个接口
 
 	class CRMIObjectAdapter :public virtual Singleton<CRMIObjectAdapter>
 	{
@@ -22,8 +23,9 @@ namespace csg
 
 		bool addRmiObject(const std::string& endPoint ,const CRMIObjectPtr rmiObject);
 
-		bool findRmiObject(const std::string& endPoint ,MapRMIObject& mapRmiObject);
+		bool findRmiObject(const std::string& endPoint ,MapRMIObject& rmiObj);
 
+		bool findRmiObject(const int rpcId, CRMIObjectPtr& mapRmiObject);
 
 	protected:
 		CLock& getLock();
@@ -31,6 +33,7 @@ namespace csg
 	private:
 		CLock _lock;
 		MapEndPointRMIObject _endPointRmiObjectMap;
+		MapIdRMIObject _idRmiObjectMap;
 	};
 
 }

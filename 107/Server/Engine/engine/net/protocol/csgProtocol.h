@@ -9,6 +9,8 @@ namespace csg
 	class CCsgProtocol :public virtual IProtocol
 	{
 	public:
+		CCsgProtocol(int recvSizeLimit,int recvBuffSize) :IProtocol(recvSizeLimit,recvBuffSize) {};
+
 		virtual int handleRecvData(const CSessionPtr session,const void* inData ,const int len)override;
 
 		virtual int handleSendData(const CSessionPtr session ,const void* data ,const int len)override;
@@ -26,7 +28,6 @@ namespace csg
 	private:
 		CLock _writeLock;
 		CLock _readLock;
-	
 	};
 
 	typedef CSmartPointShare<CCsgProtocol> CCsgProtocolPtr;

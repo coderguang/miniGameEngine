@@ -36,7 +36,6 @@ void registStruct() {
 
 void registImpl() {
 	CRMIObjectAdapter::instance()->addRmiObject("Test", new ITestImpl());
-	CRMIObjectAdapter::instance()->addRmiObject("TestEx", new ITestImpl());
 }
 
 class CPrintMemTimer :public csg::CTimerBase {
@@ -67,6 +66,7 @@ void startRegistCmd()
 	CCmdManager::instance()->registCmd("a" ,"test asion net" ,testAsio);
 	CCmdManager::instance()->registCmd("b", "test asio net ex", testAsioEx);
 	CCmdManager::instance()->registCmd("s", "test scapy for test", testSendString);
+	CCmdManager::instance()->registCmd("ss", "test scapy for vm", testSendStringVm);
 
 }
 

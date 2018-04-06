@@ -57,7 +57,7 @@ void csg::CSocketServer::handleAccept(CSessionPtr session ,const boost::system::
 		{
 			LogDebug("CSocketServer::handleAccept accept... ,port = " << _port << " ,ex=" << ex.what());
 		}
-		CCsgProtocolPtr protocol = new CCsgProtocol();
+		CCsgProtocolPtr protocol = new CCsgProtocol(PROTOCOL_RECV_MAX_SIZE_LIMIT_CLIENT,PROTOCOL_RECV_BUFF_MAX_SIZE_LIMIT_CLIENT);
 		session->setProtocol(protocol);
 		session->setStatus(ESessionStatusConnected);
 		CSessionMgr::instance()->addSession(session);
@@ -97,7 +97,11 @@ void csg::CSocketServer::handleRead(CSessionPtr session ,boost::system::error_co
 		return;
 	} else
 	{
-		session->handleRecvData(tt ,len);
+		if (-1 == session->handleRecvData(tt, len) ){
+			LogDebug(__FUNCTION__<< ",read error len =" << len);
+			disconnect(session);
+			return;
+		}
 		LogDebug("CSocketServer::handleRead"<< ",read size=" << len);
 	}
 	startRead(session);

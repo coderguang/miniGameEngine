@@ -222,16 +222,7 @@
     <ClCompile Include="..\..\Engine\framework\lua\lbaselib.c">
       <Filter>Src\framework\lua</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Engine\framework\lua\lbitlib.c">
-      <Filter>Src\framework\lua</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Engine\framework\lua\lcode.c">
-      <Filter>Src\framework\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Engine\framework\lua\lcorolib.c">
-      <Filter>Src\framework\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Engine\framework\lua\lctype.c">
       <Filter>Src\framework\lua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Engine\framework\lua\ldblib.c">
@@ -303,13 +294,13 @@
     <ClCompile Include="..\..\Engine\framework\lua\lundump.c">
       <Filter>Src\framework\lua</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Engine\framework\lua\lutf8lib.c">
-      <Filter>Src\framework\lua</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Engine\framework\lua\lvm.c">
       <Filter>Src\framework\lua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Engine\framework\lua\lzio.c">
+      <Filter>Src\framework\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Engine\framework\lua\print.c">
       <Filter>Src\framework\lua</Filter>
     </ClCompile>
   </ItemGroup>
@@ -509,9 +500,6 @@
     <ClInclude Include="..\..\Engine\framework\lua\lcode.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Engine\framework\lua\lctype.h">
-      <Filter>Src\framework\lua</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Engine\framework\lua\ldebug.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
@@ -542,9 +530,6 @@
     <ClInclude Include="..\..\Engine\framework\lua\lparser.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Engine\framework\lua\lprefix.h">
-      <Filter>Src\framework\lua</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Engine\framework\lua\lstate.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
@@ -560,9 +545,6 @@
     <ClInclude Include="..\..\Engine\framework\lua\lua.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Engine\framework\lua\lua.hpp">
-      <Filter>Src\framework\lua</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Engine\framework\lua\luaconf.h">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
@@ -576,6 +558,9 @@
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Engine\framework\lua\lzio.h">
+      <Filter>Src\framework\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Engine\framework\lua\lua.hpp">
       <Filter>Src\framework\lua</Filter>
     </ClInclude>
   </ItemGroup>

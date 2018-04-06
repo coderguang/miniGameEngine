@@ -9,6 +9,7 @@
 #include "framework/SmartPoint/smartPoint.h"
 #include "engine/net/session/session.h"
 #include "boost/smart_ptr/shared_ptr.hpp"
+#include "framework/DesignPattern/objectPool.h"
 
 namespace csg
 {
@@ -92,7 +93,12 @@ namespace csg
 	class CRMIObjectCallBackObject :public virtual CRefObject
 	{
 	public:
+
 		virtual void setSession(const CSessionPtr& session ,const SRMICall& rmiCall);
+
+		virtual void exception(const csg::CException& ex);
+
+		virtual void exception(const std::exception& ex);
 
 	protected:
 		CSessionPtr _session;
@@ -109,6 +115,10 @@ namespace csg
 		virtual ~CRMIProxyCallBackObject();
 
 		virtual void __response(CSerializeStream& __os) = 0;
+
+		virtual void __exception(CSerializeStream& __is);
+
+		virtual void exception(const csg::CException& ex);
 
 	private:
 		static CCounterHandler _count;

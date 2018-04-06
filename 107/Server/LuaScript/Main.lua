@@ -1,6 +1,6 @@
-require "test"
 
-print "start lua main"
 
-start_lua()
+print "start lua main in lua file"
+
+
 

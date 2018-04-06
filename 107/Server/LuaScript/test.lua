@@ -4,9 +4,10 @@
 --require "log"
 
 function start_lua()
-	local log=require("log")
-	log.log("start test lua")
-	log.log("ok")
+	--local log=require("log")
+	--log.log("start test lua")
+	--log.log("ok")
+	print("start lua ok")
 end
 
 

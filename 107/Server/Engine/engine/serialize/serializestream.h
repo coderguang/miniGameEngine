@@ -5,6 +5,7 @@
 #include <vector>
 #include "engine/def/csg_def.h"
 #include <string>
+#include "framework/exception/exception.h"
 
 #define SERIALIZE_MAX_RESIZE (1024*100)
 
@@ -124,6 +125,10 @@ namespace csg
 		void write(const std::vector<std::string>&);
 		void read(std::string&);
 		void read(std::vector<std::string>&);
+
+		//exception
+		void write(const csg::CException& ex);
+		void read(csg::CException& ex);
 
 		int getBytesLeft()const;
 

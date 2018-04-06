@@ -29,12 +29,12 @@ CC="clang++"
 CCEX="clang"
 
 #lib build params
-LIB_CFLAG="-std=c++11 -MMD -MP -g -D _DEBUG -I. -I$PRO_ROOT_DIR/Engine"
+LIB_CFLAG="-std=c++11 -MMD -MP -g -D NDEBUG -I. -I$PRO_ROOT_DIR/Engine"
 
-LIB_CFLAG_EX=" -MMD -MP -g -D _DEBUG -I -I$PRO_ROOT_DIR/Engine"
+LIB_CFLAG_EX=" -MMD -MP -g -D NDEBUG -I -I$PRO_ROOT_DIR/Engine"
 
 #bin build params
-BIN_CFLAG="-std=c++11 -MMD -MP -lstdc++ -g -D _DEBUG -L../../lib -L../../../../lib/linuxlib/mongodb-c++-driver -L../../../../lib/linuxlib/boost -I. -I../../Engine/ -I../../../../lib/include -I../Message"
+BIN_CFLAG="-std=c++11 -MMD -MP -lstdc++ -g -D NDEBUG -L../../lib -L../../../../lib/linuxlib/mongodb-c++-driver -L../../../../lib/linuxlib/boost -I. -I../../Engine/ -I../../../../lib/include -I../Message"
 
 LIBS="-lMessage -lEngine -lmongoclient -lboost_system -lboost_thread -lboost_filesystem -lboost_date_time -lboost_regex -lboost_program_options"
 

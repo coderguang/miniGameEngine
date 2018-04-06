@@ -335,5 +335,41 @@ void testSendString(Json::Value& js) {
 	} while (true);
 }
 
+void testSendStringVm(Json::Value& js) {
+
+	std::string msg = js[1].asString();
+	LogDebug("start test msg:" << msg);
+	boost_CSocketClient_ptr client(new CSocketClient());
+	client->init(vm_url, test_royalchen_port, false);
+	client->startConnect();
+
+	Message::SScapyTest_Ptr t = new Message::SScapyTest();
+	t->str = msg;
+
+	CMsgBlockPtr mb = new CMsgBlock();
+	mb->_msgHead.command = 988;
+	mb->_msgHead.fromId.id = 1992;
+	mb->_msgBase = t;
+	int count = 0;
+	do
+	{
+		if (client->getSession()->getStatus() != ESessionStatusConnected) {
+			LogDebug("test msg:session not connected now:" << count);
+			count++;
+			if (count >= 5)
+			{
+				LogDebug("test msg:session not connected now more than 5,return");
+				return;
+			}
+		}
+		else {
+			client->pushMessage(mb);
+			LogDebug("test msg:" << msg);
+		}
+		cin.get(); \
+
+	} while (true);
+}
+
 
 #endif
