@@ -1,0 +1,1 @@
+copy /y ..\..\..\lib\winlib\lua_5.1.4\lua.exe .

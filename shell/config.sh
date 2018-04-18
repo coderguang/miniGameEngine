@@ -14,7 +14,7 @@
 #***********************************************
 
 
-VERSION=107
+VERSION=108
 
 BUILD_ROOT_DIR=/home/guang/GameWorld
 
@@ -29,9 +29,9 @@ CC="clang++"
 CCEX="clang"
 
 #lib build params
-LIB_CFLAG="-std=c++11 -MMD -MP -g -D NDEBUG -I. -I$PRO_ROOT_DIR/Engine"
+LIB_CFLAG="-std=c++11 -MMD -MP -g -D NDEBUG -I. -I../../../lib/include -I../../../../lib/include -I$PRO_ROOT_DIR/Engine"
 
-LIB_CFLAG_EX=" -MMD -MP -g -D NDEBUG -I -I$PRO_ROOT_DIR/Engine"
+LIB_CFLAG_EX=" -MMD -MP -g -D NDEBUG -I -I$PRO_ROOT_DIR/Engine -I../../../lib/include -I../../../../lib/include"
 
 #bin build params
 BIN_CFLAG="-std=c++11 -MMD -MP -lstdc++ -g -D NDEBUG -L../../lib -L../../../../lib/linuxlib/mongodb-c++-driver -L../../../../lib/linuxlib/boost -I. -I../../Engine/ -I../../../../lib/include -I../Message"
