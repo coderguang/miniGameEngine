@@ -42,6 +42,11 @@ int csg::CCsgWebSocketProtocol::handleRecvData(const CSessionPtr session,const v
 		//超过缓冲区大小时直接断开连接
 		return -1;
 	}
+	if (_receiveHead&&_protocolHead.msgSize > _maxRecvBuffSize) {
+		LogErr(__FUNCTION__ << " protocol head msg size error,now=" <<(int)_protocolHead.msgSize << ",limit=" << _maxRecvBuffSize);
+		return -1;
+	}
+
 	_recvBuffer->append(_payload, _payload_length);
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CCsgWebSocketProtocol::handleReadData,this,session));
 	return 0;

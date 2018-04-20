@@ -15,6 +15,10 @@ int csg::CCsgProtocol::handleRecvData(const CSessionPtr session,const void* inDa
 		//超过缓冲区大小时直接断开连接--由上层断开
 		return -1;
 	}
+	if (_receiveHead&&_protocolHead.msgSize > _maxRecvBuffSize) {
+		LogErr(__FUNCTION__ << " protocol head msg size error,now=" << (int)_protocolHead.msgSize << ",limit=" << _maxRecvBuffSize);
+		return -1;
+	}
 	_recvBuffer->append(inData, len);
 
 	CCsgIoMgr::instance()->getLogicServer()->post(boost::bind(&CCsgProtocol::handleReadData,this,session));

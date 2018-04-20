@@ -34,7 +34,7 @@ int csg::CSocketServer::startListen()
 
 		if (ec) {
 			LogErr(__FUNCTION__ << " listen failed:" << _port << " ,msg=" << ec.message());
-			CThread::sleep_for(1000);
+			CThread::sleep_for(1000); //print all log
 			CCsgServer::instance()->stop();
 			return -1;
 		}
