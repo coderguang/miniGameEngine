@@ -1,4 +1,4 @@
-
+//rmi class
 
 class CRmi{
 	constructor(){
