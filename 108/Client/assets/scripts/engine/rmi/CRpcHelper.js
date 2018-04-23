@@ -1,6 +1,7 @@
 
 
-import {_csg_wirte_rmi_type,ERMIMessageType,SRMICall} from 'CRmiDef'
+import {_csg_wirte_rmi_type,ERMIMessageType,SRMICall,SProtocolHead} from 'CRmiDef'
+import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 
 class CRpcHelper{
 	
@@ -12,11 +13,12 @@ class CRpcHelper{
 
 
 	static toCall(session,__os,objectBind){
+
 		__os.prepareToAppend();
 
 		let tmpOs=new CSerializeStream();
-		tmpOs.writeSizeInt(__os.getFlagDataSize());
-		tmpOs.writeByteSeq(__os.getFlagData(),__os.getFlagDataSize());
+		let flagBytes=__os.getFlagData().slice(0,__os.getFlagDataSize());
+		tmpOs.writeByteSeq(flagBytes);
 		tmpOs.append(__os.getData(),__os.getDataSize());
 
 		let head=new SProtocolHead();
@@ -25,7 +27,7 @@ class CRpcHelper{
 		let sendOs=new CSerializeStream();
 		head._csg_write(sendOs);
 		sendOs.append(tmpOs.getData(),tmpOs.getDataSize());
-
+		session.sendData(sendOs.getData());
 	}
 
 }

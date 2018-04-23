@@ -4,7 +4,7 @@ import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 import {CRpcHelper} from '../engine/rmi/CRpcHelper'
 
 
-class ITest{
+class MITest{
 
 	constructor(){
 		
@@ -21,11 +21,26 @@ class ITest{
 	
 		__os.setUseBitMark(true);
 
-		CRpcHelper.toCall(session,objectBind);		
-
-
+		CRpcHelper.toCall(session,__os,	objectBind);		
 	}
+
+	t2_async(session,a,s,cb){
+		console.log("t2_async");
+		let call=new SRMICall;
+		call.rpcId=12;
+
+		let __os=new CSerializeStream();
+		let objectBind;
+		CRpcHelper.prepareToCall(session,__os,call,cb,objectBind);
+	
+		__os.setUseBitMark(true);
+		__os.writeInt(a);
+		__os.writeString(s);
+		CRpcHelper.toCall(session,__os,	objectBind);		
+	}
+
+
 
 }
 
-export {ITest}
+export {MITest}

@@ -36,10 +36,10 @@ class SProtocolHead{
 	msgSize=0;
 
 	_csg_write(__os){
-		__os.writeSizeInt(this.msgSize);
+		__os.writeSizeIntWithoutBitMark(this.msgSize);
 	}
 	_csg_read(__is){
-		this.msgSize=__is.readSizeInt();
+		this.msgSize=__is.readSizeIntWithoutBitMark();		
 	}
 }
 

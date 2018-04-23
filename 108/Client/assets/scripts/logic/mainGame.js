@@ -11,6 +11,8 @@
 import {CRmi} from '../engine/rmi/CRmi'
 import {CByteBuffer,concatArrayBuffer} from '../engine/serializeStream/CByteBuffer'
 import {CSerializeStream} from '../engine/serializable/CSerializeStream'
+import {CSession} from '../engine/net/session/CSession'
+import {MITest} from '../message/MITest'
 
 function test(){
     console.log("test ok");
@@ -133,6 +135,21 @@ function testSerialize(){
         console.log(sseqv);
 }
 
+function testSocket(){
+    let session=new CSession();
+    session.init("test.royalchen.com",9201);
+    session.startConnect();
+
+    let mitest=new MITest();
+    let cb=3;
+    setTimeout(function(){
+        mitest.t1_async(session,3);
+        mitest.t2_async(session,5,"are you ok,zz");
+    },5000);
+
+
+}
+
 cc.Class({
     extends: cc.Component,
 
@@ -157,8 +174,8 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () {
-       testSerialize();
-
+       //testSerialize();
+       testSocket();
      },
 
     start () {

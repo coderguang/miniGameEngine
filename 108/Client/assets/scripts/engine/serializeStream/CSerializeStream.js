@@ -93,7 +93,7 @@ class CSerializeStream extends CByteBuffer{
 				this._flagByte=0;
 			}
 		}
-		_flagBit=FLAG_BIT_INIT;
+		this._flagBit=FLAG_BIT_INIT;
 	}
 
 	prepareToRead(){
@@ -379,6 +379,18 @@ class CSerializeStream extends CByteBuffer{
 			v[i]=this._readView.getFloat64(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_DOUBLE);
 		}
+		return v;
+	}
+
+	writeSizeIntWithoutBitMark(v){
+		let data=new ArrayBuffer(SIZE_OF_INT);
+		let view=new DataView(data);
+		view.setInt32(0,v,this.getEndian());
+		this.append(data,SIZE_OF_INT);
+	}
+	readSizeIntWithoutBitMark(){
+		let v=this._readView.getInt32(this.getReadPoint(),this.getEndian());
+		this.addReadIndex(SIZE_OF_INT);
 		return v;
 	}
 
