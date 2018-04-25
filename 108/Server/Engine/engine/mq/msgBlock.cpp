@@ -194,7 +194,7 @@ void csg::CMsgBlock::_csg_readHead(csg::CSerializeStream& is)
 void csg::CMsgBlock::_csg_readBody(csg::CSerializeStream& is)
 {
 	int type = 0;
-	is.read(type);
+	is.read(type); //bitMark=true,if null,type=0 will use flagBits to replace
 	if ( 0 != type )
 	{
 		_msgBase = CMsgManager::instance()->createMsg(type);

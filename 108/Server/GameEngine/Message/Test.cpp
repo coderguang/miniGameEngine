@@ -811,6 +811,23 @@ void Message::__write(csg::CSerializeStream& __os,const std::map<STest,long64_t>
 	}
 };
 
+void Message::CSrv_ITest_t7::response(const STestStruct& ot)
+{
+	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());
+	SRMIReturn rmiReturn;
+	rmiReturn.dispatchStatus = ERMIDispatchResultOk;
+	rmiReturn.messageId = _rmiCall.messageId;
+
+	CRpcHelper::prepareToReturn(_session,__os,rmiReturn);
+
+	__os->setUseBitMark(true);
+
+	ot._csg_write(*__os);
+
+	CRpcHelper::toReturn(_session,__os);
+
+}
+
 Message::ITest::ITest()
 {
 	SRMIInfo rmiInfo;
@@ -839,6 +856,10 @@ Message::ITest::ITest()
 	rmiInfo.operation="t6";
 	addRMIInfo(16,rmiInfo);
 	addRpcId(16);
+
+	rmiInfo.operation="t7";
+	addRMIInfo(17,rmiInfo);
+	addRpcId(17);
 
 }
 
@@ -874,6 +895,11 @@ csg::ERMIDispatchResult Message::ITest::__onCall(const CSessionPtr& session,cons
 		case 16:
 		{
 			return __t6_async(session,rmiCall,__is);
+		}
+		break;
+		case 17:
+		{
+			return __t7_async(session,rmiCall,__is);
 		}
 		break;
 		default:
@@ -1000,6 +1026,27 @@ csg::ERMIDispatchResult Message::ITest::__t6_async(const CSessionPtr& session,co
 
 }
 
+csg::ERMIDispatchResult Message::ITest::__t7_async(const CSessionPtr& session,const SRMICall& rmiCall,CSerializeStream& __is)
+{
+	int a;
+	__is.read(a);
+	STestStruct t;
+	t._csg_read(__is);
+	CSrv_ITest_t7_Ptr cb=new CSrv_ITest_t7();
+	cb->setSession(session,rmiCall);
+	try{
+		t7_async(session,cb,a,t);
+	}catch(const csg::CException &ex){
+		cb->exception(ex);
+	}catch(const std::exception& ex){
+		cb->exception(ex);
+	}catch(...){
+		cb->exception("ExceptionCodeUnknow");
+	}
+	return ERMIDispatchResultOk;
+
+}
+
 void Message::__read(CSerializeStream& __is,std::vector<STest>& __data,__STL_TYPE_ONE__Interface_CSrv__Read__ITest__t5__vector__STest__v)
 {
 	int size=0;
@@ -1090,6 +1137,15 @@ void csg_proxy::__read(CSerializeStream& __is,std::map<STest,long64_t>& __data,_
 		__is.read(val);
 		__data[key]=val;
 	}
+}
+
+void csg_proxy::CCli_ITest_t7::__response(CSerializeStream& __is)
+{
+	STestStruct ot;
+	ot._csg_read(__is);
+
+	response(ot);
+
 }
 
 csg_proxy::ITest::ITest()
@@ -1188,6 +1244,23 @@ void csg_proxy::ITest::t6_async(const CSessionPtr& session,const CCli_ITest_t6_P
 
 	__os->setUseBitMark(true);
 	csg_proxy::__write(*__os,mss,__STL_TYPE_DOUBLE__Interface_CCli__Write__ITest__t6__map__string__STest__mss());
+
+	CRpcHelper::toCall(session,__os,objectBind);
+
+}
+
+void csg_proxy::ITest::t7_async(const CSessionPtr& session,const CCli_ITest_t7_Ptr& cb,const int a,const STestStruct& t)
+{
+	csg::SRMICall call;
+	call.rpcId=17;
+
+	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());
+	CRMIObjectBindPtr objectBind=NULL;
+	CRpcHelper::prepareToCall(session,__os,call,cb,objectBind);
+
+	__os->setUseBitMark(true);
+	__os->write(a);
+	t._csg_write(*__os);
 
 	CRpcHelper::toCall(session,__os,objectBind);
 

@@ -30,6 +30,11 @@
 			"file" : "ITest",
 			"name" : "t6",
 			"rpcId" : 16
+		},
+		{
+			"file" : "ITest",
+			"name" : "t7",
+			"rpcId" : 17
 		}
 	],
 	"struct" : 

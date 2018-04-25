@@ -10,16 +10,17 @@
 
 import {CRmi} from '../engine/rmi/CRmi'
 import {CByteBuffer,concatArrayBuffer} from '../engine/serializeStream/CByteBuffer'
-import {CSerializeStream} from '../engine/serializable/CSerializeStream'
+import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 import {CSession} from '../engine/net/session/CSession'
-import {MITest} from '../message/MITest'
+import {MITest,STestStruct} from '../message/MITest'
+import {CMsgManager} from '../engine/mq/CMsgManager'
 
 function test(){
     console.log("test ok");
 }
 
 function testSerialize(){
- console.log("test concat");
+        console.log("test concat");
         let bf1=new ArrayBuffer(10);
         let bv1=new DataView(bf1);
         bv1.setInt32(0,2323,true);
@@ -100,7 +101,7 @@ function testSerialize(){
         let sseq=new Array("hi","hello","how are you");
         ss.writeStringSeq(sseq);
 
-        ss.prepareToRead();
+        ss.initReadView();
 
         let bv=ss.readByte();
         let iv=ss.readInt();
@@ -136,18 +137,31 @@ function testSerialize(){
 }
 
 function testSocket(){
-    let session=new CSession();
-    session.init("test.royalchen.com",9201);
-    session.startConnect();
+    console.log("testSocket")
+
+    CMsgManager.getInstance().regist(new STestStruct());
+
+    //CSession.getInstance().init("test.royalchen.com",9201);
+    CSession.getInstance().init("192.168.100.104",9201);
+    //CSession.getInstance().init("127.0.0.1",9201);
+    CSession.getInstance().startConnect();
 
     let mitest=new MITest();
     let cb=3;
+    let st=new STestStruct();
+    st.a=987;
+    st.b=true;
+    st.str="test sturct";
+    st.ib.push(5);
+    st.ib.push(6);
+    st.ib.push(7);
+    st.ib.push(8);
     setTimeout(function(){
-        mitest.t1_async(session,3);
-        mitest.t2_async(session,5,"are you ok,zz");
+        //mitest.t1_async(CSession.getInstance(),3);
+        //mitest.t2_async(CSession.getInstance(),5,"hi.hello");
+        //mitest.t7_async(CSession.getInstance(),88,st);
+        mitest.t3_async(CSession.getInstance(),5,"hi.hellot2");
     },5000);
-
-
 }
 
 cc.Class({

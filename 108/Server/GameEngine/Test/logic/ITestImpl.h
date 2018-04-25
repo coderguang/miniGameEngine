@@ -42,7 +42,10 @@ public:
 
 typedef CSmartPointShare<CCli_ITest_t6_CallBack> CCli_ITest_t6_CallBackPtr;
 
-
+class CCli_ITest_t7_CallBack :public virtual csg_proxy::CCli_ITest_t7 {
+public:
+	virtual void response(const STestStruct& t);
+};
 
 
 class ITestImpl:public virtual Message::ITest
@@ -60,7 +63,7 @@ public:
 
 	virtual void t6_async(const CSessionPtr&, Message::CSrv_ITest_t6_Ptr&, const std::map<std::string, STest>&)override;
 
-
+	virtual void t7_async(const CSessionPtr&, Message::CSrv_ITest_t7_Ptr&, int a, const STestStruct &b);
 	
 };
 

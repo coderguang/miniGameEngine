@@ -96,9 +96,12 @@ class CSerializeStream extends CByteBuffer{
 		this._flagBit=FLAG_BIT_INIT;
 	}
 
-	prepareToRead(){
+	initReadView(){
 		this._readView=new DataView(this.getData(),this.getReadPoint());
 		return ;
+	}
+
+	prepareToRead(){
 		this._flagByteSize=this.readSizeInt();
 		if(this._flagByteSize>0){
 			for(let i=0;i<this._flagByteSize;i++){
@@ -108,7 +111,6 @@ class CSerializeStream extends CByteBuffer{
 			this._flagBit=FLAG_BIT_INIT;
 			this._flagByteReadPos=0;
 		}
-		this._readView=new DataView(this.getData(),this.getReadPoint());
 	}
 
 	setUseBitMark(useBitMark){
@@ -132,6 +134,15 @@ class CSerializeStream extends CByteBuffer{
 	}
 	addReadIndex(len){
 		this._readIndex+=len;
+	}
+	reset(){
+		this._readIndex=0;
+		this._flagByte=0;
+		this._flagBit=FLAG_BIT_INIT;
+		this._useBitMark=false;
+		this._flagByteReadPos=0;
+		this._flagByteWritePos=0;
+
 	}
 
 
@@ -407,7 +418,7 @@ class CSerializeStream extends CByteBuffer{
 	}
 
 	readInt(){
-		if(this._useBitMark&&readBitFlag()){
+		if(this._useBitMark&&this.readBitFlag()){
 			return 0;
 		}else{
 			let v=this._readView.getInt32(this.getReadPoint(),this.getEndian());

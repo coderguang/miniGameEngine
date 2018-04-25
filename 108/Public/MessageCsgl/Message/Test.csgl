@@ -51,6 +51,8 @@ interface ITest{
 	["rpcid":15] void t5(vector<STest> v,out vector<long> vl);
 	
 	["rpcid":16] void t6(map<string,STest> mss,out map<STest,long> vl);
+	
+	["rpcid":17] void t7(int a,STestStruct t,out STestStruct ot);
 };
 
 

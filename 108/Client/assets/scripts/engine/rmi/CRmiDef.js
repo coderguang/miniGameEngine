@@ -1,4 +1,7 @@
 
+
+const SIZE_OF_PROTOCOL_HEAD=4;
+
 if(typeof ERMIMessageType== "undefined"){
 	var ERMIMessageType={};
 	ERMIMessageType.ERMIMessageTypeMQ=1;
@@ -49,4 +52,4 @@ export {ERMIMessageType}
 
 export {_csg_wirte_rmi_type}
 
-export {SProtocolHead}
+export {SProtocolHead,SIZE_OF_PROTOCOL_HEAD}

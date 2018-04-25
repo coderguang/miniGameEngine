@@ -40,7 +40,7 @@ int csg::CCsgProtocol::handleReadData(const CSessionPtr session)
 	{
 		if (_receiveHead)
 		{
-			if (_recvBuffer->getDataSize() < _protocolHead.msgSize)
+			if (_recvBuffer->getDataSize() < _protocolHead.msgSize+SIZE_OF_PROTOCOL_HEAD)
 			{
 				//data not enough for a packet
 				return 0;

@@ -13,7 +13,7 @@ let concatArrayBuffer=function(ArrayBufferLeft,leftLen,ArrayBfferRight,rightLen)
 };
 
 let popArrayBuffer=function(ArrayBfferValue,len){
-	console.log("popArrayBuffer,byteLength"+ArrayBfferRight.byteLength+",pop size="+len)
+	console.log("popArrayBuffer,byteLength"+ArrayBfferValue.byteLength+",pop size="+len)
 	let left_len=ArrayBfferValue.byteLength-len;
 	if(left_len<=0)
 		left_len=0;

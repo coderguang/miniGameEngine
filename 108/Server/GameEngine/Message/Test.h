@@ -210,6 +210,13 @@ namespace Message
 	class __STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl{};
 	void __write(csg::CSerializeStream& __os,const std::map<STest,long64_t>&,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl);
 
+	class CSrv_ITest_t7:public virtual CRMIObjectCallBackObject
+	{
+	public:
+		virtual void response(const STestStruct& ot);
+	};
+	typedef CSmartPointShare<CSrv_ITest_t7> CSrv_ITest_t7_Ptr;
+
 }
 
 
@@ -246,6 +253,10 @@ namespace Message
 		ERMIDispatchResult __t6_async(const CSessionPtr&,const SRMICall&,CSerializeStream&);
 
 		virtual void t6_async(const CSessionPtr& ,Message::CSrv_ITest_t6_Ptr&,const std::map<std::string,STest>&)=0;
+
+		ERMIDispatchResult __t7_async(const CSessionPtr&,const SRMICall&,CSerializeStream&);
+
+		virtual void t7_async(const CSessionPtr& ,Message::CSrv_ITest_t7_Ptr&,int,const STestStruct &)=0;
 
 	};
 
@@ -318,6 +329,15 @@ namespace csg_proxy
 	class __STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl {};
 	void __read(CSerializeStream&,std::map<STest,long64_t>&,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl);
 
+	class CCli_ITest_t7:public virtual CRMIProxyCallBackObject
+	{
+	public:
+		virtual void response(const STestStruct&)=0;
+	protected:
+		virtual void __response(CSerializeStream& __is);
+	};
+	typedef CSmartPointShare<CCli_ITest_t7> CCli_ITest_t7_Ptr;
+
 }
 
 namespace csg_proxy
@@ -339,6 +359,8 @@ namespace csg_proxy
 		void t5_async(const CSessionPtr&,const CCli_ITest_t5_Ptr&,const std::vector<STest>&);
 
 		void t6_async(const CSessionPtr&,const CCli_ITest_t6_Ptr&,const std::map<std::string,STest>&);
+
+		void t7_async(const CSessionPtr&,const CCli_ITest_t7_Ptr&,const int,const STestStruct&);
 
 	};
 

@@ -1,4 +1,6 @@
 
+import {CSerializeStream} from '../../serializeStream/CSerializeStream'
+import {CsgProtocol} from '../protocol/CsgProtocol'
 
 if(typeof ESessionStatus == "undefined"){
 	var ESessionStatus={};
@@ -15,9 +17,18 @@ class CSession{
 	_port;
 	_status;
 	_ws;
-
+	_buffer;
+	_protocol;
+	static _instance;
 	constructor(){
-
+		this._buffer=new CSerializeStream();
+		this._protocol=new CsgProtocol();
+	}
+	static getInstance(){
+		if(false === this._instance instanceof this){
+			this._instance=new this;
+		}
+		return this._instance;
 	}
 
 	init(url,port){
@@ -34,7 +45,9 @@ class CSession{
 
 
 	onMessage(evt){
-		console.log("session onmessage,evt="+evt);
+		console.log("session onmessage,evt="+evt.data+",length="+evt.data.byteLength);
+		this._buffer.append(evt.data,evt.data.byteLength);
+		this._protocol.handleRecvData(this,evt.data,evt.data.byteLength);
 	}
 
 
@@ -56,13 +69,13 @@ class CSession{
 		this._ws.onopen=function(){
 			session.onOpen();
 		}
-		this.onmessage=function(evt){
+		this._ws.onmessage=function(evt){
 			session.onMessage(evt);
 		}
-		this.onclose=function(evt){
+		this._ws.onclose=function(evt){
 			session.onClose(evt);
 		}
-		this.onerror=function(evt){
+		this._ws.onerror=function(evt){
 			session.onError(evt);
 		}
 	}

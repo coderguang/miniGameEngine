@@ -1,13 +1,13 @@
 
 
 import {_csg_wirte_rmi_type,ERMIMessageType,SRMICall,SProtocolHead} from 'CRmiDef'
-import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
+import {CSerializeStream} from '../serializeStream/CSerializeStream'
 
 class CRpcHelper{
 	
 	static prepareToCall(session,__os,call,backObject,objectBind){
 		_csg_wirte_rmi_type(__os,ERMIMessageType.ERMIMessageTypeCall);
-		call.messageId=0;
+		call.messageId=5;
 		call._csg_write(__os);
 	}
 
