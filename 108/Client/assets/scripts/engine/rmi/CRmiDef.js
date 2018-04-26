@@ -20,7 +20,8 @@ class SRMICall{
 	rpcId=0;
 
 	constructor(){
-
+		this.messageId=0;
+		this.rpcId=0;
 	}
 
 	_csg_write(__os){
@@ -35,8 +36,20 @@ class SRMICall{
 
 }
 
+if(typeof ERMIDispatchResult=="undefined"){
+	var ERMIDispatchResult={};
+	ERMIDispatchResult.ERMIDispatchResultOk = 1 ;
+	ERMIDispatchResult.ERMIDispatchResultTimeout = 2 ;
+	ERMIDispatchResult.ERMIDispatchResultException = 3 ;
+	ERMIDispatchResult.ERMIDispatchObjectNotExist = 4 ;
+}
+
 class SProtocolHead{
 	msgSize=0;
+
+	constructor(){
+		this.msgSize=0;
+	}
 
 	_csg_write(__os){
 		__os.writeSizeIntWithoutBitMark(this.msgSize);
@@ -46,10 +59,24 @@ class SProtocolHead{
 	}
 }
 
+class SRMIReturn{
+	messageId=0;
+	dispathStatus=ERMIDispatchResult.ERMIDispatchResultOk;
+	constructor(){
 
-export {SRMICall}
-export {ERMIMessageType}
+	}
+	_csg_read(__is){
+		this.messageId=__is.readInt();
+		this.dispathStatus=__is.readByte();
+	}
+	_csg_write(__os){
+		__os.writeInt(this.messageId);
+		__os.writeByte(this.dispathStatus);
+	}
 
+}
+
+export {SRMICall,SRMIReturn}
+export {ERMIMessageType,ERMIDispatchResult}
 export {_csg_wirte_rmi_type}
-
 export {SProtocolHead,SIZE_OF_PROTOCOL_HEAD}

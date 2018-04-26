@@ -1,8 +1,10 @@
 
 import {CSerializeStream} from '../../serializeStream/CSerializeStream'
-import {SProtocolHead,SIZE_OF_PROTOCOL_HEAD,ERMIMessageType} from '../../rmi/CRmiDef'
+import {SProtocolHead,SIZE_OF_PROTOCOL_HEAD,ERMIMessageType,SRMIReturn,ERMIDispatchResult} from '../../rmi/CRmiDef'
 import {CMsgManager} from '../../mq/CMsgManager'
 import {CMsgBlock} from '../../mq/CMsgBlock'
+import {CException,ECSGEErrorCode} from '../../exception/CException'
+import {CRMIProxyCallBackObject} from '../../rmi/CRmiObject'
 
 class CsgProtocol{
 	_recvBuffer;
@@ -27,9 +29,14 @@ class CsgProtocol{
 				if(this._recvBuffer.getDataSize()<this._protocolHead.msgSize+SIZE_OF_PROTOCOL_HEAD){
 					return 0;
 				}
-				if(-1===this.handlePacket(session)){
+				try{
+					if(-1===this.handlePacket(session)){
 
-					return -1;
+						return -1;
+					}
+				}catch(err){
+					console.log("CsgProtocol.handlePacket error,message="+err.message);
+					throw err;
 				}
 				this._recvBuffer.popData(this._protocolHead.msgSize+SIZE_OF_PROTOCOL_HEAD);
 				this._recvBuffer.reset();
@@ -70,11 +77,29 @@ class CsgProtocol{
 			case ERMIMessageType.ERMIMessageTypeCall:
 			{
 				console.log("get call from server?");
+				throw new CException(ECSGEErrorCode.ExceptionCodeRMIBase,"client shouldn't receive call type");
 			}
 			break;
 			case ERMIMessageType.ERMIMessageTypeCallRet:
 			{
 				console.log("call back from server")
+				let rmiReturn=new SRMIReturn();
+				rmiReturn._csg_read(is);
+				is.setUseBitMark(true);
+				if(rmiReturn.messageId<=0)
+					return 0;
+				let backObject=session.getCallBackObject(rmiReturn.messageId);
+				if(backObject=="undefined"){
+					return -1;
+				}
+				if(backObject._callBack!="undefined"){
+					if(ERMIDispatchResult.ERMIDispatchResultOk==rmiReturn.dispathStatus){
+						backObject._callBack.__response(is);
+					}else{
+						backObject._callBack.__exception(is);
+					}
+				}
+				
 			}
 			break;
 			default:
@@ -85,7 +110,7 @@ class CsgProtocol{
 		}
 
 
-
+		return 0;
 	}
 
 }

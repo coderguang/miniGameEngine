@@ -1,5 +1,7 @@
 
 
+import {CException,ECSGEErrorCode} from '../exception/CException'
+
 class CMsgManager{
 	//prop
 	_msgMap;
@@ -10,6 +12,7 @@ class CMsgManager{
 	regist(msgBlock){
 		if(!this._msgMap[msgBlock.getType()]==null){
 			console.log("CMsgManager::regist duplicate type="+msgBlock.getType());
+			throw new CException(ECSGEErrorCode.ExceptionCodeRMIBase,"duplicate regist tyep");
 			return false;
 		}
 		this._msgMap[msgBlock.getType()]=msgBlock;

@@ -8,12 +8,12 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
-import {CRmi} from '../engine/rmi/CRmi'
 import {CByteBuffer,concatArrayBuffer} from '../engine/serializeStream/CByteBuffer'
 import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 import {CSession} from '../engine/net/session/CSession'
-import {MITest,STestStruct} from '../message/MITest'
+import {MITest,STestStruct,CCli_ITest_t3_CallBack} from '../message/MITest'
 import {CMsgManager} from '../engine/mq/CMsgManager'
+import {CException,ECSGEErrorCode,ECSGEErrorCodeSystem} from '../engine/exception/CException'
 
 function test(){
     console.log("test ok");
@@ -136,13 +136,29 @@ function testSerialize(){
         console.log(sseqv);
 }
 
+
+class CCli_ITest_t3_CallBack_ex extends CCli_ITest_t3_CallBack{
+
+    constructor(){
+        super();
+        super().registFunc(this.respon,this.failF);
+    }
+
+    respon(a,os){
+        console.log("respon");
+    }
+    failF(ex){
+        console.log("fail");
+    }
+}
+
 function testSocket(){
     console.log("testSocket")
 
     CMsgManager.getInstance().regist(new STestStruct());
 
-    //CSession.getInstance().init("test.royalchen.com",9201);
-    CSession.getInstance().init("192.168.100.104",9201);
+    CSession.getInstance().init("test.royalchen.com",9201);
+    //CSession.getInstance().init("192.168.100.104",9201);
     //CSession.getInstance().init("127.0.0.1",9201);
     CSession.getInstance().startConnect();
 
@@ -153,15 +169,45 @@ function testSocket(){
     st.b=true;
     st.str="test sturct";
     st.ib.push(5);
-    st.ib.push(6);
-    st.ib.push(7);
+    st.ib.push(0);
+    st.ib.push(0);
     st.ib.push(8);
+    st.ib.push(0);
+    st.ib.push(0);
+    st.ib.push(8);
+    st.ib.push(0);
+    st.ib.push(0);
+    st.ib.push(8);
+    st.ib.push(0);
+    st.ib.push(0);
+    st.ib.push(8);
+    st.ib.push(0);
+    st.ib.push(0);
+    st.ib.push(8);
+    //let cbb=new CCli_ITest_t3_CallBack_ex();
+    let cbb=new CCli_ITest_t3_CallBack(function(a,os){
+        console.log("res by inner,a="+a+",os="+os);
+    },function(ex){
+        console.log("error");
+    })
     setTimeout(function(){
         //mitest.t1_async(CSession.getInstance(),3);
         //mitest.t2_async(CSession.getInstance(),5,"hi.hello");
         //mitest.t7_async(CSession.getInstance(),88,st);
-        mitest.t3_async(CSession.getInstance(),5,"hi.hellot2");
+        mitest.t3_async(CSession.getInstance(),5,"hi.hellot2",cbb);
     },5000);
+}
+
+function testException(){
+   
+
+    let ex=new CException(ECSGEErrorCodeSystem.ExceptionCodeMsgTypeNotRegist,"not regist the type");
+    //let code=ex.code();
+    try{
+        throw ex;
+    }catch(err){
+        console.log("error,what="+err.message);
+    }
 }
 
 cc.Class({
@@ -190,6 +236,7 @@ cc.Class({
      onLoad () {
        //testSerialize();
        testSocket();
+       //testException();
      },
 
     start () {

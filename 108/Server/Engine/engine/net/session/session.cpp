@@ -140,6 +140,7 @@ bool csg::CSession::getCallBackObject(int callBackId ,CRMIObjectBindPtr& backObj
 	if ( it != _callBackMap.cend() )
 	{
 		backObject = it->second;
+		_callBackMap.erase(it);
 		return true;
 	}
 	backObject = NULL;

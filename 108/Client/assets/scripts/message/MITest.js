@@ -2,7 +2,7 @@
 import {SRMICall} from '../engine/rmi/CRmiDef'
 import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 import {CRpcHelper} from '../engine/rmi/CRpcHelper'
-
+import {CRMIProxyCallBackObject} from '../engine/rmi/CRmiObject'
 
 
 class STestStruct{
@@ -105,9 +105,28 @@ class MITest{
 		st._csg_write(__os);
 		CRpcHelper.toCall(session,__os,	objectBind);		
 	}
-
-
-
 }
 
-export {MITest,STestStruct}
+
+class CCli_ITest_t3_CallBack{
+	b;
+	os;
+	responseFunc;
+	failFunc;
+	constructor(resFunc,failFunc){
+		this.responseFunc=resFunc;
+		this.failFunc=failFunc;
+	}
+	__response(__is){
+		this.b=__is.readBoolean();
+		this.os=__is.readString();
+		this.responseFunc(this.b,this.os);
+	}
+	__exception(__is){
+		let ex=__is.readException();
+		this.failFunc(ex);
+	}
+}
+
+
+export {MITest,STestStruct,CCli_ITest_t3_CallBack}

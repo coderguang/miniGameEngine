@@ -1,6 +1,7 @@
 
 import {CSerializeStream} from '../../serializeStream/CSerializeStream'
 import {CsgProtocol} from '../protocol/CsgProtocol'
+import {CException} from '../../exception/CException'
 
 if(typeof ESessionStatus == "undefined"){
 	var ESessionStatus={};
@@ -9,6 +10,16 @@ if(typeof ESessionStatus == "undefined"){
 	ESessionStatus.ESessionStatusDisConnected=3;
 }
 
+
+if(typeof ESessionDisconnectReason=="undefined"){
+	var ESessionDisconnectReason={};
+	ESessionDisconnectReason.ESessionDisconnectByClient=1; //客户端主动断开
+	ESessionDisconnectReason.ESessionDisconnectOutOfRecvBuff=2;//数据超出缓冲区大小
+	ESessionDisconnectReason.ESessionDisconnectReadErrorSync=3; //socket 错误
+	ESessionDisconnectReason.ESessionDisconnectReadErrorAsync=4;
+	ESessionDisconnectReason.ESessionDisconnectShutDownServer=5;
+	ESessionDisconnectReason.ESessionDisconnectConnectError=6;
+}
 
 
 class CSession{
@@ -19,10 +30,14 @@ class CSession{
 	_ws;
 	_buffer;
 	_protocol;
+	_callBackId;
+	_callBackMap;
 	static _instance;
 	constructor(){
 		this._buffer=new CSerializeStream();
 		this._protocol=new CsgProtocol();
+		this._callBackId=0;
+		this._callBackMap=new Map();
 	}
 	static getInstance(){
 		if(false === this._instance instanceof this){
@@ -89,6 +104,36 @@ class CSession{
 		}
 		this._ws.send(buf);
 	}
+
+
+	//rpc function
+	getCallBackId(){
+		if(this._callBackId<100000){
+			this._callBackId=this._callBackId+1;
+		}else{
+			this._callBackId=1;
+		}
+		return this._callBackId;
+	}
+
+	addCallBackObject(messageId,objcetBind){
+		if(!this._callBackMap[messageId]==null){
+			console.log("session.addCallBackObject,duplicate messageId="+messageId);
+			throw new CException(ECSGEErrorCode.ExceptionCodeRMIBase,"duplicate messageId id");
+			return ;
+		}
+		this._callBackMap[messageId]=objcetBind;
+	}
+	getCallBackObject(messageId){
+		if(this._callBackMap[messageId]==null){
+			console.log("session,getCallBackObject no this backObject,messageId="+messageI);
+			return false;
+		}
+		let backObject=this._callBackMap[messageId];
+		this._callBackMap.delete(messageId);
+		return backObject;
+	}
+
 }
 
 export {CSession}

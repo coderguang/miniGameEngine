@@ -36,6 +36,12 @@ void ITestImpl::t3_async(const CSessionPtr& session ,Message::CSrv_ITest_t3_Ptr&
 	t->str = "gewgw w3";
 	t->ib.push_back(4646);
 	t->ib.push_back(46461);
+	t->ib.push_back(0);
+	t->ib.push_back(0);
+	t->ib.push_back(6);
+	t->ib.push_back(0);
+	t->ib.push_back(0);
+	t->ib.push_back(46461);
 	t->ib.push_back(46462);
 
 	CMsgBlockPtr mb = new CMsgBlock();
@@ -75,7 +81,7 @@ void ITestImpl::t6_async(const CSessionPtr&, Message::CSrv_ITest_t6_Ptr& cb,cons
 	cb->response(vl);
 }
 
-void ITestImpl::t7_async(const CSessionPtr&, Message::CSrv_ITest_t7_Ptr&, int a, const STestStruct &b)
+void ITestImpl::t7_async(const CSessionPtr&, Message::CSrv_ITest_t7_Ptr& cb, int a, const STestStruct &b)
 {
 	LogInfo("t7_async be call");
 	LogInfo("a=" << b.a);
@@ -85,6 +91,7 @@ void ITestImpl::t7_async(const CSessionPtr&, Message::CSrv_ITest_t7_Ptr&, int a,
 	for (std::vector<int>::const_iterator it = b.ib.begin(); it != b.ib.end(); ++it) {
 		LogInfo("  i="<<i++<<",v="<<*it);
 	}
+	cb->response(b);
 }
 
 void CCli_ITest_t3_CallBack::response(const bool b ,const string os)

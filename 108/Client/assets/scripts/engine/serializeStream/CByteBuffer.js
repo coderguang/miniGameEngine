@@ -1,4 +1,3 @@
-
 import {isUndefined} from '../util/CUtil'
 
 const MAX_BUFFER_SIZE=1024*100;

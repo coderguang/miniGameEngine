@@ -115,6 +115,7 @@ int main(int argc ,char **argv)
 
 	CCsgServer::instance()->stop();
 
-	//cin.get();
+	CThread::sleep_for(2000);
+	
 	return 0;
 }

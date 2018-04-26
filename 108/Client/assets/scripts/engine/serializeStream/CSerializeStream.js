@@ -1,6 +1,7 @@
 
 
 import {CByteBuffer} from './CByteBuffer'
+import {CException,ECSGEErrorCodeSystem} from '../exception/CException'
 
 const SIZE_OF_BYTE=1; // Int8
 const SIZE_OF_INT=4; //Int32
@@ -103,6 +104,7 @@ class CSerializeStream extends CByteBuffer{
 
 	prepareToRead(){
 		this._flagByteSize=this.readSizeInt();
+		this.checkReadLength(this._flagByteSize*SIZE_OF_BYTE,"prepareToRead");
 		if(this._flagByteSize>0){
 			for(let i=0;i<this._flagByteSize;i++){
 				let v=this.readByte();
@@ -210,6 +212,7 @@ class CSerializeStream extends CByteBuffer{
 		if(this._useBitMark&&this.readBitFlag()){
 			return 0;
 		}else{
+			this.checkReadLength(SIZE_OF_BYTE,"readByte");
 			let v=this._readView.getUint8(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_BYTE);
 			return v;
@@ -231,6 +234,7 @@ class CSerializeStream extends CByteBuffer{
 	readByteSeq(){
 		let size=this.readSizeInt();
 		let v=new Uint8Array(size);
+		this.checkReadLength(size*SIZE_OF_BYTE,"readByteSeq");
 		for(let i=0;i<size;i++){
 			v[i]=this._readView.getUint8(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_BYTE);
@@ -276,6 +280,7 @@ class CSerializeStream extends CByteBuffer{
 		if(this._useBitMark&&readBitFlag()){
 			return 0;
 		}else{
+			this.checkReadLength(SIZE_OF_SHORT,"readShort");
 			let v=this._readView.getInt16(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_SHORT);
 			return v;
@@ -298,6 +303,7 @@ class CSerializeStream extends CByteBuffer{
 	readShortSeq(){
 		let size=this.readSizeInt();
 		let v=new Int16Array(size);
+		this.checkReadLength(size*SIZE_OF_SHORT,"readShortSeq");
 		for(let i=0;i<size;i++){
 			v[i]=this._readView.getInt16(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_SHORT);
@@ -321,6 +327,7 @@ class CSerializeStream extends CByteBuffer{
 		if(this._useBitMark&&readBitFlag()){
 			return 0.0;
 		}else{
+			this.checkReadLength(SIZE_OF_FLOAT,"readFloat");
 			let v=this._readView.getFloat32(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_FLOAT);
 			return v;
@@ -342,6 +349,7 @@ class CSerializeStream extends CByteBuffer{
 	readFloatSeq(){
 		let size=this.readSizeInt();
 		let v=new Float32Array(size);
+		this.checkReadLength(size*SIZE_OF_FLOAT,"readFloatSeq");
 		for(let i=0;i<size;i++){
 			v[i]=this._readView.getFloat32(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_FLOAT);
@@ -366,6 +374,7 @@ class CSerializeStream extends CByteBuffer{
 		if(this._useBitMark&&readBitFlag()){
 			return 0;
 		}else{
+			this.checkReadLength(SIZE_OF_DOUBLE,"readDouble");
 			let v=this._readView.getFloat64(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_DOUBLE);
 			return v;
@@ -386,6 +395,7 @@ class CSerializeStream extends CByteBuffer{
 	readDoubleSeq(){
 		let size=this.readSizeInt();
 		let v=new Float64Array(size);
+		this.checkReadLength(size*SIZE_OF_DOUBLE,"readDoubleSeq");
 		for(let i=0;i<size;i++){
 			v[i]=this._readView.getFloat64(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_DOUBLE);
@@ -401,6 +411,7 @@ class CSerializeStream extends CByteBuffer{
 	}
 	readSizeIntWithoutBitMark(){
 		let v=this._readView.getInt32(this.getReadPoint(),this.getEndian());
+		this.checkReadLength(SIZE_OF_INT,"readSizeIntWithoutBitMark");
 		this.addReadIndex(SIZE_OF_INT);
 		return v;
 	}
@@ -421,6 +432,7 @@ class CSerializeStream extends CByteBuffer{
 		if(this._useBitMark&&this.readBitFlag()){
 			return 0;
 		}else{
+			this.checkReadLength(SIZE_OF_INT,"readInt");
 			let v=this._readView.getInt32(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_INT);
 			return v;
@@ -441,6 +453,7 @@ class CSerializeStream extends CByteBuffer{
 	readIntSeq(){
 		let size=this.readSizeInt();
 		let v=new Int32Array(size);
+		this.checkReadLength(size*SIZE_OF_INT,"readIntSeq");
 		for(let i=0;i<size;i++){
 			v[i]=this._readView.getInt32(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_INT);
@@ -463,6 +476,7 @@ class CSerializeStream extends CByteBuffer{
 	readString(){
 		let strlen=this.readSizeInt();
 		let v=new Uint8Array(strlen);
+		this.checkReadLength(strlen*SIZE_OF_BYTE,"readString");
 		for(let i=0;i<strlen;i++){
 			v[i]=this._readView.getUint8(this.getReadPoint(),this.getEndian());
 			this.addReadIndex(SIZE_OF_BYTE);
@@ -494,6 +508,29 @@ class CSerializeStream extends CByteBuffer{
 			this._useBitMark=originalUseBitMark;
 		}
 		return strSeq;
+	}
+
+	checkReadLength(read_length,func_name){
+		let left=this.getBytesLeft();
+		if(left<read_length){
+			throw new CException(ECSGEErrorCodeSystem.ExceptionCodeOutOffMemery,func_name);
+		}
+	}
+
+	getBytesLeft(){
+		return this.getDataSize()-this._readIndex;
+	}
+
+	writeException(ex){
+		this.writeInt(ex.code());
+		let whatStr=ex.what();
+		this.writeString(whatStr);
+	}
+	readException(){
+		let code=this.readInt();
+		let whatStr=this.readString();
+		let ex=new CException(code,whatStr);
+		return ex;
 	}
 
 
