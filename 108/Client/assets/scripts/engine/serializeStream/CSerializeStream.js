@@ -14,7 +14,7 @@ const FLAG_BIT_INIT=0x80
 const SIZE_BYTE_MAX=0xFE; //254
 const UNSIGNED_BYTE_MAX=0xFF; //255
 
-const MAX_DEFAULT_VALUE_NUM=100; // 100*8=800
+const MAX_DEFAULT_VALUE_NUM=1000; // 1000*8=8000
 
 class CSerializeStream extends CByteBuffer{
 		
@@ -72,15 +72,15 @@ class CSerializeStream extends CByteBuffer{
 	}
 
 	readBitFlag(){
-		if(this._useBitMark||this._flagByteSize<=this._flagByteReadPos){
+		if(!this._useBitMark||this._flagByteSize<=this._flagByteReadPos){
 			return false;
 		}
 		let result=this._flagByte&this._flagBit;
 		this._flagBit=this._flagBit>>1;
 		if(0==this._flagBit){
 			this._flagBit=FLAG_BIT_INIT;
-			this._flagByte=this._flagBytes[this._flagByteReadPos];
 			this._flagByteReadPos+=1;
+			this._flagByte=this._flagBytes[this._flagByteReadPos];
 		}
 		return !!result;  //change to boolean
 	}
@@ -112,6 +112,7 @@ class CSerializeStream extends CByteBuffer{
 			}
 			this._flagBit=FLAG_BIT_INIT;
 			this._flagByteReadPos=0;
+			this._flagByte=this._flagBytes[this._flagByteReadPos];
 		}
 	}
 

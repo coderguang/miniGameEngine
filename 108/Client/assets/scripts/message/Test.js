@@ -75,7 +75,7 @@ class STest{
 		{
 			let val=new STestStruct();
 			val._csg_read(__is);
-			data.push_back(val);
+			data.push(val);
 		}
 		return data;
 	}

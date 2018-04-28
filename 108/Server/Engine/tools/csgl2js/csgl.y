@@ -620,7 +620,7 @@ struct: TOKEN_ID_START TOKEN_ID_NUM TOKEN_ID_END TOKEN_STRUCT_START TOKEN_STRUCT
 									<<"		{\n"
 									<<"			let val=new "<<tmp.stlType<<"();\n"
 									<<"			val._csg_read(__is);\n"
-									<<"			data.push_back(val);\n"
+									<<"			data.push(val);\n"
 									<<"		}\n"
 									<<"		return data;\n"
 									<<"	}\n\n";

@@ -186,8 +186,15 @@ function testSocket(){
 
     let test=new STest();
     test.a=5657;
+    test.b=false;
     test.str="gewgwoe";
     test.ib.push(46);
+    test.il.push(1);
+    test.il.push(3);
+    test.il.push(4);
+    test.il.push(7);
+    test.is.push("hi how are you");
+    test.is.push("hi how are you ok");
     let mm=new Map();
     //mm.set("1",test);
     mm["1"]=test;
@@ -200,12 +207,22 @@ function testSocket(){
 
     let t7=new CCli_ITest_t6_callBack(
         function(v){
-            console.log("res by inner,a="+a+",os="+os);
+            //console.log("res by inner,a="+a+",os="+os);
+             console.log("success t7");
         },
         function(ex){
             console.log("error");
     }
     );
+
+    let t5=new CCli_ITest_t5_callBack(
+        function(v){
+            console.log("success t5");
+        },
+        function(ex){
+            console.log("error t5");
+        }
+        );
 
     setTimeout(function(){
         //mitest.t1_async(CSession.getInstance(),3);
@@ -213,6 +230,7 @@ function testSocket(){
         //mitest.t7_async(CSession.getInstance(),88,st);
         //proxy_test.t3_async(CSession.getInstance(),5,"hi.hellot2",cbb);
         proxy_test.t6_async(CSession.getInstance(),mm,t7);
+        proxy_test.t5_async(CSession.getInstance(),new Array(),t5);
     },5000);
 }
 

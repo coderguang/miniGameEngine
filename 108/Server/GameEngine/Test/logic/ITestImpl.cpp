@@ -76,7 +76,8 @@ void ITestImpl::t6_async(const CSessionPtr&, Message::CSrv_ITest_t6_Ptr& cb,cons
 	}
 	std::map<Message::STest, int> vl;
 	STest t;
-	for (int i = 0; i < 100; i++) {
+	int times = 100;
+	for (int i = 0; i < times; i++) {
 		t.a = i*11111;
 		t.str = ToStr(t.a);
 		t.ib.push_back(t.a);

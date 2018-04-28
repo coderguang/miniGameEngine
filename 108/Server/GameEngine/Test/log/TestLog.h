@@ -171,16 +171,16 @@ void sendMsgToSrvByOpt(boost_CSocketClient_ptr client) {
 			sendMsgToSrv(client, 3);
 		}
 		else if ("4" == inputStr) {
-			sendMsgToSrv(client, 3);
+			sendMsgToSrv(client, 4);
 		}
 		else if ("5" == inputStr) {
-			sendMsgToSrv(client, 3);
+			sendMsgToSrv(client, 5);
 		}
 		else if ("6" == inputStr) {
-			sendMsgToSrv(client, 3);
+			sendMsgToSrv(client, 6);
 		}
 		else if ("7" == inputStr) {
-			sendMsgToSrv(client, 3);
+			sendMsgToSrv(client, 7);
 		}
 		else if ("0" == inputStr)
 			break;
@@ -220,6 +220,9 @@ void startSendLoop(std::string url)
 	onlyQForExit();
 }
 
+void sendt6() {
+	
+}
 
 void testAsio(Json::Value& js)
 {
@@ -259,7 +262,20 @@ void testAsio(Json::Value& js)
 			startSendLoop(test_royalchen_url);
 		}
 		break;
-		case 8:
+		case 8: //inner srv
+		{
+			CCsgServer::instance()->startListenServer(9201, true, ESessionTypeClient);
+		}
+		break;
+		case 9:
+		{
+			boost_CSocketClient_ptr client(new CSocketClient());
+			client->init(localhost_url, 9201, false);
+			client->startConnect();
+			sendMsgToSrvByOpt(client);
+		}
+		break;
+		case 10: //websocket srv
 		{
 			CCsgServer::instance()->startListenServer(9201, false, ESessionTypeClient);
 		}
