@@ -11,9 +11,11 @@
 import {CByteBuffer,concatArrayBuffer} from '../engine/serializeStream/CByteBuffer'
 import {CSerializeStream} from '../engine/serializeStream/CSerializeStream'
 import {CSession} from '../engine/net/session/CSession'
-import {MITest,STestStruct,CCli_ITest_t3_CallBack} from '../message/MITest'
 import {CMsgManager} from '../engine/mq/CMsgManager'
 import {CException,ECSGEErrorCode,ECSGEErrorCodeSystem} from '../engine/exception/CException'
+
+import {ETest,STest,STestMap,SScapyTest,ITest,CCli_ITest_t1_callBack,CCli_ITest_t2_callBack,CCli_ITest_t3_callBack,CCli_ITest_t4_callBack,CCli_ITest_t5_callBack,CCli_ITest_t6_callBack,CCli_ITest_t7_callBack} from '../message/Test'
+import {ETestStruct,STestStruct} from '../message/TestStruct'
 
 function test(){
     console.log("test ok");
@@ -136,65 +138,81 @@ function testSerialize(){
         console.log(sseqv);
 }
 
-
-class CCli_ITest_t3_CallBack_ex extends CCli_ITest_t3_CallBack{
-
-    constructor(){
-        super();
-        super().registFunc(this.respon,this.failF);
-    }
-
-    respon(a,os){
-        console.log("respon");
-    }
-    failF(ex){
-        console.log("fail");
+function testMap(){
+    let t=new Map();
+    t["1"]=4;
+    t["3"]=4;
+    t["3"]=4;
+    t["2"]=4;
+    t.set("5",45);
+    let size=Object.keys(t).length;
+    console.log("size="+size)
+    // for( let [key,value] of t.entries()){--erro
+    //     console.log(key+","+value)
+    // }
+    // t.forEach(function(value,key){---error
+    //     console.log("aaa");
+    //     console.log(key+","+value)
+    // },t);
+    for(let v in t){
+        console.log("aaa");
     }
 }
 
 function testSocket(){
+    // testMap();
+    // return ;
     console.log("testSocket")
 
     CMsgManager.getInstance().regist(new STestStruct());
+    CMsgManager.getInstance().regist(new STest());
+    CMsgManager.getInstance().regist(new STestMap());
+    CMsgManager.getInstance().regist(new SScapyTest());
 
-    CSession.getInstance().init("test.royalchen.com",9201);
+    //CSession.getInstance().init("test.royalchen.com",9201);
     //CSession.getInstance().init("192.168.100.104",9201);
-    //CSession.getInstance().init("127.0.0.1",9201);
+    CSession.getInstance().init("127.0.0.1",9201);
     CSession.getInstance().startConnect();
 
-    let mitest=new MITest();
-    let cb=3;
-    let st=new STestStruct();
-    st.a=987;
-    st.b=true;
-    st.str="test sturct";
-    st.ib.push(5);
-    st.ib.push(0);
-    st.ib.push(0);
-    st.ib.push(8);
-    st.ib.push(0);
-    st.ib.push(0);
-    st.ib.push(8);
-    st.ib.push(0);
-    st.ib.push(0);
-    st.ib.push(8);
-    st.ib.push(0);
-    st.ib.push(0);
-    st.ib.push(8);
-    st.ib.push(0);
-    st.ib.push(0);
-    st.ib.push(8);
-    //let cbb=new CCli_ITest_t3_CallBack_ex();
-    let cbb=new CCli_ITest_t3_CallBack(function(a,os){
-        console.log("res by inner,a="+a+",os="+os);
-    },function(ex){
-        console.log("error");
-    })
+    
+    let proxy_test=new ITest();
+    let cbb=new CCli_ITest_t3_callBack(
+        function(a,os){
+            console.log("res by inner,a="+a+",os="+os);
+    },
+        function(ex){
+            console.log("error");
+    });
+
+    let test=new STest();
+    test.a=5657;
+    test.str="gewgwoe";
+    test.ib.push(46);
+    let mm=new Map();
+    //mm.set("1",test);
+    mm["1"]=test;
+    test.ib.push(783);
+    mm["2"]=test;
+    //mm.set("2",test);
+    test.ib.push(78335);
+    mm["3"]=test;
+    //mm.set("34668",test);
+
+    let t7=new CCli_ITest_t6_callBack(
+        function(v){
+            console.log("res by inner,a="+a+",os="+os);
+        },
+        function(ex){
+            console.log("error");
+    }
+    );
+
     setTimeout(function(){
         //mitest.t1_async(CSession.getInstance(),3);
         //mitest.t2_async(CSession.getInstance(),5,"hi.hello");
         //mitest.t7_async(CSession.getInstance(),88,st);
-        mitest.t3_async(CSession.getInstance(),5,"hi.hellot2",cbb);
+        //proxy_test.t3_async(CSession.getInstance(),5,"hi.hellot2",cbb);
+        proxy_test.t6_async(CSession.getInstance(),mm,t7);
     },5000);
 }
 

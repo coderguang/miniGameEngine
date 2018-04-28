@@ -46,7 +46,7 @@ class CSerializeStream extends CByteBuffer{
 
 	// flagBit function
 	markBitFlag(isDefault){
-		if(this._useBitMark)
+		if(!this._useBitMark)
 		{
 			return ;
 		}

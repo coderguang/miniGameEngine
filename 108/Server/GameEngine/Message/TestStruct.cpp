@@ -94,17 +94,33 @@ bool Message::STestStruct::operator<(const STestStruct& __other)const
 	{
 		return true;
 	}
+	else if(__other.a<a)
+	{
+		return false;
+	}
 	if(b < __other.b)
 	{
 		return true;
+	}
+	else if(__other.b<b)
+	{
+		return false;
 	}
 	if(str < __other.str)
 	{
 		return true;
 	}
+	else if(__other.str<str)
+	{
+		return false;
+	}
 	if(ib < __other.ib)
 	{
 		return true;
+	}
+	else if(__other.ib<ib)
+	{
+		return false;
 	}
 	return false;
 }

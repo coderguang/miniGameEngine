@@ -408,7 +408,7 @@ void Message::STestMap::_csg_init(){
 
 void Message::STestMap::_csg_read(CSerializeStream& __is){
 	__is.read(a);
-	Message::__read(__is,ii,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize());
+	Message::__read(__is,ii,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize());
 	Message::__read(__is,il,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__double__il__Serialize());
 	Message::__read(__is,ss,__STL_TYPE_DOUBLE__Struct__STestMap__map__string__string__ss__Serialize());
 	Message::__read(__is,iff,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__float__iff__Serialize());
@@ -419,7 +419,7 @@ void Message::STestMap::_csg_read(CSerializeStream& __is){
 
 void Message::STestMap::_csg_write(CSerializeStream& __os)const{
 	__os.write(a);
-	Message::__write(__os,ii,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize());
+	Message::__write(__os,ii,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize());
 	Message::__write(__os,il,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__double__il__Serialize());
 	Message::__write(__os,ss,__STL_TYPE_DOUBLE__Struct__STestMap__map__string__string__ss__Serialize());
 	Message::__write(__os,iff,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__float__iff__Serialize());
@@ -428,7 +428,7 @@ void Message::STestMap::_csg_write(CSerializeStream& __os)const{
 	Message::__write(__os,msstring,__STL_TYPE_DOUBLE__Struct__STestMap__map__STestStruct__string__msstring__Serialize());
 };
 
-void Message::__read(csg::CSerializeStream& __is,std::map<int,long64_t>& __data,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize)
+void Message::__read(csg::CSerializeStream& __is,std::map<int,int>& __data,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize)
 {
 	int size=0;
 	__is.readSize(size);
@@ -436,18 +436,18 @@ void Message::__read(csg::CSerializeStream& __is,std::map<int,long64_t>& __data,
 	{
 		int key;
 		__is.read(key);
-		long64_t val;
+		int val;
 		__is.read(val);
 		__data[key]=val;
 	}
 };
 
-void Message::__write(csg::CSerializeStream& __os,const std::map<int,long64_t>& __data,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize)
+void Message::__write(csg::CSerializeStream& __os,const std::map<int,int>& __data,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize)
 
 {
 	int size=__data.size();
 	__os.writeSize(size);
-	for(std::map<int,long64_t>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	for(std::map<int,int>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
 	{
 		__os.write(it->first);
 		__os.write(it->second);
@@ -766,7 +766,7 @@ void Message::CSrv_ITest_t4::response(const STestMap& os)
 
 }
 
-void Message::CSrv_ITest_t5::response(const std::vector<long64_t>& vl)
+void Message::CSrv_ITest_t5::response(const std::vector<int>& vl)
 {
 	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());
 	SRMIReturn rmiReturn;
@@ -783,7 +783,7 @@ void Message::CSrv_ITest_t5::response(const std::vector<long64_t>& vl)
 
 }
 
-void Message::CSrv_ITest_t6::response(const std::map<STest,long64_t>& vl)
+void Message::CSrv_ITest_t6::response(const std::map<STest,int>& vl)
 {
 	CAutoSerializeStream __os(CSerializeStreamPool::instance()->newObject());
 	SRMIReturn rmiReturn;
@@ -794,17 +794,17 @@ void Message::CSrv_ITest_t6::response(const std::map<STest,long64_t>& vl)
 
 	__os->setUseBitMark(true);
 
-	Message::__write(*__os,vl,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl());
+	Message::__write(*__os,vl,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__int__vl());
 
 	CRpcHelper::toReturn(_session,__os);
 
 }
 
-void Message::__write(csg::CSerializeStream& __os,const std::map<STest,long64_t>& __data,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl)
+void Message::__write(csg::CSerializeStream& __os,const std::map<STest,int>& __data,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__int__vl)
 {
 	int size=__data.size();
 	__os.writeSize(size);
-	for(std::map<STest,long64_t>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
+	for(std::map<STest,int>::const_iterator it=__data.cbegin();it!=__data.cend();++it)
 	{
 		it->first._csg_write(__os);
 		__os.write(it->second);
@@ -1109,7 +1109,7 @@ void csg_proxy::CCli_ITest_t4::__response(CSerializeStream& __is)
 
 void csg_proxy::CCli_ITest_t5::__response(CSerializeStream& __is)
 {
-	std::vector<long64_t> vl;
+	std::vector<int> vl;
 	__is.read(vl);
 
 	response(vl);
@@ -1118,14 +1118,14 @@ void csg_proxy::CCli_ITest_t5::__response(CSerializeStream& __is)
 
 void csg_proxy::CCli_ITest_t6::__response(CSerializeStream& __is)
 {
-	std::map<STest,long64_t> vl;
-	csg_proxy::__read(__is,vl,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl());
+	std::map<STest,int> vl;
+	csg_proxy::__read(__is,vl,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__int__vl());
 
 	response(vl);
 
 }
 
-void csg_proxy::__read(CSerializeStream& __is,std::map<STest,long64_t>& __data,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl)
+void csg_proxy::__read(CSerializeStream& __is,std::map<STest,int>& __data,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__int__vl)
 {
 	int size=0;
 	__is.readSize(size);
@@ -1133,7 +1133,7 @@ void csg_proxy::__read(CSerializeStream& __is,std::map<STest,long64_t>& __data,_
 	{
 		STest key;
 		key._csg_read(__is);
-		long64_t val;
+		int val;
 		__is.read(val);
 		__data[key]=val;
 	}

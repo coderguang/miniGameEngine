@@ -6,7 +6,7 @@
 // for test
 enum ETest{
 	ETestOne=1,
-	ETestTwo,
+	ETestTwo=4,
 	ETestThree=5,
 };
 
@@ -17,14 +17,14 @@ enum ETest{
 	STestStruct tt;
 	vector<int> ib;
 	vector<STestStruct> hss;
-	vector<long> il;
+	vector<int> il;
 	vector<string> is;
 };
 
 
 ["id":6] struct STestMap{
 	int a;
-	map<int,long> ii;
+	map<int,int> ii;
 	map<int,double> il;
 	map<string,string> ss;
 	map<int,float> iff;
@@ -48,9 +48,9 @@ interface ITest{
 	
 	["rpcid":14] void t4(STestMap t,out STestMap os);
 	
-	["rpcid":15] void t5(vector<STest> v,out vector<long> vl);
+	["rpcid":15] void t5(vector<STest> v,out vector<int> vl);
 	
-	["rpcid":16] void t6(map<string,STest> mss,out map<STest,long> vl);
+	["rpcid":16] void t6(map<string,STest> mss,out map<STest,int> vl);
 	
 	["rpcid":17] void t7(int a,STestStruct t,out STestStruct ot);
 };

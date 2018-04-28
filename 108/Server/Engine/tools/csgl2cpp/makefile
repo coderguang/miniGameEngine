@@ -1,6 +1,6 @@
 
 ##############################for csgl##################################
-OBJ	:= csgl
+OBJ	:= csgl2cpp
 TOOLS_DIR	:=../../../../Public/tools/
 SRCC_LEX	:=$(OBJ).yy.c
 SRCC_YACC	:=$(OBJ).tab.c

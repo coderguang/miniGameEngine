@@ -20,7 +20,7 @@ namespace Message {
 
 	enum ETest {
 		ETestOne = 1,
-		ETestTwo,
+		ETestTwo = 4,
 		ETestThree = 5,
 	};
 
@@ -37,7 +37,7 @@ namespace Message {
 		STestStruct  tt;
 		std::vector<int> ib;
 		std::vector<STestStruct> hss;
-		std::vector<long64_t> il;
+		std::vector<int> il;
 		std::vector<std::string> is;
 
 	public:
@@ -70,7 +70,7 @@ namespace Message {
 		:public virtual csg::IMsgBase {
 	public:
 		int  a;
-		std::map<int,long64_t> ii;
+		std::map<int,int> ii;
 		std::map<int,double> il;
 		std::map<std::string,std::string> ss;
 		std::map<int,float> iff;
@@ -100,9 +100,9 @@ namespace Message {
 
 	typedef csg::CSmartPointShare<STestMap> STestMap_Ptr;
 
-	class __STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize {};
-	void __read(csg::CSerializeStream& __is,std::map<int,long64_t>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize);
-	void __write(csg::CSerializeStream& __os,const std::map<int,long64_t>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__long__ii__Serialize);
+	class __STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize {};
+	void __read(csg::CSerializeStream& __is,std::map<int,int>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize);
+	void __write(csg::CSerializeStream& __os,const std::map<int,int>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__int__ii__Serialize);
 
 	class __STL_TYPE_DOUBLE__Struct__STestMap__map__int__double__il__Serialize {};
 	void __read(csg::CSerializeStream& __is,std::map<int,double>&,__STL_TYPE_DOUBLE__Struct__STestMap__map__int__double__il__Serialize);
@@ -196,19 +196,19 @@ namespace Message
 	class CSrv_ITest_t5:public virtual CRMIObjectCallBackObject
 	{
 	public:
-		virtual void response(const std::vector<long64_t>& vl);
+		virtual void response(const std::vector<int>& vl);
 	};
 	typedef CSmartPointShare<CSrv_ITest_t5> CSrv_ITest_t5_Ptr;
 
 	class CSrv_ITest_t6:public virtual CRMIObjectCallBackObject
 	{
 	public:
-		virtual void response(const std::map<STest,long64_t>& vl);
+		virtual void response(const std::map<STest,int>& vl);
 	};
 	typedef CSmartPointShare<CSrv_ITest_t6> CSrv_ITest_t6_Ptr;
 
-	class __STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl{};
-	void __write(csg::CSerializeStream& __os,const std::map<STest,long64_t>&,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__long__vl);
+	class __STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__int__vl{};
+	void __write(csg::CSerializeStream& __os,const std::map<STest,int>&,__STL_TYPE_ONE__Interface__CSrv__ITest__t6__map__STest__int__vl);
 
 	class CSrv_ITest_t7:public virtual CRMIObjectCallBackObject
 	{
@@ -311,7 +311,7 @@ namespace csg_proxy
 	class CCli_ITest_t5:public virtual CRMIProxyCallBackObject
 	{
 	public:
-		virtual void response(const std::vector<long64_t>& )=0;
+		virtual void response(const std::vector<int>& )=0;
 	protected:
 		virtual void __response(CSerializeStream& __is);
 	};
@@ -320,14 +320,14 @@ namespace csg_proxy
 	class CCli_ITest_t6:public virtual CRMIProxyCallBackObject
 	{
 	public:
-		virtual void response(const std::map<STest,long64_t>&)=0;
+		virtual void response(const std::map<STest,int>&)=0;
 	protected:
 		virtual void __response(CSerializeStream& __is);
 	};
 	typedef CSmartPointShare<CCli_ITest_t6> CCli_ITest_t6_Ptr;
 
-	class __STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl {};
-	void __read(CSerializeStream&,std::map<STest,long64_t>&,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__long__vl);
+	class __STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__int__vl {};
+	void __read(CSerializeStream&,std::map<STest,int>&,__STL_TYPE_DOUBLE__Interface_CCli__Read__ITest__t6__map__STest__int__vl);
 
 	class CCli_ITest_t7:public virtual CRMIProxyCallBackObject
 	{

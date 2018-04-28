@@ -27,7 +27,7 @@ typedef CSmartPointShare<CCli_ITest_t4_CallBack> CCli_ITest_t4_CallBackPtr;
 
 class CCli_ITest_t5_CallBack :public virtual csg_proxy::CCli_ITest_t5 {
 public:
-	virtual void response(const std::vector<long64_t>&);
+	virtual void response(const std::vector<int>&);
 
 	virtual void exception(const csg::CException& ex);
 };
@@ -37,7 +37,7 @@ typedef CSmartPointShare<CCli_ITest_t5_CallBack> CCli_ITest_t5_CallBackPtr;
 
 class CCli_ITest_t6_CallBack :public virtual csg_proxy::CCli_ITest_t6 {
 public:
-	virtual void response(const std::map<STest, long64_t>&);
+	virtual void response(const std::map<STest, int>&);
 };
 
 typedef CSmartPointShare<CCli_ITest_t6_CallBack> CCli_ITest_t6_CallBackPtr;

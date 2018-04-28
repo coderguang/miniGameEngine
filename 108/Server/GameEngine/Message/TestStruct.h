@@ -19,7 +19,7 @@ namespace Message {
 
 	enum ETestStruct {
 		ETestOneEx = 1,
-		ETestTwoEx,
+		ETestTwoEx = 3,
 		ETestThreeEx = 5,
 	};
 
