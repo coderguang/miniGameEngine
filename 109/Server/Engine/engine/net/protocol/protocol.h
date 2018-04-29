@@ -34,6 +34,8 @@ namespace csg
 		{
 
 		}
+
+		virtual ~IProtocol();
 		// IO线程接收数据
 		virtual int handleRecvData(const CSessionPtr session, const void* inData ,const int len);
 		// 逻辑线程压包

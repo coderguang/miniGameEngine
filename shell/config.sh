@@ -14,7 +14,7 @@
 #***********************************************
 
 
-VERSION=108
+VERSION=109
 
 BUILD_ROOT_DIR=/home/guang/GameWorld
 
