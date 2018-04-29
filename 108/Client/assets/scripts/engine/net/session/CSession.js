@@ -77,7 +77,7 @@ class CSession{
 	}
 
 	startConnect(){
-		let remote_url="ws://"+this._url+":"+this._port;
+		let remote_url="wss://"+this._url+":"+this._port;
 		let session=this;
 		this._ws=new WebSocket(remote_url);
 		this._ws.binaryType='arraybuffer';

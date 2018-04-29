@@ -170,8 +170,9 @@ function testSocket(){
     CMsgManager.getInstance().regist(new SScapyTest());
 
     //CSession.getInstance().init("test.royalchen.com",9201);
+    CSession.getInstance().init("game.0cpp.com",9201);
     //CSession.getInstance().init("192.168.100.104",9201);
-    CSession.getInstance().init("127.0.0.1",9201);
+    //CSession.getInstance().init("127.0.0.1",9201);
     CSession.getInstance().startConnect();
 
     

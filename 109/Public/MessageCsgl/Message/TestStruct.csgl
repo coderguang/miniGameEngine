@@ -1,0 +1,18 @@
+#ifndef _MESSAGE_TEST_STRUCT_H_
+#define _MESSAGE_TEST_STRUCT_H_
+
+// for test
+enum ETestStruct{
+	ETestOneEx=1,
+	ETestTwoEx=3,
+	ETestThreeEx=5,
+};
+
+["id":5] struct STestStruct{
+	int a;
+	bool b;
+	string str;
+	vector<int> ib;
+};
+
+#endif
