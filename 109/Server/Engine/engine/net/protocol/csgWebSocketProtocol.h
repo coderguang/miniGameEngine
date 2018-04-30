@@ -24,6 +24,8 @@ namespace csg
 		CCsgWebSocketProtocol(int recvSizeLimit,int recvBuffSize) :IProtocol(recvSizeLimit,recvBuffSize),_is_complete_websocket_handshake(false)
 			,_fin(),_opCode(),_mask(),_masking_key(),_payload(),_payload_length(){};
 
+		virtual ~CCsgWebSocketProtocol();
+
 		virtual int handleRecvData(const CSessionPtr session,const void* inData ,const int len)override;
 
 		virtual int handleSendData(const CSessionPtr session ,const void* data ,const int len)override;

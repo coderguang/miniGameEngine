@@ -9,6 +9,11 @@
 #include "framework/tool/memTool.h"
 #include "framework/exception/exception.h"
 
+csg::CCsgWebSocketProtocol::~CCsgWebSocketProtocol()
+{
+
+}
+
 int csg::CCsgWebSocketProtocol::handleRecvData(const CSessionPtr session,const void* inData, const int len)
 {
 	if (!_is_complete_websocket_handshake) {

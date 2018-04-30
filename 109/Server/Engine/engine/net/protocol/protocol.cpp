@@ -55,10 +55,7 @@ int csg::IProtocol::handleReadData(const CSessionPtr session)
 				try {
 					if (-1 == handlePacket(session, _recvBuffer->getData() + SIZE_OF_PROTOCOL_HEAD, _protocolHead.msgSize))
 					{
-						LogInfo("CProtocol::handlePacket error,close the socket...");
-						// 						//解包错误时直接断开连接
-						// 						session->getSocket()->close();
-						// 						CSessionMgr::instance()->delSession(session);
+						LogErr(__FUNCTION__ << " handlePacket error,close the socket...");
 						return -1;
 					}
 				}
@@ -169,8 +166,6 @@ int csg::IProtocol::handlePacket(const CSessionPtr session, const void *packageD
 
 		is->setUseBitMark(true);
 
-		LogInfo("CProtocol::handlePacket" << ",messageId=" << rmiReturn.messageId);
-
 		if (rmiReturn.messageId <= 0)
 			return 0;
 
@@ -205,22 +200,22 @@ int csg::IProtocol::handleWriteData(const CSessionPtr session, boost::system::er
 {
 	if (err)
 	{
-		LogErr("CCsgProtocol::handleWriteDataEx handleWritet,ex=" << err.message());
+		LogErr(__FUNCTION__<<",ex=" << err.message());
 		return -1;
 	}
 	else
 	{
-		LogDebug("CCsgProtocol::handleWriteDataEx handleWritet.....");
+		LogDebug(__FUNCTION__<<".....");
 		boost::system::error_code write_err;
 		int wlen = session->getSocket()->write_some(boost::asio::buffer(_sendBuffer->getData(), _sendBuffer->getDataSize()), write_err);
 		if (write_err)
 		{
-			LogErr("CCsgProtocol::handleWriteDataEx write some2,ex=" << write_err.message());
+			LogErr(__FUNCTION__<<" write error,ex=" << write_err.message());
 			return -1;
 		}
 		else
 		{
-			LogDebug("CCsgProtocol::handleWriteDataEx handleWritet complete,size=" << wlen);
+			LogDebug(__FUNCTION__<<" complete,size=" << wlen);
 		}
 		_sendBuffer->popData(wlen);
 	}

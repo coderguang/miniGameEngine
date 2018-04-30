@@ -10,6 +10,8 @@ namespace csg
 	{
 	public:
 		CCsgProtocol(int recvSizeLimit,int recvBuffSize) :IProtocol(recvSizeLimit,recvBuffSize) {};
+
+		virtual ~CCsgProtocol();
 	};
 
 	typedef CSmartPointShare<CCsgProtocol> CCsgProtocolPtr;

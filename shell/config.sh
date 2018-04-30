@@ -16,7 +16,7 @@
 
 VERSION=109
 
-BUILD_ROOT_DIR=/home/guang/GameWorld
+BUILD_ROOT_DIR=/root/GameWorld
 
 PRO_ROOT_DIR=$BUILD_ROOT_DIR/$VERSION/Server
 
