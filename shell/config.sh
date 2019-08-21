@@ -13,10 +13,12 @@
 #     Last Modified: 2017-12-20 20:05:19
 #***********************************************
 
+cd ../
+
+BUILD_ROOT_DIR=$(shell pwd)
 
 VERSION=109
 
-BUILD_ROOT_DIR=../../miniGameEngine
 
 PRO_ROOT_DIR=$BUILD_ROOT_DIR/$VERSION/Server
 

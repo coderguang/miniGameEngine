@@ -30,7 +30,7 @@ function build_engine(){
 	#time make -f makefile_for_lib clean
 	#time make -f makefile_for_lib clean LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" DEP_CFLAG="$LIB_DEP_CFLAG"
 	echo -e "$GREEN start build Engine... $BLACK"
-	time make -f makefile_for_lib all LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="../../$LIB_DIR" DEP_CFLAG="$LIB_DEP_CFLAG" CCEX="$CCEX" CFLAGEX="$LIB_CFLAG_EX"
+	time make -f makefile_for_lib all LIB_NAME="libEngine.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR" DEP_CFLAG="$LIB_DEP_CFLAG" CCEX="$CCEX" CFLAGEX="$LIB_CFLAG_EX"
 	EXCODE=$?
   	if [ "$EXCODE" != "0" ]; then
    	 echo -e "$RED build Engine error,please check$BLACK"
@@ -53,7 +53,7 @@ function build_libs(){
 		#echo -e "$GREEN first clean $name $BLACK"
 		#time make -f makefile_for_lib clean LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
 		echo -e "$GREEN start build $name... $BLACK"
-		time make -f makefile_for_lib all LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="../$LIB_DIR"
+		time make -f makefile_for_lib all LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
 		EXCODE=$?
   		if [ "$EXCODE" != "0" ]; then
    	 		echo -e "$RED build $name error,please check$BLACK"
