@@ -53,7 +53,7 @@ function build_libs(){
 		#echo -e "$GREEN first clean $name $BLACK"
 		#time make -f makefile_for_lib clean LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
 		echo -e "$GREEN start build $name... $BLACK"
-		time make -f makefile_for_lib all LIB_NAME="lib$name.a" CC="$CC" CFLAG="../$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="$LIB_DIR"
+		time make -f makefile_for_lib all LIB_NAME="lib$name.a" CC="$CC" CFLAG="$LIB_CFLAG" PROJECT_BIN_DIR="$BIN_DIR" PROJECT_LIB_DIR="../$LIB_DIR"
 		EXCODE=$?
   		if [ "$EXCODE" != "0" ]; then
    	 		echo -e "$RED build $name error,please check$BLACK"
