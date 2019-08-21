@@ -14,8 +14,9 @@
 #***********************************************
 
 cd ../
+pwd
 
-BUILD_ROOT_DIR=$(shell pwd)
+BUILD_ROOT_DIR=$(cd "$(dirname "$0")";pwd)
 
 VERSION=109
 
