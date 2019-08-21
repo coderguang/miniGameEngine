@@ -55,6 +55,7 @@ all:$(LIB_NAME)
 
 $(LIB_NAME):$(CUR_OBJ) $(CUR_OBJ_C)
 	cd $(SHELL_ROOT_DIR)
+	pwd
 	ar cr $(PROJECT_LIB_DIR)$@ $^
 
 
