@@ -53,6 +53,9 @@ arr_lib=(Message)
 arr_bin=(Test)
 
 
+test -d $BIN_DIR||mkdir -p $BIN_DIR
+test -d $LIB_DIR||mkdir -p $LIB_DIR
+
 ############################dont change below code################
 
 #color def
