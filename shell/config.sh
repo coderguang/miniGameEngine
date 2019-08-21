@@ -14,12 +14,13 @@
 #***********************************************
 
 cd ../
-pwd
+# pwd
 
 BUILD_ROOT_DIR=$(cd "$(dirname "$0")";pwd)
 
-VERSION=109
+cd shell
 
+VERSION=109
 
 PRO_ROOT_DIR=$BUILD_ROOT_DIR/$VERSION/Server
 
