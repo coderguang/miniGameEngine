@@ -16,7 +16,7 @@
 
 VERSION=109
 
-BUILD_ROOT_DIR=../miniGameEngine/
+BUILD_ROOT_DIR=../miniGameEngine
 
 PRO_ROOT_DIR=$BUILD_ROOT_DIR/$VERSION/Server
 
