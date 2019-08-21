@@ -4,9 +4,13 @@ complier:
     - clang
     
 before_install: 
-    - sudo apt-get install -y bison
-    - sudo apt-get install -y flex
+    - sudo apt-get install bison
+    - sudo apt-get install flex
     
 script: 
+    - cd 109/Server/Engine/tools/csgl2cpp
+    - make clean && make all
+    - cd 109/Server/Engine/tools/csgl2js
+    - make clean && make all
     - cd shell
     - sh build.sh
